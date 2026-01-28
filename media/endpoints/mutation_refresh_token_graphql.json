@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_refresh_token_graphql-001",
+  "endpoint_id": "mutation_refresh_token_graphql",
+  "endpoint_path": "graphql/RefreshToken",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Refresh access token using refresh token. Accepts RefreshTokenInput with refreshToken (required, valid JWT). Returns AuthPayload containing new accessToken (JWT, expires in 30 minutes), new refreshToken (JWT, expires in 7 days), and user info (uuid, email, name). Implements token rotation - both tokens are refreshed on each call. Validates refresh token signature and expiration. Raises UnauthorizedError (401) if refresh token is invalid, expired, or blacklisted. Used internally by graphqlClient for automatic token refresh when access token expires.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/auth/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/authService.ts",
+  "service_methods": [
+    "refreshToken"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation RefreshToken($input: RefreshTokenInput!) { auth { refreshToken(input: $input) { accessToken refreshToken user { uuid email name } } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

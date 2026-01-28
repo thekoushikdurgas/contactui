@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_complete_upload_graphql-001",
+  "endpoint_id": "mutation_complete_upload_graphql",
+  "endpoint_path": "graphql/CompleteUpload",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Complete multipart upload by combining all uploaded parts. Accepts CompleteUploadInput with uploadId (required, String). Validates at least one part has been registered. Uses S3Service.complete_multipart_upload to finalize in S3. Parts sorted by partNumber before completion. Returns CompleteUploadResponse with status (String: 'completed'), fileKey (String), s3Url (String, presigned URL), location (String, S3 object URL). Session deleted after success. Raises BadRequestError (400) if no parts registered. Raises NotFoundError (404) if upload session not found.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/upload/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/uploadService.ts",
+  "service_methods": [
+    "completeUpload"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CompleteUpload($input: CompleteUploadInput!) { upload { completeUpload(input: $input) { status fileKey s3Url location } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,67 @@
+/* Theme System - Light/Dark Mode Support */
+/* 
+ * Note: Design tokens are now defined in design-tokens.css
+ * This file provides theme-specific overrides and utility classes
+ */
+
+/* Legacy color aliases for backward compatibility */
+:root {
+    --color-primary: var(--color-primary-500);
+    --color-primary-hover: var(--color-primary-600);
+    --color-success: var(--color-success-500);
+    --color-error: var(--color-error-500);
+    --color-warning: var(--color-warning-500);
+    --color-info: var(--color-info-500);
+}
+
+[data-theme="dark"] {
+    --color-primary: var(--color-primary-500);
+    --color-primary-hover: var(--color-primary-400);
+    --color-success: var(--color-success-500);
+    --color-error: var(--color-error-500);
+    --color-warning: var(--color-warning-500);
+    --color-info: var(--color-info-400);
+}
+
+/* Theme Transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Apply theme colors */
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}
+
+.bg-primary {
+    background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-bg-secondary);
+}
+
+.bg-tertiary {
+    background-color: var(--color-bg-tertiary);
+}
+
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+    color: var(--color-text-tertiary);
+}
+
+.border-color {
+    border-color: var(--color-border);
+}
+
+.border-color-light {
+    border-color: var(--color-border-light);
+}

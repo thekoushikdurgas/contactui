@@ -1,0 +1,152 @@
+/**
+ * Bulk Operations Styles
+ * 
+ * Styles for bulk selection and operations bar
+ */
+
+.bulk-operations-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4);
+    background-color: var(--color-primary-50);
+    border: 1px solid var(--color-primary-200);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-4);
+    gap: var(--spacing-4);
+}
+
+[data-theme="dark"] .bulk-operations-bar {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-primary-600);
+}
+
+.bulk-operations-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.bulk-select-all {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--color-primary-500);
+}
+
+.bulk-select-all-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.bulk-operations-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.bulk-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-base) var(--transition-ease);
+}
+
+.bulk-action-btn:hover:not(:disabled) {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-border-medium);
+}
+
+.bulk-action-btn:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.bulk-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bulk-action-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Action type variants */
+.bulk-action-danger {
+    background-color: var(--color-error-50);
+    border-color: var(--color-error-200);
+    color: var(--color-error-700);
+}
+
+.bulk-action-danger:hover:not(:disabled) {
+    background-color: var(--color-error-100);
+    border-color: var(--color-error-300);
+}
+
+[data-theme="dark"] .bulk-action-danger {
+    background-color: rgba(220, 38, 38, 0.1);
+    border-color: var(--color-error-600);
+    color: var(--color-error-400);
+}
+
+.bulk-action-primary {
+    background-color: var(--color-primary-500);
+    border-color: var(--color-primary-500);
+    color: white;
+}
+
+.bulk-action-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+}
+
+/* Item checkbox */
+.bulk-item-checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    cursor: pointer;
+    accent-color: var(--color-primary-500);
+    margin-right: var(--spacing-3);
+    flex-shrink: 0;
+}
+
+/* Selected item styling */
+.bulk-item-selected {
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+}
+
+[data-theme="dark"] .bulk-item-selected {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-primary-600);
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .bulk-operations-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-3);
+    }
+    
+    .bulk-operations-actions {
+        flex-wrap: wrap;
+    }
+    
+    .bulk-action-btn {
+        flex: 1;
+        min-width: calc(50% - var(--spacing-1));
+    }
+}

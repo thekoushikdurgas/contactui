@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Knowledge Base - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div>
+            <h2 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Knowledge Base</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Store and manage code patterns, best practices, and documentation</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'knowledge:search' %}" class="px-6 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-gray-900 dark:text-gray-100">
+                Advanced Search
+            </a>
+            <a href="{% url 'knowledge:create' %}" class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:bg-blue-700 dark:hover:bg-blue-600 transition-all">
+                Create New
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <form method="get" class="space-y-4">
+            <div class="flex items-center gap-3">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="flex-1 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-4 ring-blue-500/10 focus:border-blue-500 outline-none text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                    placeholder="Search knowledge base..."
+                    value="{{ search_query }}"
+                >
+                {% if search_query %}
+                    <a href="{% url 'knowledge:list' %}" class="px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-gray-900 dark:text-gray-100">
+                        Clear
+                    </a>
+                {% endif %}
+                <button type="submit" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:bg-blue-700 dark:hover:bg-blue-600 transition-all">
+                    Search
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-4 flex-wrap">
+                <select name="pattern_type" class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm font-medium focus:ring-4 ring-blue-500/10 focus:border-blue-500 outline-none" onchange="this.form.submit()">
+                    <option value="">All Types</option>
+                    {% for value, label in pattern_types %}
+                        <option value="{{ value }}" {% if pattern_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                
+                <select name="tags" class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm font-medium focus:ring-4 ring-blue-500/10 focus:border-blue-500 outline-none" onchange="this.form.submit()">
+                    <option value="">All Tags</option>
+                    {% for tag in all_tags %}
+                        <option value="{{ tag }}" {% if tags_filter == tag %}selected{% endif %}>{{ tag }}</option>
+                    {% endfor %}
+                </select>
+                
+                <div class="flex items-center gap-2 ml-auto">
+                    <button type="button" class="p-2 rounded-xl {% if view_mode == 'grid' %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %} transition-all" 
+                            onclick="setViewMode('grid')" title="Grid View">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                    </button>
+                    <button type="button" class="p-2 rounded-xl {% if view_mode == 'list' %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %} transition-all" 
+                            onclick="setViewMode('list')" title="List View">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <input type="hidden" id="viewModeInput" value="{{ view_mode }}">
+    
+    {% if page_obj %}
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <div class="mb-6">
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ total_count }} results</p>
+            </div>
+            
+            {% if view_mode == 'grid' %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for item in page_obj %}
+                        {% include 'knowledge/card.html' with item=item %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    {% for item in page_obj %}
+                        <div class="flex items-start justify-between p-6 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all group">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
+                                    <a href="{% url 'knowledge:detail' knowledge_id=item.knowledge_id %}">{{ item.title }}</a>
+                                </h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{{ item.content|truncatewords:30 }}</p>
+                                <div class="flex items-center gap-4 flex-wrap">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600">
+                                        {{ item.get_pattern_type_display }}
+                                    </span>
+                                    {% if item.tags %}
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            {% for tag in item.tags|slice:":5" %}
+                                                <span class="px-2 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <span class="text-xs text-gray-400 dark:text-gray-500 font-medium">{{ item.updated_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 ml-4">
+                                <a href="{% url 'knowledge:detail' knowledge_id=item.knowledge_id %}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
+                                <a href="{% url 'knowledge:edit' knowledge_id=item.knowledge_id %}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% include 'components/pagination.html' with page_obj=page_obj %}
+        </div>
+    {% else %}
+        <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-20 border border-gray-100 dark:border-gray-700 shadow-sm text-center flex flex-col items-center">
+            <div class="w-24 h-24 bg-gray-50 dark:bg-gray-700 rounded-[2rem] flex items-center justify-center text-gray-300 dark:text-gray-500 mb-6">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">No knowledge items found</h2>
+            <p class="text-gray-500 dark:text-gray-400 mt-2 max-w-sm mx-auto">Get started by creating your first knowledge item.</p>
+            <a href="{% url 'knowledge:create' %}" class="mt-8 px-8 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-2xl text-sm font-bold shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:bg-blue-700 dark:hover:bg-blue-600 transition-all">
+                Create Knowledge Item
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function setViewMode(mode) {
+    const form = document.querySelector('form');
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'view';
+    input.value = mode;
+    form.appendChild(input);
+    form.submit();
+}
+</script>
+{% endblock %}

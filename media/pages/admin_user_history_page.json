@@ -1,0 +1,47 @@
+{
+  "_id": "admin_user_history_page-001",
+  "page_id": "admin_user_history_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/admin/user-history",
+    "file_path": "contact360/dashboard/app/(dashboard)/admin/user-history/page.tsx",
+    "purpose": "Admin user history page for viewing detailed user activity history. Super Admin only.",
+    "s3_key": "data/pages/admin_user_history_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": "Super Admin role required",
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetUserHistory",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "adminService",
+        "via_hook": "useAdminUserHistory",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get user activity history with filtering (user ID, date range, action type, etc.)"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "AdminUserHistory",
+        "file_path": "components/features/admin/AdminUserHistory.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 1,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

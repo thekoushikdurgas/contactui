@@ -1,0 +1,2678 @@
+{
+	"info": {
+		"_postman_id": "638cf954-fc1c-4e92-b561-4110ab0b6ba2",
+		"name": "Contact360 API",
+		"description": "Postman collection for the Contact360 FastAPI backend. Core business logic (Authentication, Users, Contacts, Companies, Billing, Usage) is now handled by Connectra service. This collection includes v1 endpoints (Imports, Bulk), v2 endpoints (AI Chat, Apollo, Email, Email Patterns, LinkedIn, Exports, Gemini REST endpoint, Activities), v3 endpoints (S3 Files, Cleanup, Email Pattern, Analysis, Validation), and v4 endpoints (Sales Navigator scraping). Note: For GraphQL API, Gemini operations are now available through the AI Chats module. All endpoints require Bearer token authentication via Connectra. Sample parameters align with docs/api/ai_chat.md, docs/api/apollo.md, docs/api/email.md, docs/api/pattern.md, docs/api/linkdin.md, docs/api/export.md, docs/api/insert.md, docs/api/scrape.md, docs/api/s3.md, docs/api/cleanup.md, docs/api/email_pattern.md, docs/api/analysis.md, docs/api/validation.md, and docs/api/activities.md.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20572666",
+		"_collection_link": "https://prbal5-1003.postman.co/workspace/priama~c1c1d143-bd8f-4768-b551-66234b878d2b/collection/20572666-638cf954-fc1c-4e92-b561-4110ab0b6ba2?action=share&source=collection_link&creator=20572666"
+	},
+	"item": [
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Root Metadata",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": "Expected response content type."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Return API metadata such as project name, version, and documentation URL."
+					},
+					"response": []
+				},
+				{
+					"name": "API Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/health/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "Health probe served under the versioned API prefix."
+					},
+					"response": []
+				},
+				{
+					"name": "Application Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseHost}}/health",
+							"host": [
+								"{{baseHost}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Unversioned health check defined in app/main.py."
+					},
+					"response": []
+				},
+				{
+					"name": "Database Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseHost}}/health/db",
+							"host": [
+								"{{baseHost}}"
+							],
+							"path": [
+								"health",
+								"db"
+							]
+						},
+						"description": "Database connection pool health check endpoint."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "v1 API",
+			"item": [
+				{
+					"name": "Contacts",
+					"item": [
+						{
+							"name": "List Contacts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"description": "JWT Bearer token for authentication."
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/contacts/?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"contacts",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50",
+											"description": "Maximum number of results per page"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Starting offset for results"
+										},
+										{
+											"key": "title",
+											"value": "",
+											"description": "Filter by contact title",
+											"disabled": true
+										},
+										{
+											"key": "view",
+											"value": "simple",
+											"description": "View mode: 'simple' or 'full'",
+											"disabled": true
+										}
+									]
+								},
+								"description": "List contacts with filtering, pagination, and sorting. Supports comprehensive filtering by title, seniority, department, location, email status, and more."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Contact by UUID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/contacts/{{sampleContactUuid}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"contacts",
+										"{{sampleContactUuid}}",
+										""
+									]
+								},
+								"description": "Get detailed information about a specific contact by UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "Count Contacts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/contacts/count/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"contacts",
+										"count",
+										""
+									]
+								},
+								"description": "Get count of contacts matching filter criteria."
+							},
+							"response": []
+						},
+						{
+							"name": "Stream Contacts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/contacts/stream/?format=jsonl",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"contacts",
+										"stream",
+										""
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "jsonl",
+											"description": "Response format: 'jsonl' or 'csv'"
+										}
+									]
+								},
+								"description": "Stream contacts in JSONL or CSV format for large datasets."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Contact",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"title\": \"Software Engineer\",\n  \"email\": \"john.doe@example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/contacts/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"contacts",
+										""
+									]
+								},
+								"description": "Create a new contact. Requires authentication."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Companies",
+					"item": [
+						{
+							"name": "List Companies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/companies/?limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"companies",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List companies with filtering, pagination, and sorting."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Company by UUID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/companies/{{sampleCompanyUuid}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"companies",
+										"{{sampleCompanyUuid}}",
+										""
+									]
+								},
+								"description": "Get detailed information about a specific company by UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "Count Companies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/companies/count/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"companies",
+										"count",
+										""
+									]
+								},
+								"description": "Get count of companies matching filter criteria."
+							},
+							"response": []
+						},
+						{
+							"name": "Stream Companies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/companies/stream/?format=jsonl",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"companies",
+										"stream",
+										""
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "jsonl"
+										}
+									]
+								},
+								"description": "Stream companies in JSONL or CSV format for large datasets."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Company",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Acme Corporation\",\n  \"website\": \"https://acme.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/companies/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"companies",
+										""
+									]
+								},
+								"description": "Create a new company. Requires authentication."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Imports",
+					"item": [
+						{
+							"name": "Import Contacts from CSV",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"description": "CSV file to import",
+											"type": "file",
+											"src": "{{importFilePath}}"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/imports/contacts/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"imports",
+										"contacts",
+										""
+									]
+								},
+								"description": "Import contacts from CSV file. Returns job_id for status tracking."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Import Job Status",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/imports/jobs/{{sampleImportJobId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"imports",
+										"jobs",
+										"{{sampleImportJobId}}"
+									]
+								},
+								"description": "Get status of an import job by job_id."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bulk Operations",
+					"item": [
+						{
+							"name": "Bulk Create Contacts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"contacts\": [\n    {\n      \"first_name\": \"John\",\n      \"last_name\": \"Doe\",\n      \"email\": \"john@example.com\"\n    },\n    {\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\",\n      \"email\": \"jane@example.com\"\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bulk/contacts/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bulk",
+										"contacts",
+										""
+									]
+								},
+								"description": "Create multiple contacts in a single request."
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Update Contacts",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"contacts\": [\n    {\n      \"uuid\": \"{{sampleContactUuid}}\",\n      \"title\": \"Updated Title\"\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bulk/contacts/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bulk",
+										"contacts",
+										""
+									]
+								},
+								"description": "Update multiple contacts in a single request."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "API v1 endpoints for contacts, companies, imports, and bulk operations."
+		},
+		{
+			"name": "v2 API",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Register User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    if (response.access_token) {",
+											"        pm.collectionVariables.set('accessToken', response.access_token);",
+											"    }",
+											"    if (response.refresh_token) {",
+											"        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/auth/register/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"auth",
+										"register",
+										""
+									]
+								},
+								"description": "Register a new user account and receive access tokens. Tokens are automatically saved to collection variables."
+							},
+							"response": []
+						},
+						{
+							"name": "Login User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    if (response.access_token) {",
+											"        pm.collectionVariables.set('accessToken', response.access_token);",
+											"    }",
+											"    if (response.refresh_token) {",
+											"        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/auth/login/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"auth",
+										"login",
+										""
+									]
+								},
+								"description": "Authenticate a user and receive access tokens. Tokens are automatically saved to collection variables."
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    if (response.access_token) {",
+											"        pm.collectionVariables.set('accessToken', response.access_token);",
+											"    }",
+											"    if (response.refresh_token) {",
+											"        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/auth/refresh/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"auth",
+										"refresh",
+										""
+									]
+								},
+								"description": "Get new access token using refresh token. Tokens are automatically updated in collection variables."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Current User",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/auth/me",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								},
+								"description": "Get current authenticated user details."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "List Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/users/?limit=25&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List all users (admin only)."
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/users/profile/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"users",
+										"profile",
+										""
+									]
+								},
+								"description": "Get current user's profile information."
+							},
+							"response": []
+						},
+						{
+							"name": "Update User Profile",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/users/profile/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"users",
+										"profile",
+										""
+									]
+								},
+								"description": "Update current user's profile."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/users/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"users",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Delete a user account (admin only)."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AI Chat",
+					"item": [
+						{
+							"name": "List AI Chats",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/?limit=25&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List user's AI chat conversations."
+							},
+							"response": []
+						},
+						{
+							"name": "Create AI Chat",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    if (response.uuid) {",
+											"        pm.collectionVariables.set('sampleChatId', response.uuid);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"New Chat\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										""
+									]
+								},
+								"description": "Create a new AI chat conversation. Chat ID is automatically saved to collection variable."
+							},
+							"response": []
+						},
+						{
+							"name": "Get AI Chat",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										"{{sampleChatId}}"
+									]
+								},
+								"description": "Get AI chat details and messages."
+							},
+							"response": []
+						},
+						{
+							"name": "Send Message",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"message\": \"Hello, how can you help me?\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}/messages",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										"{{sampleChatId}}",
+										"messages"
+									]
+								},
+								"description": "Send a message to AI chat and get response."
+							},
+							"response": []
+						},
+						{
+							"name": "Update AI Chat",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Updated Chat Title\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										"{{sampleChatId}}"
+									]
+								},
+								"description": "Update an AI chat conversation."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete AI Chat",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"ai-chats",
+										"{{sampleChatId}}"
+									]
+								},
+								"description": "Delete an AI chat conversation."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Apollo",
+					"item": [
+						{
+							"name": "Analyze Apollo URL",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personLocations[]=california&personTitles[]=CEO&organizationNumEmployeesRanges[]=11,50&page=1\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/apollo/analyze",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"apollo",
+										"analyze"
+									]
+								},
+								"description": "Analyze an Apollo.io URL and return structured parameter breakdown."
+							},
+							"response": []
+						},
+						{
+							"name": "Analyze Apollo URL with Counts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/apollo/analyze/count",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"apollo",
+										"analyze",
+										"count"
+									]
+								},
+								"description": "Analyze Apollo URL and return parameter breakdown with contact counts."
+							},
+							"response": []
+						},
+						{
+							"name": "Search Contacts from Apollo URL",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/apollo/contacts?limit=50&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"apollo",
+										"contacts"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Search contacts using Apollo.io URL parameters."
+							},
+							"response": []
+						},
+						{
+							"name": "Count Contacts from Apollo URL",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/apollo/contacts/count",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"apollo",
+										"contacts",
+										"count"
+									]
+								},
+								"description": "Count contacts matching Apollo.io URL parameters."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Exports",
+					"item": [
+						{
+							"name": "List Exports",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/exports/?limit=25&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"exports",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List user's export jobs."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Contact Export",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    if (response.export_id) {",
+											"        pm.collectionVariables.set('sampleExportId', response.export_id);",
+											"    }",
+											"    if (response.download_url) {",
+											"        pm.collectionVariables.set('sampleExportDownloadUrl', response.download_url);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"filters\": {},\n  \"format\": \"csv\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/exports/contacts",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"exports",
+										"contacts"
+									]
+								},
+								"description": "Create a contact export job. Export ID and download URL are automatically saved."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Company Export",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"filters\": {},\n  \"format\": \"csv\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/exports/companies",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"exports",
+										"companies"
+									]
+								},
+								"description": "Create a company export job."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Export Status",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/exports/{{sampleExportId}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"exports",
+										"{{sampleExportId}}"
+									]
+								},
+								"description": "Get status of an export job."
+							},
+							"response": []
+						},
+						{
+							"name": "Download Export",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/exports/{{sampleExportId}}/download",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"exports",
+										"{{sampleExportId}}",
+										"download"
+									]
+								},
+								"description": "Download completed export file."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "LinkedIn",
+					"item": [
+						{
+							"name": "Lookup LinkedIn Profile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"linkedin_url\": \"https://www.linkedin.com/in/johndoe\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/linkedin/lookup",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"linkedin",
+										"lookup"
+									]
+								},
+								"description": "Look up LinkedIn profile information."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Email",
+					"item": [
+						{
+							"name": "Export Emails to CSV",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"contacts\": [\n    {\n      \"first_name\": \"John\",\n      \"last_name\": \"Doe\",\n      \"website\": \"https://example.com\"\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/email/export",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email",
+										"export"
+									]
+								},
+								"description": "Process CSV and find/verify emails. Creates/updates contacts and companies."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Email Patterns",
+					"item": [
+						{
+							"name": "List Email Patterns",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/email-patterns/?limit=25&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email-patterns",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List all email patterns."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Email Pattern",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pattern\": \"{first_name}.{last_name}@example.com\",\n  \"company_uuid\": \"{{sampleCompanyUuid}}\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/email-patterns/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email-patterns",
+										""
+									]
+								},
+								"description": "Create a new email pattern."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Email Pattern",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email-patterns",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Get email pattern details by ID."
+							},
+							"response": []
+						},
+						{
+							"name": "Update Email Pattern",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pattern\": \"{first_name}.{last_name}@example.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email-patterns",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Update an existing email pattern."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Email Pattern",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"email-patterns",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Delete an email pattern."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Gemini",
+					"item": [
+						{
+							"name": "Gemini Chat",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"message\": \"Hello, how can you help?\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/gemini/chat",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"gemini",
+										"chat"
+									]
+								},
+								"description": "Send message to Google Gemini AI."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Billing",
+					"item": [
+						{
+							"name": "Get Billing Info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/billing/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"billing",
+										""
+									]
+								},
+								"description": "Get user's billing information."
+							},
+							"response": []
+						},
+						{
+							"name": "Update Billing",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{}"
+								},
+								"url": {
+									"raw": "{{baseUrlV2}}/billing/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"billing",
+										""
+									]
+								},
+								"description": "Update billing details."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Usage",
+					"item": [
+						{
+							"name": "Get Usage Statistics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/usage/",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"usage",
+										""
+									]
+								},
+								"description": "Get user's API usage statistics."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Activities",
+					"item": [
+						{
+							"name": "List Activities",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/activities/?limit=25&offset=0",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"activities",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								},
+								"description": "List user activities."
+							},
+							"response": []
+						},
+						{
+							"name": "Get IP Geolocation",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV2}}/activities/ip-geo/?ip=8.8.8.8",
+									"host": [
+										"{{baseUrlV2}}"
+									],
+									"path": [
+										"activities",
+										"ip-geo",
+										""
+									],
+									"query": [
+										{
+											"key": "ip",
+											"value": "8.8.8.8"
+										}
+									]
+								},
+								"description": "Get geolocation data for an IP address."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "API v2 endpoints for authentication, users, AI chat, Apollo integration, exports, LinkedIn, email services, and more."
+		},
+		{
+			"name": "v3 API",
+			"item": [
+				{
+					"name": "S3 Files",
+					"item": [
+						{
+							"name": "List CSV Files",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/s3/files",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"s3",
+										"files"
+									],
+									"query": [
+										{
+											"key": "prefix",
+											"value": "",
+											"description": "Optional prefix to filter files",
+											"disabled": true
+										}
+									]
+								},
+								"description": "List all CSV files in the S3 bucket with their metadata."
+							},
+							"response": []
+						},
+						{
+							"name": "Get CSV File Info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/s3/files/apollo_sample_5000_cleaned.csv",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"s3",
+										"files",
+										"apollo_sample_5000_cleaned.csv"
+									]
+								},
+								"description": "Get metadata/information about a specific CSV file in S3. The file_id parameter must be the full S3 object key."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Paginated CSV Data",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/s3/files/apollo_sample_5000_cleaned.csv?limit=100&offset=0",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"s3",
+										"files",
+										"apollo_sample_5000_cleaned.csv"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "Maximum number of rows to return (1-1000)"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Number of rows to skip"
+										}
+									]
+								},
+								"description": "Get paginated CSV file data from S3. Returns rows as dictionaries."
+							},
+							"response": []
+						}
+					],
+					"description": "S3 file operations for listing, retrieving metadata, and reading CSV files from S3 buckets."
+				},
+				{
+					"name": "Cleanup",
+					"item": [
+						{
+							"name": "Clean Single Contact",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/cleanup/contact/single/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"cleanup",
+										"contact",
+										"single",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Clean and normalize a single contact and its metadata."
+							},
+							"response": []
+						},
+						{
+							"name": "Clean Batch of Contacts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/cleanup/contact/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"cleanup",
+										"contact",
+										"batch",
+										""
+									]
+								},
+								"description": "Clean and normalize multiple contacts in a single request."
+							},
+							"response": []
+						},
+						{
+							"name": "Clean Single Company",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/cleanup/company/single/{{sampleCompanyUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"cleanup",
+										"company",
+										"single",
+										"{{sampleCompanyUuid}}"
+									]
+								},
+								"description": "Clean and normalize a single company and its metadata."
+							},
+							"response": []
+						},
+						{
+							"name": "Clean Batch of Companies",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/cleanup/company/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"cleanup",
+										"company",
+										"batch",
+										""
+									]
+								},
+								"description": "Clean and normalize multiple companies in a single request."
+							},
+							"response": []
+						}
+					],
+					"description": "Data cleanup operations for cleaning and normalizing contact and company data."
+				},
+				{
+					"name": "Email Pattern",
+					"item": [
+						{
+							"name": "Get Email Pattern for Contact",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/email_pattern/contact/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"email_pattern",
+										"contact",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Get email pattern information for a single contact."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Email Patterns for Batch of Contacts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/email_pattern/contact/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"email_pattern",
+										"contact",
+										"batch",
+										""
+									]
+								},
+								"description": "Get email pattern information for multiple contacts."
+							},
+							"response": []
+						}
+					],
+					"description": "Email pattern operations for retrieving email patterns associated with contacts."
+				},
+				{
+					"name": "Analysis",
+					"item": [
+						{
+							"name": "Analyze Single Contact",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/analysis/contact/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"analysis",
+										"contact",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Analyze a single contact's data quality."
+							},
+							"response": []
+						},
+						{
+							"name": "Analyze Batch of Contacts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/analysis/contact/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"analysis",
+										"contact",
+										"batch",
+										""
+									]
+								},
+								"description": "Analyze multiple contacts in a single request."
+							},
+							"response": []
+						},
+						{
+							"name": "Analyze Single Company",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/analysis/company/{{sampleCompanyUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"analysis",
+										"company",
+										"{{sampleCompanyUuid}}"
+									]
+								},
+								"description": "Analyze a single company's data quality."
+							},
+							"response": []
+						},
+						{
+							"name": "Analyze Batch of Companies",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/analysis/company/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"analysis",
+										"company",
+										"batch",
+										""
+									]
+								},
+								"description": "Analyze multiple companies in a single request."
+							},
+							"response": []
+						}
+					],
+					"description": "Data analysis operations for analyzing data quality of contacts and companies."
+				},
+				{
+					"name": "Validation",
+					"item": [
+						{
+							"name": "Validate Single Contact",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/validation/contact/{{sampleContactUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"validation",
+										"contact",
+										"{{sampleContactUuid}}"
+									]
+								},
+								"description": "Validate a single contact's data quality."
+							},
+							"response": []
+						},
+						{
+							"name": "Validate Batch of Contacts",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/validation/contact/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"validation",
+										"contact",
+										"batch",
+										""
+									]
+								},
+								"description": "Validate multiple contacts in a single request."
+							},
+							"response": []
+						},
+						{
+							"name": "Validate Single Company",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlV3}}/validation/company/{{sampleCompanyUuid}}",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"validation",
+										"company",
+										"{{sampleCompanyUuid}}"
+									]
+								},
+								"description": "Validate a single company's data quality."
+							},
+							"response": []
+						},
+						{
+							"name": "Validate Batch of Companies",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV3}}/validation/company/batch/",
+									"host": [
+										"{{baseUrlV3}}"
+									],
+									"path": [
+										"validation",
+										"company",
+										"batch",
+										""
+									]
+								},
+								"description": "Validate multiple companies in a single request."
+							},
+							"response": []
+						}
+					],
+					"description": "Data validation operations for validating contact and company data quality."
+				}
+			],
+			"description": "API v3 endpoints for S3 file operations, data cleanup, email pattern retrieval, data analysis, and data validation."
+		},
+		{
+			"name": "v4 API",
+			"item": [
+				{
+					"name": "Sales Navigator",
+					"item": [
+						{
+							"name": "Scrape Sales Navigator HTML",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"html\": \"<html><body><div data-x-search-result='LEAD'>...</div></body></html>\",\n  \"save\": false\n}"
+								},
+								"url": {
+									"raw": "{{baseUrlV4}}/sales-navigator/scrape",
+									"host": [
+										"{{baseUrlV4}}"
+									],
+									"path": [
+										"sales-navigator",
+										"scrape"
+									]
+								},
+								"description": "Scrape Sales Navigator HTML content and extract all profile data into a structured JSON format."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "API v4 endpoints for Sales Navigator HTML scraping."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Collection-level pre-request script",
+					"// Add any common pre-request logic here",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Collection-level test script",
+					"// Add any common test logic here",
+					"",
+					"// Log response time",
+					"if (pm.response.responseTime) {",
+					"    console.log('Response time: ' + pm.response.responseTime + 'ms');",
+					"}",
+					"",
+					"// Basic response validation",
+					"if (pm.response.code >= 400) {",
+					"    console.error('Error response:', pm.response.code, pm.response.text());",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseHost",
+			"value": "http://127.0.0.1:8000",
+			"description": "Default FastAPI server origin."
+		},
+		{
+			"key": "baseUrl",
+			"value": "{{baseHost}}/api/v1",
+			"description": "Versioned API base path for v1 endpoints."
+		},
+		{
+			"key": "baseUrlV2",
+			"value": "{{baseHost}}/api/v2",
+			"description": "Versioned API base path for v2 endpoints (Authentication, Users, AI Chat)."
+		},
+		{
+			"key": "baseUrlV3",
+			"value": "{{baseHost}}/api/v3",
+			"description": "Versioned API base path for v3 endpoints (S3 Files, Cleanup, Email Pattern, Analysis, Validation)."
+		},
+		{
+			"key": "baseUrlV4",
+			"value": "{{baseHost}}/api/v4",
+			"description": "Versioned API base path for v4 endpoints (Sales Navigator scraping)."
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"description": "JWT access token obtained from login or register endpoints. Automatically set by test scripts."
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"description": "JWT refresh token obtained from login or register endpoints. Automatically set by test scripts."
+		},
+		{
+			"key": "sampleContactUuid",
+			"value": "abc123-def456-ghi789",
+			"description": "Example contact UUID for detail routes."
+		},
+		{
+			"key": "sampleCompanyUuid",
+			"value": "398cce44-233d-5f7c-aea1-e4a6a79df10c",
+			"description": "Placeholder company UUID used for exclusion filters."
+		},
+		{
+			"key": "sampleImportJobId",
+			"value": "demo-job-id",
+			"description": "Placeholder job identifier for import status checks."
+		},
+		{
+			"key": "sampleChatId",
+			"value": "",
+			"description": "Chat UUID identifier. Automatically set by the Create Chat endpoint test script."
+		},
+		{
+			"key": "sampleExportId",
+			"value": "",
+			"description": "Export UUID identifier. Automatically set by the Create Contact Export endpoint test script."
+		},
+		{
+			"key": "sampleExportDownloadUrl",
+			"value": "",
+			"description": "Signed download URL for export file. Automatically set by the Create Contact Export endpoint test script."
+		},
+		{
+			"key": "importFilePath",
+			"value": "D:\\code\\ayan\\appoinmentbackend\\data\\data\\apollo_sample_5000_cleaned.csv",
+			"description": "Local CSV file path used for import requests. Update this to point to your CSV file location."
+		}
+	]
+}

@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Endpoints - Documentation{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/cards.css' %}?v=20260125">
+<link rel="stylesheet" href="{% static 'css/components/badges.css' %}?v=20260125">
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-7xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Endpoints</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Endpoints</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total: {{ total|default:0 }} endpoint{{ total|pluralize }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                    <button type="button" 
+                            onclick="setViewMode('list')"
+                            id="view-list-btn"
+                            class="p-2 rounded text-gray-500 dark:text-gray-400 transition-colors"
+                            aria-label="List view">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <button type="button" 
+                            onclick="setViewMode('grid')"
+                            id="view-grid-btn"
+                            class="p-2 rounded bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 transition-colors"
+                            aria-label="Grid view">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                    </button>
+                </div>
+                <a href="{% url 'documentation:endpoint_create' %}" 
+                   class="inline-flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors font-medium text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create Endpoint
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-4 mb-6">
+        <div class="flex flex-wrap items-center gap-4">
+            <div>
+                <label for="filter-method" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Method</label>
+                <select id="filter-method" 
+                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                        onchange="applyFilters()">
+                    <option value="">All Methods</option>
+                    <option value="QUERY" {% if request.GET.method == 'QUERY' %}selected{% endif %}>QUERY</option>
+                    <option value="MUTATION" {% if request.GET.method == 'MUTATION' %}selected{% endif %}>MUTATION</option>
+                    <option value="GET" {% if request.GET.method == 'GET' %}selected{% endif %}>GET</option>
+                    <option value="POST" {% if request.GET.method == 'POST' %}selected{% endif %}>POST</option>
+                    <option value="PUT" {% if request.GET.method == 'PUT' %}selected{% endif %}>PUT</option>
+                    <option value="DELETE" {% if request.GET.method == 'DELETE' %}selected{% endif %}>DELETE</option>
+                    <option value="PATCH" {% if request.GET.method == 'PATCH' %}selected{% endif %}>PATCH</option>
+                </select>
+            </div>
+            <div>
+                <label for="filter-api-version" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">API Version</label>
+                <select id="filter-api-version" 
+                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                        onchange="applyFilters()">
+                    <option value="">All Versions</option>
+                    <option value="v1" {% if request.GET.api_version == 'v1' %}selected{% endif %}>v1</option>
+                    <option value="v4" {% if request.GET.api_version == 'v4' %}selected{% endif %}>v4</option>
+                    <option value="graphql" {% if request.GET.api_version == 'graphql' %}selected{% endif %}>GraphQL</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Operations -->
+    <div id="bulk-operations-container">
+        <!-- Bulk operations will be initialized here -->
+    </div>
+
+    <!-- List Content -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        {% if endpoints %}
+            <!-- Grid View -->
+            <div id="endpoints-grid-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for endpoint in endpoints %}
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-purple-500 dark:hover:border-purple-400 transition-all">
+                        <div class="flex items-start gap-2 mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    {% include 'components/badge.html' with type='method' method=endpoint.method|default:'QUERY' text=endpoint.method|default:'QUERY' %}
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100">
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="hover:text-purple-600 dark:hover:text-purple-400">
+                                            {{ endpoint.endpoint_id|default:"Unknown" }}
+                                        </a>
+                                    </h3>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 font-mono">{{ endpoint.endpoint_path|default:"" }}</p>
+                                {% if endpoint.description %}
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">{{ endpoint.description|truncatewords:15 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mt-4">
+                            <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium">
+                                View →
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- List View (hidden by default) -->
+            <div id="endpoints-list-view" class="hidden space-y-3">
+                {% for endpoint in endpoints %}
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-md border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-500 dark:hover:border-purple-400 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    {% include 'components/badge.html' with type='method' method=endpoint.method|default:'QUERY' text=endpoint.method|default:'QUERY' %}
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100">
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="hover:text-purple-600 dark:hover:text-purple-400">
+                                            {{ endpoint.endpoint_id|default:"Unknown" }}
+                                        </a>
+                                    </h3>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">{{ endpoint.endpoint_path|default:"" }}</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium">
+                                    View →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% include 'components/empty-state.html' with icon='endpoint' title="No endpoints found" message="Get started by creating your first API endpoint" action_url='documentation:endpoint_create' action_text="Create Endpoint" %}
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+let currentViewMode = localStorage.getItem('endpoints-view-mode') || 'grid';
+
+function setViewMode(mode) {
+    currentViewMode = mode;
+    localStorage.setItem('endpoints-view-mode', mode);
+    
+    const gridView = document.getElementById('endpoints-grid-view');
+    const listView = document.getElementById('endpoints-list-view');
+    const listBtn = document.getElementById('view-list-btn');
+    const gridBtn = document.getElementById('view-grid-btn');
+    
+    if (mode === 'grid') {
+        if (gridView) gridView.classList.remove('hidden');
+        if (listView) listView.classList.add('hidden');
+        if (listBtn) {
+            listBtn.classList.remove('bg-white', 'dark:bg-gray-600', 'text-gray-900', 'dark:text-gray-100');
+            listBtn.classList.add('text-gray-500', 'dark:text-gray-400');
+        }
+        if (gridBtn) {
+            gridBtn.classList.add('bg-white', 'dark:bg-gray-600', 'text-gray-900', 'dark:text-gray-100');
+            gridBtn.classList.remove('text-gray-500', 'dark:text-gray-400');
+        }
+    } else {
+        if (gridView) gridView.classList.add('hidden');
+        if (listView) listView.classList.remove('hidden');
+        if (gridBtn) {
+            gridBtn.classList.remove('bg-white', 'dark:bg-gray-600', 'text-gray-900', 'dark:text-gray-100');
+            gridBtn.classList.add('text-gray-500', 'dark:text-gray-400');
+        }
+        if (listBtn) {
+            listBtn.classList.add('bg-white', 'dark:bg-gray-600', 'text-gray-900', 'dark:text-gray-100');
+            listBtn.classList.remove('text-gray-500', 'dark:text-gray-400');
+        }
+    }
+}
+
+function applyFilters() {
+    const method = document.getElementById('filter-method').value;
+    const apiVersion = document.getElementById('filter-api-version').value;
+    const params = new URLSearchParams();
+    if (method) params.set('method', method);
+    if (apiVersion) params.set('api_version', apiVersion);
+    window.location.search = params.toString();
+}
+
+// Initialize view mode on load
+document.addEventListener('DOMContentLoaded', function() {
+    setViewMode(currentViewMode);
+});
+</script>
+{% endblock %}

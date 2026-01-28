@@ -1,0 +1,124 @@
+{
+  "id": "9128066e-28a2-4eb4-9bdc-4d07fefd159f",
+  "name": "DocsAI - Local",
+  "description": "Local environment for DocsAI (contact360/docsai). Root-mounted REST API: /api/v1/ (98 GET endpoints). Internal JSON endpoints used by the Docs UI live under /docs/api/*. base_url: http://127.0.0.1:8000",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "expand",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "api_key",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "page_id",
+      "value": "about_page",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_id",
+      "value": "count_contacts_graphql",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "relationship_id",
+      "value": "5d7f7dd9",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "config_id",
+      "value": "contact360",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "user_type",
+      "value": "developer",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "state",
+      "value": "published",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "page_type",
+      "value": "docs",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "api_version",
+      "value": "v1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "method",
+      "value": "GET",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "service_name",
+      "value": "documentation.api",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "usage_type",
+      "value": "primary",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "usage_context",
+      "value": "data_fetching",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "pattern",
+      "value": "sync",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "env_name",
+      "value": "local",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "mapping_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "suite_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-01-27T04:50:18.995Z",
+  "_postman_exported_using": "Requestly Exporter"
+}

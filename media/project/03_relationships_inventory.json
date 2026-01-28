@@ -1,0 +1,89 @@
+{
+  "inventory_date": "2026-01-20",
+  "total_relationships": 95,
+  "relationships_by_api_version": {
+    "graphql": 95
+  },
+  "relationships_by_usage_type": {
+    "primary": 60,
+    "secondary": 30,
+    "conditional": 5
+  },
+  "relationships_by_usage_context": {
+    "data_fetching": 50,
+    "data_mutation": 35,
+    "authentication": 3,
+    "analytics": 5,
+    "reporting": 2
+  },
+  "service_usage": {
+    "emailService": 5,
+    "companiesService": 6,
+    "contactsService": 4,
+    "authService": 3,
+    "marketingService": 15,
+    "dashboardPagesService": 5,
+    "activitiesService": 3,
+    "exportsService": 4,
+    "billingService": 9,
+    "profileService": 8,
+    "twoFactorService": 4,
+    "savedSearchesService": 6,
+    "usageService": 1,
+    "aiChatsService": 6,
+    "linkedinService": 4,
+    "adminService": 8,
+    "analyticsService": 3,
+    "healthService": 4,
+    "usersService": 2
+  },
+  "hook_usage_patterns": {
+    "pages_with_hooks": 35,
+    "pages_without_hooks": 10,
+    "most_used_hooks": [
+      "useMarketingPage",
+      "useCompaniesPage",
+      "useContactsPage",
+      "useProfilePage",
+      "useBillingPage",
+      "useAuth",
+      "useDashboardPage"
+    ]
+  },
+  "bidirectional_consistency": {
+    "total_by_page_files": 40,
+    "total_by_endpoint_files": 55,
+    "matched_relationships": 95,
+    "orphaned_by_page": 0,
+    "orphaned_by_endpoint": 0
+  },
+  "sample_relationships": [
+    {
+      "page_path": "/app",
+      "endpoint_path": "graphql/FindSingleEmail",
+      "method": "MUTATION",
+      "via_service": "emailService",
+      "via_hook": null,
+      "usage_type": "primary",
+      "usage_context": "data_mutation"
+    },
+    {
+      "page_path": "/companies",
+      "endpoint_path": "graphql/QueryCompanies",
+      "method": "QUERY",
+      "via_service": "companiesService",
+      "via_hook": "useCompaniesPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching"
+    },
+    {
+      "page_path": "/profile",
+      "endpoint_path": "graphql/GetMe",
+      "method": "QUERY",
+      "via_service": "authService",
+      "via_hook": "useProfilePage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching"
+    }
+  ]
+}

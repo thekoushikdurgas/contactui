@@ -1,0 +1,36 @@
+{
+  "_id": "count_contacts_graphql-001",
+  "endpoint_id": "count_contacts_graphql",
+  "endpoint_path": "graphql/CountContacts",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get total contact count with optional VQL filters applied. Accepts VQLQueryInput with filters (optional, nested AND/OR filter logic). Returns Int representing total contact count matching the filter criteria. Uses Connectra service for count retrieval. Useful for pagination UI and displaying total results before fetching actual data.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/contacts/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/contactsService.ts",
+  "service_methods": [
+    "contactCount"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/contacts",
+      "page_title": "Contacts Page",
+      "via_service": "contactsService",
+      "via_hook": "useContactsPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query CountContacts($input: VQLQueryInput) { contacts { contactCount(input: $input) } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

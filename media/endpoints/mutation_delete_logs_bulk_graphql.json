@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_delete_logs_bulk_graphql-001",
+  "endpoint_id": "mutation_delete_logs_bulk_graphql",
+  "endpoint_path": "graphql/DeleteLogsBulk",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Delete multiple log entries by filters. Accepts DeleteLogsBulkInput with optional filters: level (enum: DEBUG, INFO, WARNING, ERROR, CRITICAL), logger (String, max 200 chars), userId (UUID), requestId (String, max 100 chars), startTime (DateTime), endTime (DateTime). Returns DeleteLogsBulkResponse with deletedCount (Int). Uses Lambda Logs API for bulk deletion in MongoDB. Raises ForbiddenError (403) if not SuperAdmin. Use with caution - deletions are permanent.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/admin/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "deleteLogsBulk"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation DeleteLogsBulk($input: DeleteLogsBulkInput!) { admin { deleteLogsBulk(input: $input) { deletedCount } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,57 @@
+{% load static %}
+<aside id="app-sidebar" class="fixed left-0 top-0 h-full w-[260px] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-30 transition-transform duration-300 ease-out -translate-x-full md:translate-x-0" aria-label="Main navigation">
+    <div class="flex items-center gap-3 px-6 h-16 border-b border-gray-100 dark:border-gray-800">
+        <div class="w-8 h-8 bg-blue-600 dark:bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-blue-900/50">
+            D
+        </div>
+        <span class="font-bold text-xl text-gray-800 dark:text-gray-100 tracking-tight">DocsAI</span>
+    </div>
+
+    <nav class="mt-6 px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
+        {% for group in sidebar_menu %}
+            {% include 'components/sidebar/group_item.html' with group=group %}
+        {% endfor %}
+    </nav>
+
+    <div class="absolute bottom-0 w-full p-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div class="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/50 dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group relative overflow-hidden">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ user.email }}" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-700 shadow-sm" />
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">{{ user.username }}</span>
+                <a href="{% url 'core:logout' %}" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-left hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<script>
+    function toggleSidebarGroup(button) {
+        const groupItems = button.nextElementSibling;
+        const chevron = button.querySelector('.chevron');
+        
+        if (groupItems.classList.contains('hidden')) {
+            // Open
+            groupItems.classList.remove('hidden');
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            // Close
+            groupItems.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+    
+    // Initialize chevron state based on initial visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        const groups = document.querySelectorAll('.sidebar-group');
+        groups.forEach(group => {
+            const items = group.querySelector('.group-items');
+            const chevron = group.querySelector('.chevron');
+            // If the group has active items (is not hidden), rotate the chevron
+            if (!items.classList.contains('hidden')) {
+                 chevron.style.transform = 'rotate(180deg)';
+            }
+        });
+    });
+</script>

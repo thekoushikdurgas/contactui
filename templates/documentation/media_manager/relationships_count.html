@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Relationships Count{% if page_id %}: Page {{ page_id }}{% elif endpoint_id %}: Endpoint {{ endpoint_id }}{% elif usage_type %}: {{ usage_type|title }}{% elif usage_context %}: {{ usage_context|title }}{% elif state %}: {{ state|title }}{% endif %} - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Relationship Count</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">
+                {% if page_id %}Page: {{ page_id }}{% elif endpoint_id %}Endpoint: {{ endpoint_id }}{% elif usage_type %}{{ usage_type|title }} relationships{% elif usage_context %}{{ usage_context|title }} relationships{% elif state %}{{ state|title }} relationships{% else %}Relationships{% endif %}
+            </p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_relationships' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Relationships
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Count Display -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-8 text-center">
+        <div class="mb-4">
+            {% if page_id %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Page ID</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ page_id }}</h2>
+            {% elif endpoint_id %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Endpoint ID</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ endpoint_id }}</h2>
+            {% elif usage_type %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Type</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ usage_type|title }}</h2>
+            {% elif usage_context %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Context</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ usage_context|title }}</h2>
+            {% elif state %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">State</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ state|title }}</h2>
+            {% endif %}
+        </div>
+        <div class="mb-6">
+            <span class="text-6xl font-black text-blue-600 dark:text-blue-400">{{ count }}</span>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">relationships</p>
+        </div>
+        {% if page_id %}
+            <a href="{% url 'documentation:relationships_by_page' page_id %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All Relationships →
+            </a>
+        {% elif endpoint_id %}
+            <a href="{% url 'documentation:relationships_by_endpoint' endpoint_id %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All Relationships →
+            </a>
+        {% elif usage_type %}
+            <a href="{% url 'documentation:relationships_by_usage_type' usage_type %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ usage_type|title }} Relationships →
+            </a>
+        {% elif usage_context %}
+            <a href="{% url 'documentation:relationships_by_usage_context' usage_context %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ usage_context|title }} Relationships →
+            </a>
+        {% elif state %}
+            <a href="{% url 'documentation:relationships_by_state' state %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ state|title }} Relationships →
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

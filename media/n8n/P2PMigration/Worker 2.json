@@ -1,0 +1,403 @@
+{
+  "name": "Worker 2",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chunks",
+              "type": "array"
+            },
+            {
+              "name": "access_token"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        48,
+        -80
+      ],
+      "id": "worker-trigger-002",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "chunks",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -80
+      ],
+      "id": "split-chunks-002",
+      "name": "Split Out Chunks"
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "loop-chunks-002",
+      "name": "Loop Over Chunks"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract UUIDs from current chunk\nconst chunk = $input.first().json;\n\n// Get the uuids array from the chunk\nconst uuids = chunk.uuids || [];\n\nreturn [{\n  json: {\n    chunk_index: chunk.chunk_index,\n    chunk_size: chunk.chunk_size || uuids.length,\n    uuids: uuids\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        -80
+      ],
+      "id": "extract-chunk-uuids-002",
+      "name": "Extract Chunk UUIDs"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://54.87.173.234:8000/api/v3/cleanup/contact/batch/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('When Executed by Another Workflow').item.json.access_token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"uuids\": {{ JSON.stringify($json.uuids) }}\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        992,
+        -80
+      ],
+      "id": "cleanup-api-002",
+      "name": "Call Cleanup API (250 UUIDs)"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "uuids",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -80
+      ],
+      "id": "split-uuids-002",
+      "name": "Split UUIDs for One-by-One Processing"
+    },
+    {
+      "parameters": {
+        "url": "=http://54.87.173.234:8000/api/v1/contacts/{{ $json.uuids }}/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('When Executed by Another Workflow').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1440,
+        -80
+      ],
+      "id": "fetch-contact-002",
+      "name": "Fetch Contact Details"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform API response to database schema\nconst contact = $input.first().json;\n\n// Helper function to safely get value or default\nconst getValue = (val, defaultValue = '_') => {\n  return val && val !== null && val !== '' ? val : defaultValue;\n};\n\n// Helper function to get array or empty array\nconst getArray = (val) => {\n  if (Array.isArray(val)) return val;\n  if (typeof val === 'string' && val.trim() !== '') {\n    return val.split(',').map(item => item.trim()).filter(item => item !== '');\n  }\n  return [];\n};\n\n// Build text_search from location fields\nconst city = getValue(contact.city, '_');\nconst state = getValue(contact.state, '_');\nconst country = getValue(contact.country, '_');\nconst text_search = `${city} ${state} ${country}`.trim() || '_';\n\n// Prepare contact record\nconst contactRecord = {\n  uuid: getValue(contact.uuid),\n  first_name: getValue(contact.first_name, '_'),\n  last_name: getValue(contact.last_name, '_'),\n  company_id: getValue(contact.company_id, '_'),\n  email: getValue(contact.email, '_'),\n  title: getValue(contact.title),\n  departments: getArray(contact.departments),\n  mobile_phone: getValue(contact.mobile_phone, '_'),\n  email_status: getValue(contact.email_status, '_'),\n  text_search: text_search,\n  seniority: getValue(contact.seniority, '_'),\n  status: 'migrated',\n  created_at: contact.created_at || new Date().toISOString(),\n  updated_at: contact.updated_at || new Date().toISOString()\n};\n\n// Prepare contact metadata record\nconst metadataRecord = {\n  uuid: getValue(contact.uuid),\n  linkedin_url: getValue(contact.person_linkedin_url || contact.linkedin_url, '_'),\n  linkedin_sales_url: getValue(contact.person_linkedin_sales_url || contact.linkedin_sales_url, '_'),\n  facebook_url: getValue(contact.facebook_url, '_'),\n  twitter_url: getValue(contact.twitter_url, '_'),\n  website: getValue(contact.website, '_'),\n  work_direct_phone: getValue(contact.work_direct_phone, '_'),\n  home_phone: getValue(contact.home_phone, '_'),\n  city: city,\n  state: state,\n  country: country,\n  other_phone: getValue(contact.other_phone, '_'),\n  stage: getValue(contact.stage, '_')\n};\n\nreturn [{\n  json: {\n    contact: contactRecord,\n    metadata: metadataRecord\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        -80
+      ],
+      "id": "transform-data-002",
+      "name": "Transform Data"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "contacts",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{ $json.contact.uuid }}",
+            "first_name": "={{ $json.contact.first_name }}",
+            "last_name": "={{ $json.contact.last_name }}",
+            "company_id": "={{ $json.contact.company_id }}",
+            "email": "={{ $json.contact.email }}",
+            "title": "={{ $json.contact.title }}",
+            "departments": "={{ $json.contact.departments }}",
+            "mobile_phone": "={{ $json.contact.mobile_phone }}",
+            "email_status": "={{ $json.contact.email_status }}",
+            "text_search": "={{ $json.contact.text_search }}",
+            "seniority": "={{ $json.contact.seniority }}",
+            "status": "={{ $json.contact.status }}",
+            "created_at": "={{ $json.contact.created_at }}",
+            "updated_at": "={{ $json.contact.updated_at }}"
+          },
+          "matchingColumns": [
+            "uuid"
+          ],
+          "schema": [
+            {
+              "id": "uuid",
+              "displayName": "uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1888,
+        -80
+      ],
+      "id": "insert-contact-002",
+      "name": "Insert Contact (One by One)"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "contacts_metadata",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{ $json.metadata.uuid }}",
+            "linkedin_url": "={{ $json.metadata.linkedin_url }}",
+            "linkedin_sales_url": "={{ $json.metadata.linkedin_sales_url }}",
+            "facebook_url": "={{ $json.metadata.facebook_url }}",
+            "twitter_url": "={{ $json.metadata.twitter_url }}",
+            "website": "={{ $json.metadata.website }}",
+            "work_direct_phone": "={{ $json.metadata.work_direct_phone }}",
+            "home_phone": "={{ $json.metadata.home_phone }}",
+            "city": "={{ $json.metadata.city }}",
+            "state": "={{ $json.metadata.state }}",
+            "country": "={{ $json.metadata.country }}",
+            "other_phone": "={{ $json.metadata.other_phone }}",
+            "stage": "={{ $json.metadata.stage }}"
+          },
+          "matchingColumns": [
+            "uuid"
+          ],
+          "schema": [
+            {
+              "id": "uuid",
+              "displayName": "uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2112,
+        -80
+      ],
+      "id": "insert-metadata-002",
+      "name": "Insert Contact Metadata (One by One)"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Split Out Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Chunks": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Chunks": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Extract Chunk UUIDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Chunk UUIDs": {
+      "main": [
+        [
+          {
+            "node": "Call Cleanup API (250 UUIDs)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Cleanup API (250 UUIDs)": {
+      "main": [
+        [
+          {
+            "node": "Split UUIDs for One-by-One Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split UUIDs for One-by-One Processing": {
+      "main": [
+        [
+          {
+            "node": "Fetch Contact Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Contact Details": {
+      "main": [
+        [
+          {
+            "node": "Transform Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Data": {
+      "main": [
+        [
+          {
+            "node": "Insert Contact (One by One)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Contact (One by One)": {
+      "main": [
+        [
+          {
+            "node": "Insert Contact Metadata (One by One)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Contact Metadata (One by One)": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "worker-2-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "p2p-worker-2",
+  "tags": [],
+  "workflow_id": "Worker 2"
+}

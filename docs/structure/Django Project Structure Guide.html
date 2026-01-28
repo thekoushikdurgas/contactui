@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Project Structure Best Practices</title>
+    <style>
+        :root {
+            --color-primary: #208391;
+            --color-surface: #fdfcf9;
+            --color-text: #134252;
+            --color-text-secondary: #626c7c;
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-bg-1: rgba(33, 128, 141, 0.08);
+            --color-bg-2: rgba(230, 129, 97, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            color: var(--color-primary);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 16px;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-bg-1);
+            padding-bottom: 10px;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 3px solid var(--color-primary);
+            padding: 12px 16px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        .file-tree {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .file-tree .folder { color: var(--color-primary); font-weight: 600; }
+        .file-tree .file { color: var(--color-text); }
+        .indent-1 { padding-left: 20px; }
+        .indent-2 { padding-left: 40px; }
+        .indent-3 { padding-left: 60px; }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-top: 20px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            transition: all 200ms ease;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist input {
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-essential { background: var(--color-bg-1); color: var(--color-primary); }
+        .badge-recommended { background: var(--color-bg-2); color: #a85d2f; }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid, .two-col {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 24px; }
+            .section h2 { font-size: 18px; }
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0 10px 25px;
+            position: relative;
+            color: var(--color-text);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .copy-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            float: right;
+            margin-top: -30px;
+            margin-right: -16px;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Django Project Structure Best Practices</h1>
+            <p class="subtitle">Production-ready folder organization for scalable Django applications (2025)</p>
+        </header>
+
+        <!-- Overview Section -->
+        <div class="section">
+            <h2>Standard Project Structure</h2>
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--color-text);">Recommended Directory Layout</h3>
+                <span class="badge badge-essential">ESSENTIAL</span>
+                <div class="file-tree">
+<span class="folder">myproject/</span>
+<span class="indent-1"><span class="file">├── manage.py</span></span>
+<span class="indent-1"><span class="file">├── .env.example</span></span>
+<span class="indent-1"><span class="file">├── .gitignore</span></span>
+<span class="indent-1"><span class="file">├── requirements.txt</span></span>
+<span class="indent-1"><span class="file">├── README.md</span></span>
+<span class="indent-1"><span class="folder">├── config/</span> <span style="color: #999;"># Project settings</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="file">├── settings/</span></span>
+<span class="indent-3"><span class="file">├── __init__.py</span></span>
+<span class="indent-3"><span class="file">├── base.py</span></span>
+<span class="indent-3"><span class="file">├── development.py</span></span>
+<span class="indent-3"><span class="file">└── production.py</span></span>
+<span class="indent-2"><span class="file">├── urls.py</span></span>
+<span class="indent-2"><span class="file">├── wsgi.py</span></span>
+<span class="indent-2"><span class="file">└── asgi.py</span></span>
+<span class="indent-1"><span class="folder">├── apps/</span> <span style="color: #999;"># Business domains</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-3"><span class="file">├── migrations/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">├── serializers.py</span></span>
+<span class="indent-3"><span class="file">├── urls.py</span></span>
+<span class="indent-3"><span class="file">├── admin.py</span></span>
+<span class="indent-3"><span class="file">├── tests.py</span></span>
+<span class="indent-3"><span class="file">└── apps.py</span></span>
+<span class="indent-2"><span class="folder">├── api/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">└── serializers.py</span></span>
+<span class="indent-2"><span class="folder">├── payments/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── services.py</span></span>
+<span class="indent-3"><span class="file">└── tasks.py</span></span>
+<span class="indent-2"><span class="folder">└── common/</span> <span style="color: #999;"># Shared utilities</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── utils.py</span></span>
+<span class="indent-3"><span class="file">├── decorators.py</span></span>
+<span class="indent-3"><span class="file">└── mixins.py</span></span>
+<span class="indent-1"><span class="folder">├── static/</span> <span style="color: #999;"># CSS, JS, images</span></span>
+<span class="indent-2"><span class="file">├── css/</span></span>
+<span class="indent-2"><span class="file">├── js/</span></span>
+<span class="indent-2"><span class="file">└── images/</span></span>
+<span class="indent-1"><span class="folder">├── templates/</span></span>
+<span class="indent-2"><span class="file">├── base.html</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-2"><span class="folder">└── api/</span></span>
+<span class="indent-1"><span class="folder">├── tests/</span> <span style="color: #999;"># Unit & integration tests</span></span>
+<span class="indent-2"><span class="file">├── conftest.py</span></span>
+<span class="indent-2"><span class="file">├── test_users.py</span></span>
+<span class="indent-2"><span class="file">└── test_api.py</span></span>
+<span class="indent-1"><span class="folder">├── docker/</span> <span style="color: #999;"># Docker configuration</span></span>
+<span class="indent-2"><span class="file">├── Dockerfile</span></span>
+<span class="indent-2"><span class="file">├── entrypoint.sh</span></span>
+<span class="indent-2"><span class="folder">└── nginx/</span></span>
+<span class="indent-1"><span class="file">├── docker-compose.yml</span></span>
+<span class="indent-1"><span class="file">└── .dockerignore</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Patterns -->
+        <div class="section">
+            <h2>Architecture Approaches</h2>
+            <div class="grid">
+                <div class="card">
+                    <h2>Layered Architecture (Recommended)</h2>
+                    <span class="badge badge-essential">PRODUCTION-READY</span>
+                    <p style="margin-top: 10px; color: var(--color-text-secondary);">Separates concerns into distinct layers:</p>
+                    <ul class="feature-list">
+                        <li><strong>Models Layer:</strong> ORM & Database</li>
+                        <li><strong>Service Layer:</strong> Business logic</li>
+                        <li><strong>View/API Layer:</strong> Endpoints</li>
+                        <li><strong>Serializer Layer:</strong> Data validation</li>
+                    </ul>
+                    <p style="font-size: 13px; color: #a85d2f; margin-top: 15px;"><strong>Best for:</strong> Medium-large projects, DRF APIs, clear separation of concerns</p>
+                </div>
+
+                <div class="card">
+                    <h2>Domain-Driven Design (DDD)</h2>
+                    <span class="badge badge-recommended">ADVANCED</span>
+                    <p style="margin-top: 10px; color: var(--color-text-secondary);">Organize by business domain/feature:</p>
+                    <ul class="feature-list">
+                        <li><strong>Feature-based:</strong> /users, /payments, /products</li>
+                        <li><strong>Self-contained:</strong> Models, views, serializers per domain</li>
+                        <li><strong>Loose coupling:</strong> Minimal inter-domain dependencies</li>
+                        <li><strong>Shared core:</strong> Common utilities & base models</li>
+                    </ul>
+                    <p style="font-size: 13px; color: #a85d2f; margin-top: 15px;"><strong>Best for:</strong> Large teams, complex domains, scalability</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Management -->
+        <div class="section">
+            <h2>Settings Management</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Multi-Environment Configuration</h2>
+                <span class="badge badge-essential">ESSENTIAL</span>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'settings-structure')">Structure</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'settings-base')">Base Settings</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'settings-env')">Environment</button>
+                </div>
+
+                <div id="settings-structure" class="tab-content active">
+                    <p><strong>config/settings/__init__.py</strong></p>
+                    <div class="code-block">import os
+from dotenv import load_dotenv
+
+env = os.getenv('DJANGO_ENV', 'development')
+
+if env == 'production':
+    from .production import *
+else:
+    from .development import *</div>
+                </div>
+
+                <div id="settings-base" class="tab-content">
+                    <p><strong>config/settings/base.py</strong></p>
+                    <div class="code-block">from pathlib import Path
+import environ
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'apps.users',
+    'apps.api',
+    'apps.common',
+]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env('DB_HOST'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+    }
+}</div>
+                </div>
+
+                <div id="settings-env" class="tab-content">
+                    <p><strong>.env.example</strong></p>
+                    <div class="code-block">DJANGO_ENV=development
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+DB_ENGINE=django.db.backends.postgresql
+DB_HOST=localhost
+DB_NAME=myproject_db
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_PORT=5432
+
+REDIS_URL=redis://localhost:6379/1
+CELERY_BROKER_URL=redis://localhost:6379/0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apps Organization -->
+        <div class="section">
+            <h2>Apps Organization Pattern</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Single App Structure</h2>
+                <span class="badge badge-essential">STANDARD</span>
+                <div class="code-block">apps/users/
+├── migrations/
+├── __init__.py
+├── models.py          # ORM models
+├── views.py           # APIView or ViewSets
+├── serializers.py     # DRF Serializers
+├── urls.py            # URL routing
+├── admin.py           # Admin config
+├── apps.py            # App config
+├── forms.py           # Forms (if needed)
+├── services.py        # Business logic
+├── tasks.py           # Celery tasks
+├── permissions.py     # Custom permissions
+├── filters.py         # Query filters
+├── signals.py         # Django signals
+└── tests.py           # Unit tests</div>
+
+                <h3 style="margin-top: 20px; color: var(--color-text);">App Guidelines</h3>
+                <ul class="feature-list">
+                    <li>Keep apps focused on a single domain/feature</li>
+                    <li>Each app should be reusable across projects</li>
+                    <li>Place business logic in <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">services.py</code></li>
+                    <li>Use <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">models.py</code> for data structure only</li>
+                    <li>Implement tests within the app folder</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Services Layer -->
+        <div class="section">
+            <h2>Service Layer (Business Logic)</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Recommended Pattern</h2>
+                <span class="badge badge-recommended">RECOMMENDED</span>
+                <div class="code-block"># apps/users/services.py
+class UserService:
+    @staticmethod
+    def create_user(email, password, **kwargs):
+        user = User.objects.create_user(
+            email=email, 
+            password=password, 
+            **kwargs
+        )
+        # Business logic here
+        return user
+    
+    @staticmethod
+    def activate_user(user_id):
+        user = User.objects.get(id=user_id)
+        user.is_active = True
+        user.save()
+        # Send email notification
+        return user
+
+# apps/users/views.py
+from .services import UserService
+
+class UserViewSet(viewsets.ModelViewSet):
+    def create(self, request):
+        user = UserService.create_user(**request.data)
+        return Response(UserSerializer(user).data)</div>
+            </div>
+        </div>
+
+        <!-- Testing -->
+        <div class="section">
+            <h2>Testing Structure</h2>
+            <div class="grid">
+                <div class="card">
+                    <h2>App-Level Tests</h2>
+                    <span class="badge badge-essential">ESSENTIAL</span>
+                    <p style="margin-top: 10px;">Keep tests alongside app code:</p>
+                    <div class="code-block">apps/users/
+├── tests.py
+├── test_models.py
+├── test_views.py
+└── test_services.py</div>
+                </div>
+
+                <div class="card">
+                    <h2>Centralized Tests</h2>
+                    <span class="badge badge-recommended">ALTERNATIVE</span>
+                    <p style="margin-top: 10px;">For larger projects with shared setup:</p>
+                    <div class="code-block">tests/
+├── conftest.py
+├── fixtures/
+├── test_users/
+└── test_api/</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist -->
+        <div class="section">
+            <h2>Implementation Checklist</h2>
+            <div class="card">
+                <ul class="checklist">
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">config/</code> directory for all settings</li>
+                    <li><input type="checkbox"> Split settings into base, development, production</li>
+                    <li><input type="checkbox"> Use <code style="background: #f0f0f0; padding: 2px 6px;">django-environ</code> for environment variables</li>
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">apps/</code> directory with domain-focused apps</li>
+                    <li><input type="checkbox"> Implement service layer for business logic</li>
+                    <li><input type="checkbox"> Setup DRF serializers for validation</li>
+                    <li><input type="checkbox"> Use <code style="background: #f0f0f0; padding: 2px 6px;">.env.example</code> for documentation</li>
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">docker-compose.yml</code> for local development</li>
+                    <li><input type="checkbox"> Setup Celery for async tasks (if needed)</li>
+                    <li><input type="checkbox"> Write tests for each app</li>
+                    <li><input type="checkbox"> Configure logging per environment</li>
+                    <li><input type="checkbox"> Document API endpoints with drf-spectacular</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div class="section">
+            <h2>Common Mistakes to Avoid</h2>
+            <div class="grid">
+                <div class="card" style="border-left: 3px solid #d84040;">
+                    <h2 style="color: #d84040;">❌ Incorrect</h2>
+                    <ul class="feature-list" style="margin-top: 10px;">
+                        <li>Single monolithic settings.py file</li>
+                        <li>Hardcoded database credentials</li>
+                        <li>All apps in root directory</li>
+                        <li>Business logic in views</li>
+                        <li>No test structure planning</li>
+                        <li>Missing .gitignore for secrets</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-left: 3px solid var(--color-primary);">
+                    <h2 style="color: var(--color-primary);">✅ Correct</h2>
+                    <ul class="feature-list" style="margin-top: 10px;">
+                        <li>Multiple environment-specific settings</li>
+                        <li>Environment variables via .env</li>
+                        <li>Apps organized in apps/ directory</li>
+                        <li>Dedicated services.py for logic</li>
+                        <li>Structured tests/ folder</li>
+                        <li>.gitignore properly configured</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_hard_delete_marketing_page_graphql-001",
+  "endpoint_id": "mutation_hard_delete_marketing_page_graphql",
+  "endpoint_path": "graphql/HardDeleteMarketingPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Permanently delete a marketing page (hard delete). Accepts HardDeleteMarketingPageInput with pageId (required, String, max 255 chars). Permanently removes page from database - cannot be undone. Returns Boolean (true if deleted). Uses MarketingService.delete_page with hard_delete=True. Raises NotFoundError (404) if page not found. Raises ForbiddenError (403) if not Admin/SuperAdmin. Use with caution.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/marketing/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/marketingService.ts",
+  "service_methods": [
+    "hardDeleteMarketingPage"
+  ],
+  "repository_methods": [
+    "hard_delete_marketing_page"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation HardDeleteMarketingPage($input: HardDeleteMarketingPageInput!) { marketing { hardDeleteMarketingPage(input: $input) } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

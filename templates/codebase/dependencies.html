@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dependencies - Codebase Analysis{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Dependencies</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Analysis: {{ analysis_id }}</p>
+        </div>
+    </div>
+    
+    {% if dependencies %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for dep in dependencies %}
+                    <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <p class="font-medium text-gray-900 dark:text-gray-100">{{ dep }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        {% include 'components/empty_state.html' with title="No dependencies found" message="Dependencies will be detected during analysis" %}
+    {% endif %}
+</div>
+{% endblock %}

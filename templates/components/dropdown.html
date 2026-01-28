@@ -1,0 +1,153 @@
+{% comment %}
+Dropdown Component
+
+Usage:
+{% include 'components/dropdown.html' with trigger_text='Options' items=dropdown_items %}
+
+Parameters:
+- trigger_text: Text for the trigger button (required)
+- trigger_icon: Optional icon SVG for trigger
+- items: List of dropdown items [{'label': 'Edit', 'url': '/edit', 'icon': '<svg>...</svg>', 'danger': False}]
+- id: Optional dropdown ID
+- align: Alignment (left, right) - default: left
+- size: Size (sm, md, lg) - default: md
+- variant: Trigger variant (primary, secondary, ghost) - default: secondary
+{% endcomment %}
+
+<div id="{{ id|default:'dropdown' }}" class="dropdown relative inline-block" data-dropdown>
+    <!-- Trigger Button -->
+    <button 
+        type="button"
+        class="dropdown-trigger inline-flex items-center justify-center gap-2 rounded-xl transition-all font-medium
+            {% if size == 'sm' %}px-3 py-1.5 text-xs
+            {% elif size == 'lg' %}px-5 py-3 text-base
+            {% else %}px-4 py-2 text-sm{% endif %}
+            {% if variant == 'primary' %}bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600
+            {% elif variant == 'ghost' %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
+            {% else %}bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}"
+        aria-haspopup="true"
+        aria-expanded="false"
+        onclick="toggleDropdown(this)"
+    >
+        {% if trigger_icon %}
+        <span class="w-4 h-4">{{ trigger_icon|safe }}</span>
+        {% endif %}
+        <span>{{ trigger_text }}</span>
+        <svg class="w-4 h-4 transition-transform duration-200 dropdown-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div 
+        class="dropdown-menu absolute z-50 mt-2 min-w-[180px] max-w-[300px] bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl py-1 hidden
+            {% if align == 'right' %}right-0{% else %}left-0{% endif %}"
+        role="menu"
+        aria-orientation="vertical"
+    >
+        {% for item in items %}
+            {% if item.divider %}
+                <div class="border-t border-gray-100 dark:border-gray-700 my-1"></div>
+            {% elif item.header %}
+                <div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {{ item.header }}
+                </div>
+            {% else %}
+                <a 
+                    href="{{ item.url|default:'#' }}"
+                    class="dropdown-item flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
+                        {% if item.danger %}text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20
+                        {% elif item.active %}bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300
+                        {% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}
+                        {% if item.disabled %}opacity-50 pointer-events-none{% endif %}"
+                    role="menuitem"
+                    {% if item.onclick %}onclick="{{ item.onclick }}"{% endif %}
+                    {% if item.disabled %}aria-disabled="true"{% endif %}
+                >
+                    {% if item.icon %}
+                    <span class="flex-shrink-0 w-4 h-4">{{ item.icon|safe }}</span>
+                    {% endif %}
+                    <span class="flex-1">{{ item.label }}</span>
+                    {% if item.badge %}
+                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                        {{ item.badge }}
+                    </span>
+                    {% endif %}
+                    {% if item.shortcut %}
+                    <span class="text-xs text-gray-400 dark:text-gray-500">{{ item.shortcut }}</span>
+                    {% endif %}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function toggleDropdown(trigger) {
+    const dropdown = trigger.closest('[data-dropdown]');
+    const menu = dropdown.querySelector('.dropdown-menu');
+    const chevron = trigger.querySelector('.dropdown-chevron');
+    const isOpen = !menu.classList.contains('hidden');
+    
+    // Close all other dropdowns first
+    document.querySelectorAll('[data-dropdown] .dropdown-menu:not(.hidden)').forEach(openMenu => {
+        if (openMenu !== menu) {
+            openMenu.classList.add('hidden');
+            openMenu.closest('[data-dropdown]').querySelector('.dropdown-trigger').setAttribute('aria-expanded', 'false');
+            openMenu.closest('[data-dropdown]').querySelector('.dropdown-chevron')?.classList.remove('rotate-180');
+        }
+    });
+    
+    // Toggle current dropdown
+    if (isOpen) {
+        menu.classList.add('hidden');
+        trigger.setAttribute('aria-expanded', 'false');
+        chevron?.classList.remove('rotate-180');
+    } else {
+        menu.classList.remove('hidden');
+        trigger.setAttribute('aria-expanded', 'true');
+        chevron?.classList.add('rotate-180');
+        
+        // Focus first item
+        const firstItem = menu.querySelector('.dropdown-item:not([aria-disabled="true"])');
+        firstItem?.focus();
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('[data-dropdown]')) {
+        document.querySelectorAll('[data-dropdown] .dropdown-menu').forEach(menu => {
+            menu.classList.add('hidden');
+            menu.closest('[data-dropdown]').querySelector('.dropdown-trigger').setAttribute('aria-expanded', 'false');
+            menu.closest('[data-dropdown]').querySelector('.dropdown-chevron')?.classList.remove('rotate-180');
+        });
+    }
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const dropdown = e.target.closest('[data-dropdown]');
+    if (!dropdown) return;
+    
+    const menu = dropdown.querySelector('.dropdown-menu');
+    if (menu.classList.contains('hidden')) return;
+    
+    const items = Array.from(menu.querySelectorAll('.dropdown-item:not([aria-disabled="true"])'));
+    const currentIndex = items.indexOf(document.activeElement);
+    
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+        items[nextIndex]?.focus();
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+        items[prevIndex]?.focus();
+    } else if (e.key === 'Escape') {
+        menu.classList.add('hidden');
+        dropdown.querySelector('.dropdown-trigger').focus();
+        dropdown.querySelector('.dropdown-trigger').setAttribute('aria-expanded', 'false');
+    }
+});
+</script>

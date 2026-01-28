@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analysis Detail - Codebase{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Analysis: {{ analysis_id }}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Codebase analysis details</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'codebase:file_list' analysis_id=analysis_id %}" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                View Files
+            </a>
+            <a href="{% url 'codebase:dependencies' analysis_id=analysis_id %}" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                Dependencies
+            </a>
+        </div>
+    </div>
+    
+    {% if analysis %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Analysis Results</h2>
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Files</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ analysis.total_files|default:0 }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Lines</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ analysis.total_lines|default:0 }}</dd>
+                </div>
+            </dl>
+        </div>
+    {% else %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-8">Analysis not found</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

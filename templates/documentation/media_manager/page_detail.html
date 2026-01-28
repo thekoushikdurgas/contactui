@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.page_id }} - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">{{ page.page_id|default:"Unknown Page" }}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Page Details</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_pages' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Pages
+            </a>
+        </div>
+    </div>
+    
+    <!-- Page Information -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Page Information</h2>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Page ID</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ page.page_id|default:"N/A" }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Page Type</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ page.page_type|default:"N/A" }}</dd>
+            </div>
+            {% if page.metadata %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.status|default:"N/A" }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Page State</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.page_state|default:"N/A" }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+    
+    <!-- Sections -->
+    {% if page_sections %}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Sections</h2>
+        <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">{{ page_sections|safe }}</pre>
+    </div>
+    {% endif %}
+    
+    <!-- Components -->
+    {% if page_components %}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">UI Components</h2>
+        <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">{{ page_components|safe }}</pre>
+    </div>
+    {% endif %}
+    
+    <!-- Endpoints -->
+    {% if page_endpoints %}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Endpoints Used</h2>
+        <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">{{ page_endpoints|safe }}</pre>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

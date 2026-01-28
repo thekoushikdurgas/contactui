@@ -1,0 +1,156 @@
+{
+  "name": "Manual Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Manual Webhook-Triggered Ingestion\n\nThis workflow:\n1. Accepts file_path or S3 object_key via webhook\n2. Auto-detects data type\n3. Triggers ingestion\n4. Returns job status via webhook response",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "manual-ingestion",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Auto-detect data type and determine endpoint\nconst body = $input.item.json.body || $input.item.json;\nconst filePath = body.file_path;\nconst objectKey = body.object_key;\n\nif (!filePath && !objectKey) {\n  throw new Error('Either file_path or object_key is required');\n}\n\nconst source = filePath ? 'local' : 's3';\nconst path = filePath || objectKey;\nconst lowerPath = path.toLowerCase();\n\nlet dataType = 'unknown';\nlet endpoint = '';\n\nif (lowerPath.includes('company') || lowerPath.includes('companies')) {\n  dataType = 'companies';\n  endpoint = `/v3/data-pipeline/ingest/companies/${source}`;\n} else if (lowerPath.includes('contact') || lowerPath.includes('contacts')) {\n  dataType = 'contacts';\n  endpoint = `/v3/data-pipeline/ingest/contacts/${source}`;\n} else if (lowerPath.includes('email') && lowerPath.includes('pattern')) {\n  dataType = 'email_patterns';\n  endpoint = '/v3/data-pipeline/ingest/email-patterns/local';\n}\n\nif (dataType === 'unknown') {\n  throw new Error('Could not determine data type from file path. Please specify companies, contacts, or email-patterns in the filename.');\n}\n\nreturn {\n  json: {\n    dataType,\n    endpoint,\n    file_path: filePath,\n    object_key: objectKey,\n    batch_size: body.batch_size || 1000,\n    max_threads: body.max_threads || 3\n  }\n};"
+      },
+      "id": "auto-detect-1",
+      "name": "Auto-detect Data Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}{{$json.endpoint}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_path",
+              "value": "={{$json.file_path}}"
+            },
+            {
+              "name": "object_key",
+              "value": "={{$json.object_key}}"
+            },
+            {
+              "name": "batch_size",
+              "value": "={{$json.batch_size}}"
+            },
+            {
+              "name": "max_threads",
+              "value": "={{$json.max_threads}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Trigger Ingestion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"job_id\": $json.job_id, \"status\": $json.status, \"message\": $json.message } }}",
+        "options": {}
+      },
+      "id": "respond-webhook-1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        230,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Auto-detect Data Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-detect Data Type": {
+      "main": [
+        [
+          {
+            "node": "Trigger Ingestion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Ingestion": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "manual_ingestion"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Durgasman API Studio",
+  "description": "A high-performance, AI-integrated API development and testing platform. Features a 3-panel Postman-style dashboard with advanced Gemini AI capabilities for debugging, visual generation, and voice interaction.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

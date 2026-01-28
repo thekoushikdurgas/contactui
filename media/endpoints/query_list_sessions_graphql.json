@@ -1,0 +1,36 @@
+{
+  "_id": "query_list_sessions_graphql-001",
+  "endpoint_id": "query_list_sessions_graphql",
+  "endpoint_path": "graphql/ListSessions",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List all active sessions for the current user. Returns session metadata including device, location, IP, and last activity.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/profileService.ts",
+  "service_methods": [
+    "listSessions"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "profileService",
+      "via_hook": "useProfilePage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

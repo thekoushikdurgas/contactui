@@ -1,0 +1,91 @@
+{
+  "_id": "export_page-001",
+  "page_id": "export_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/export",
+    "file_path": "contact360/dashboard/app/(dashboard)/export/page.tsx",
+    "purpose": "Export management page for viewing, downloading, canceling, and deleting export jobs. Includes S3 file browser for super admins.",
+    "s3_key": "data/pages/export_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/ListExports",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "exportsService",
+        "via_hook": "useExportPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "List all exports with pagination and optional status filter. Auto-refreshes every 3 seconds for pending/processing exports."
+      },
+      {
+        "endpoint_path": "graphql/GetExport",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "exportsService",
+        "via_hook": "useExportManager",
+        "usage_type": "secondary",
+        "usage_context": "data_fetching",
+        "description": "Get details of a specific export"
+      },
+      {
+        "endpoint_path": "graphql/CancelExport",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "exportsService",
+        "via_hook": "useExportManager",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Cancel a pending or processing export"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "ToolPageLayout",
+        "file_path": "components/layouts/ToolPageLayout.tsx"
+      },
+      {
+        "name": "PageHeader",
+        "file_path": "components/patterns/PageHeader.tsx"
+      },
+      {
+        "name": "ExportFilters",
+        "file_path": "components/features/export/ExportFilters.tsx"
+      },
+      {
+        "name": "ExportListTable",
+        "file_path": "components/features/export/ExportListTable.tsx"
+      },
+      {
+        "name": "ExportDeleteModal",
+        "file_path": "components/features/export/ExportDeleteModal.tsx"
+      },
+      {
+        "name": "ExportMessages",
+        "file_path": "components/features/export/ExportMessages.tsx"
+      },
+      {
+        "name": "S3FileBrowser",
+        "file_path": "components/features/export/S3FileBrowser.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 3,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

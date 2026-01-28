@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Postman Dashboard - API Testing{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                            API Testing Dashboard
+                        </h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Test and explore your API endpoints</p>
+                    </div>
+                </div>
+                <a href="{% url 'postman:homepage' %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Homepage
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <!-- Collections Section -->
+            {% if collections %}
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Available Collections</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {% for collection in collections %}
+                            <div class="collection-card bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-orange-500 dark:hover:border-orange-400 transition-all cursor-pointer group">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                                            {{ collection.name|default:"Unnamed Collection" }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ collection.requests|length|default:0 }} requests
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">
+                                    Click to explore collection
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Endpoints Section -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Available Endpoints</h2>
+                {% if endpoints %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {% for endpoint in endpoints|slice:":12" %}
+                            <div class="endpoint-card bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-orange-500 dark:hover:border-orange-400 transition-all group">
+                                <div class="flex items-start gap-3 mb-4">
+                                    {% include 'components/method_badge.html' with method=endpoint.method|default:'QUERY' %}
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                                            {{ endpoint.endpoint_id|default:"Unknown" }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ endpoint.endpoint_path|default:"" }}</p>
+                                        {% if endpoint.description %}
+                                            <p class="text-sm text-gray-600 dark:text-gray-300">{{ endpoint.description|truncatewords:10 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <button class="w-full px-4 py-2 bg-orange-600 dark:bg-orange-500 text-white rounded-lg hover:bg-orange-700 dark:hover:bg-orange-600 transition-colors text-sm font-medium">
+                                    Test Endpoint
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% include 'components/empty_state.html' with title="No endpoints available" message="Endpoints will appear here once they are loaded from the documentation system" %}
+                {% endif %}
+            </div>
+
+            <!-- Quick Test Section -->
+            <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick API Test</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Method</label>
+                        <select id="quick-method" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL</label>
+                        <input type="text" id="quick-url" placeholder="https://api.example.com/endpoint" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button id="quick-test-btn" class="px-6 py-2 bg-orange-600 dark:bg-orange-500 text-white rounded-lg hover:bg-orange-700 dark:hover:bg-orange-600 transition-colors font-medium">
+                        Send Request
+                    </button>
+                </div>
+
+                <!-- Response Display -->
+                <div id="quick-response" class="mt-4 hidden">
+                    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Response</span>
+                            <span id="response-status" class="text-sm px-2 py-1 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">200 OK</span>
+                        </div>
+                        <pre id="response-body" class="text-sm text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-900 p-2 rounded overflow-auto max-h-40"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple API testing functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const testBtn = document.getElementById('quick-test-btn');
+    const responseDiv = document.getElementById('quick-response');
+    const responseBody = document.getElementById('response-body');
+    const responseStatus = document.getElementById('response-status');
+
+    testBtn.addEventListener('click', async function() {
+        const method = document.getElementById('quick-method').value;
+        const url = document.getElementById('quick-url').value;
+
+        if (!url) {
+            alert('Please enter a URL');
+            return;
+        }
+
+        testBtn.disabled = true;
+        testBtn.textContent = 'Sending...';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const statusText = `${response.status} ${response.statusText}`;
+            responseStatus.textContent = statusText;
+
+            // Color code status
+            if (response.status >= 200 && response.status < 300) {
+                responseStatus.className = 'text-sm px-2 py-1 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
+            } else if (response.status >= 400 && response.status < 500) {
+                responseStatus.className = 'text-sm px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400';
+            } else if (response.status >= 500) {
+                responseStatus.className = 'text-sm px-2 py-1 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+            }
+
+            try {
+                const data = await response.json();
+                responseBody.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                const text = await response.text();
+                responseBody.textContent = text;
+            }
+
+            responseDiv.classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Request failed:', error);
+            responseStatus.textContent = 'Error';
+            responseStatus.className = 'text-sm px-2 py-1 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+            responseBody.textContent = `Request failed: ${error.message}`;
+            responseDiv.classList.remove('hidden');
+        } finally {
+            testBtn.disabled = false;
+            testBtn.textContent = 'Send Request';
+        }
+    });
+
+    // Handle collection clicks (placeholder)
+    document.querySelectorAll('.collection-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const collectionName = this.querySelector('h3').textContent;
+            alert(`Collection "${collectionName}" selected. Full collection testing would be implemented here.`);
+        });
+    });
+
+    // Handle endpoint test clicks (placeholder)
+    document.querySelectorAll('.endpoint-card button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const endpointCard = this.closest('.endpoint-card');
+            const endpointName = endpointCard.querySelector('h3').textContent;
+            alert(`Testing endpoint "${endpointName}". Full endpoint testing would be implemented here.`);
+        });
+    });
+});
+</script>
+{% endblock %}

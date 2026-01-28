@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_s3_file_presigned_url_graphql-001",
+  "endpoint_id": "query_get_s3_file_presigned_url_graphql",
+  "endpoint_path": "graphql/GetS3FileDownloadUrl",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get presigned download URL for an S3 file. Returns S3DownloadUrlResponse with downloadUrl and expiresIn (in seconds). URL expiration defaults to 1 hour (max: 7 days). Validates that file exists before generating URL. Used by export page and S3FileBrowser component for downloading CSV files.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/s3Service.ts",
+  "service_methods": [
+    "getS3FileDownloadUrl"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Page - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center gap-4">
+        <a href="{% url 'documentation:list' %}" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+        <h1 class="text-2xl font-black text-gray-900 tracking-tight">Create Documentation Page</h1>
+    </div>
+    
+    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <form method="post" class="space-y-8">
+            {% csrf_token %}
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Basic Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Page ID <span class="text-red-500">*</span></label>
+                        <input type="text" name="page_id" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium" placeholder="about_page" />
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Title <span class="text-red-500">*</span></label>
+                        <input type="text" name="title" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium" placeholder="Page Title" />
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Page Type</label>
+                        <select name="page_type" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium">
+                            <option value="docs">Documentation</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="dashboard">Dashboard</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Status</label>
+                        <select name="status" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium">
+                            <option value="draft">Draft</option>
+                            <option value="review">Review</option>
+                            <option value="published">Published</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Route</label>
+                    <input type="text" name="route" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium" placeholder="/about" />
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Content</h2>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Content <span class="text-red-500">*</span></label>
+                    <textarea name="content" rows="15" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium resize-none" placeholder="Page content (Markdown supported)"></textarea>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
+                <a href="{% url 'documentation:list' %}" class="px-6 py-2 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all">Cancel</a>
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">Create Page</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% comment %}
+Error State Component - Unified error display with retry functionality.
+
+Usage:
+{% include 'components/error-state.html' with title='Error' message='Something went wrong' retry_url='/retry' %}
+{% include 'components/error-state.html' with title='Error' message='Failed to load' retry_onclick='retry()' show_details=true %}
+
+Parameters:
+- title: Error title (optional, default: 'Error')
+- message: Error message (required)
+- retry_url: URL for retry button (optional)
+- retry_onclick: JavaScript function for retry (optional)
+- retry_text: Retry button text (default: 'Retry')
+- show_details: Show error details in dev mode (default: false)
+- error_details: Error details to show (optional)
+- icon: Custom error icon (optional)
+- class: Additional CSS classes (optional)
+{% endcomment %}
+
+{% load static %}
+
+<div class="flex flex-col items-center justify-center p-8 text-center {{ class|default:'' }}" role="alert">
+    {% if icon %}
+        <div class="mb-4 text-red-500 dark:text-red-400">{{ icon|safe }}</div>
+    {% else %}
+        <svg class="w-16 h-16 mb-4 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+    {% endif %}
+    
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        {{ title|default:'Error' }}
+    </h3>
+    
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-md">
+        {{ message }}
+    </p>
+    
+    {% if show_details and error_details %}
+    <details class="mb-4 text-left max-w-md w-full">
+        <summary class="cursor-pointer text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+            Show Error Details
+        </summary>
+        <pre class="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded text-xs text-gray-800 dark:text-gray-200 overflow-auto">{{ error_details }}</pre>
+    </details>
+    {% endif %}
+    
+    {% if retry_url or retry_onclick %}
+    <div class="flex gap-2">
+        {% if retry_url %}
+        <a href="{{ retry_url }}" 
+           class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {{ retry_text|default:'Retry' }}
+        </a>
+        {% elif retry_onclick %}
+        <button type="button" 
+                onclick="{{ retry_onclick }}"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {{ retry_text|default:'Retry' }}
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

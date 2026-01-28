@@ -1,0 +1,56 @@
+{
+  "_id": "mutation_create_marketing_page_graphql-001",
+  "endpoint_id": "mutation_create_marketing_page_graphql",
+  "endpoint_path": "graphql/CreateMarketingPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new marketing page. Accepts CreateMarketingPageInput with pageId (required, String, unique slug), title (required, String), description (optional, String), metaTitle (optional, String), metaDescription (optional, String), hero (optional, HeroInput with headline, subheadline, ctaText, ctaLink), sections (optional, array of SectionInput), isPublished (optional, Boolean, default false). Returns MarketingPage with pageId, title, description, hero, sections, isPublished, createdAt. Raises ConflictError (409) if pageId exists. Raises ForbiddenError (403) if not Admin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/marketing/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/marketingService.ts",
+  "service_methods": [
+    "createMarketingPage"
+  ],
+  "repository_methods": [
+    "create_marketing_page"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/marketing/new",
+      "page_title": "Admin Marketing New Page",
+      "via_service": "marketingService",
+      "via_hook": "useMarketingPageEditor",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/admin/marketing",
+      "page_title": "Admin Marketing Page",
+      "via_service": "marketingService",
+      "via_hook": "useAdminMarketingPages",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/admin/marketing/[pageId]",
+      "page_title": "Admin Marketing Pageid Page",
+      "via_service": "marketingService",
+      "via_hook": "useMarketingPageEditor",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateMarketingPage($input: CreateMarketingPageInput!) { marketing { createMarketingPage(input: $input) { pageId title description isPublished createdAt } } }",
+  "sql_file": null,
+  "page_count": 3,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

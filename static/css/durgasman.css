@@ -1,0 +1,180 @@
+/* Durgasman API Testing App Styles */
+
+.durgasman-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.durgasman-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-bottom: 1px solid #475569;
+}
+
+.durgasman-sidebar {
+    background: #1e293b;
+    border-right: 1px solid #475569;
+    width: 320px;
+}
+
+.durgasman-main {
+    background: #0f172a;
+}
+
+.durgasman-card {
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.durgasman-input {
+    background: #334155;
+    border: 1px solid #475569;
+    color: #f1f5f9;
+}
+
+.durgasman-input:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 1px #f59e0b;
+}
+
+.durgasman-button-primary {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.durgasman-button-primary:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.durgasman-button-secondary {
+    background: #334155;
+    color: #cbd5e1;
+    border: 1px solid #475569;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.durgasman-button-secondary:hover {
+    background: #475569;
+    border-color: #64748b;
+}
+
+.durgasman-method-get {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.durgasman-method-post {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.durgasman-method-put {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.durgasman-method-patch {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.durgasman-method-delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.durgasman-status-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.durgasman-status-error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.durgasman-json-key {
+    color: #3b82f6;
+}
+
+.durgasman-json-string {
+    color: #10b981;
+}
+
+.durgasman-json-number {
+    color: #f59e0b;
+}
+
+.durgasman-json-boolean {
+    color: #8b5cf6;
+}
+
+.durgasman-json-null {
+    color: #6b7280;
+}
+
+/* Custom scrollbar */
+.durgasman-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.durgasman-scrollbar::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+.durgasman-scrollbar::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 3px;
+}
+
+.durgasman-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Animations */
+@keyframes durgasman-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.durgasman-pulse {
+    animation: durgasman-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes durgasman-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.durgasman-spin {
+    animation: durgasman-spin 1s linear infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .durgasman-sidebar {
+        width: 280px;
+    }
+
+    .durgasman-button-primary,
+    .durgasman-button-secondary {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}

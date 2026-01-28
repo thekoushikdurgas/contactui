@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tasks - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-8 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div>
+            <h2 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Tasks</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Manage your tasks and workflows</p>
+        </div>
+        <a href="{% url 'tasks:create' %}" class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:bg-blue-700 dark:hover:bg-blue-600 transition-all">
+            Create Task
+        </a>
+    </div>
+    
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        {% include 'components/stat_card.html' with label="Total" value=stats.total|default:"0" change="" trend="" color="bg-gray-50 text-gray-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>' %}
+        {% include 'components/stat_card.html' with label="Pending" value=stats.pending|default:"0" change="" trend="" color="bg-yellow-50 text-yellow-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' %}
+        {% include 'components/stat_card.html' with label="In Progress" value=stats.in_progress|default:"0" change="" trend="" color="bg-blue-50 text-blue-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>' %}
+        {% include 'components/stat_card.html' with label="Completed" value=stats.completed|default:"0" change="" trend="" color="bg-green-50 text-green-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' %}
+        {% include 'components/stat_card.html' with label="Failed" value=stats.failed|default:"0" change="" trend="" color="bg-red-50 text-red-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>' %}
+    </div>
+    
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'tasks:list' %}" class="px-4 py-2 rounded-xl text-sm font-bold {% if not request.GET.status %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %} transition-all">
+                All
+            </a>
+            <a href="{% url 'tasks:list' %}?status=pending" class="px-4 py-2 rounded-xl text-sm font-bold {% if request.GET.status == 'pending' %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %} transition-all">
+                Pending
+            </a>
+            <a href="{% url 'tasks:list' %}?status=in_progress" class="px-4 py-2 rounded-xl text-sm font-bold {% if request.GET.status == 'in_progress' %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %} transition-all">
+                In Progress
+            </a>
+            <a href="{% url 'tasks:list' %}?status=completed" class="px-4 py-2 rounded-xl text-sm font-bold {% if request.GET.status == 'completed' %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %} transition-all">
+                Completed
+            </a>
+        </div>
+    </div>
+    
+    <!-- Tasks List -->
+    {% if tasks %}
+        <div class="space-y-4">
+            {% for task in tasks %}
+                <a href="{% url 'tasks:detail' task_id=task.task_id %}" class="block bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ task.title }}</h3>
+                                {% include 'components/status_badge.html' with status=task.status %}
+                                {% if task.priority %}
+                                    {% include 'components/badge.html' with text=task.priority|title variant='info' %}
+                                {% endif %}
+                            </div>
+                            {% if task.description %}
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{{ task.description|truncatewords:20 }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                                Created: {{ task.created_at|date:"M d, Y H:i" }}
+                                {% if task.assigned_to %}
+                                    • Assigned to: {{ task.assigned_to.username }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% include 'components/empty_state.html' with title="No tasks found" message="Get started by creating your first task" action_url=empty_state_create_url action_text="Create Task" %}
+    {% endif %}
+</div>
+{% endblock %}

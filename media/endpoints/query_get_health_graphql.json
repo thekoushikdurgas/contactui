@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_health_graphql-001",
+  "endpoint_id": "query_get_health_graphql",
+  "endpoint_path": "graphql/GetHealth",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get API health status. No input required. Returns HealthStatus with status (String: 'healthy', 'degraded', 'unhealthy'), timestamp (DateTime), uptime (Float, seconds), version (String), services (array of ServiceHealth with name, status, latency, lastChecked). Checks database connectivity, S3 availability, and external service health. Public endpoint - no authentication required. Also available as REST endpoint at /health.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/health/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/healthService.ts",
+  "service_methods": [
+    "apiHealth"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/system-status",
+      "page_title": "Admin System Status Page",
+      "via_service": "healthService",
+      "via_hook": "useSystemStatus",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetHealth { health { apiHealth { status timestamp uptime version services { name status latency } } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

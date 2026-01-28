@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_log_statistics_graphql-001",
+  "endpoint_id": "query_get_log_statistics_graphql",
+  "endpoint_path": "graphql/GetLogStatistics",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get log statistics for a time range including total logs, counts by level, error rate, avg response time, slow queries count, top errors, performance trends, and user activity.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "getLogStatistics"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/logs",
+      "page_title": "Admin Logs Page",
+      "via_service": "adminService",
+      "via_hook": "useAdminLogs",
+      "usage_type": "secondary",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

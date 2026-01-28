@@ -1,0 +1,38 @@
+{
+  "_id": "query_list_ai_chats_graphql-001",
+  "endpoint_id": "query_list_ai_chats_graphql",
+  "endpoint_path": "graphql/ListAIChats",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List AI chat conversations for current user. Accepts optional AIChatFilterInput with title (String, partial match), search (String, searches title and messages), startDate/endDate (DateTime range), orderBy (enum: CREATED_AT, UPDATED_AT, TITLE), orderDirection (enum: ASC, DESC), limit (Int, default 100), offset (Int, default 0). Returns AIChatConnection with items (array of AIChat with uuid, title, createdAt, updatedAt), total, limit, offset, hasNext, hasPrevious. Uses Lambda AI service. User isolation enforced.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "chats"
+  ],
+  "repository_methods": [
+    "get_chats_by_user"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/ai-chat",
+      "page_title": "Ai Chat Page",
+      "via_service": "aiChatsService",
+      "via_hook": "useAiChat",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query ListAIChats($input: AIChatFilterInput) { aiChats { chats(input: $input) { items { uuid title createdAt updatedAt } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

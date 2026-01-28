@@ -1,0 +1,10 @@
+[Unit]
+Description=Gunicorn socket for DocsAI Django application
+Before=gunicorn.service
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+SocketMode=0666
+
+[Install]
+WantedBy=sockets.target

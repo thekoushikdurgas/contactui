@@ -1,0 +1,76 @@
+{
+  "validation_date": "2026-01-20",
+  "overall_completeness": "excellent",
+  "missing_relationships": 0,
+  "missing_metadata": 0,
+  "documentation_gaps": 3,
+  "missing_data": {
+    "missing_relationship_files": [],
+    "missing_page_references": [],
+    "missing_endpoint_references": [],
+    "missing_metadata_fields": []
+  },
+  "integration_opportunities": [
+    {
+      "type": "page_api_integration",
+      "page_id": "admin_settings_page",
+      "current_state": "0 endpoints",
+      "potential": "Could use settings API endpoints",
+      "priority": "low",
+      "reason": "May be intentionally static"
+    }
+  ],
+  "documentation_gaps": [
+    {
+      "category": "rate_limiting",
+      "issue": "Most endpoints have rate_limit: null",
+      "affected_endpoints": 145,
+      "recommendation": "Document rate limits per endpoint"
+    },
+    {
+      "category": "credit_costs",
+      "issue": "Email operations mention credits but not documented in endpoint files",
+      "affected_endpoints": 7,
+      "recommendation": "Document credit costs in endpoint metadata"
+    },
+    {
+      "category": "repository_methods",
+      "issue": "Most endpoints have empty repository_methods array",
+      "affected_endpoints": 145,
+      "recommendation": "Document repository layer if applicable"
+    }
+  ],
+  "api_only_endpoints": {
+    "total": 50,
+    "categories": {
+      "admin_only": 15,
+      "internal_utility": 10,
+      "programmatic": 20,
+      "recently_added": 5
+    },
+    "status": "intentionally_unused",
+    "recommendation": "Document API-only usage patterns"
+  },
+  "completeness_metrics": {
+    "pages_with_relationships": {
+      "total": 40,
+      "with_files": 40,
+      "coverage": "100%"
+    },
+    "endpoints_with_relationships": {
+      "total": 95,
+      "with_files": 95,
+      "coverage": "100%"
+    },
+    "metadata_coverage": {
+      "pages": "100%",
+      "endpoints": "100%",
+      "relationships": "100%"
+    },
+    "documentation_coverage": {
+      "pages": "100%",
+      "endpoints": "100%",
+      "relationships": "100%"
+    }
+  }
+}

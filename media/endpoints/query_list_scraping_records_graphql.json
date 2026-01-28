@@ -1,0 +1,26 @@
+{
+  "_id": "query_list_scraping_records_graphql-001",
+  "endpoint_id": "query_list_scraping_records_graphql",
+  "endpoint_path": "graphql/ListScrapingRecords",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List Sales Navigator scraping metadata records for the current user with pagination. Accepts optional SalesNavigatorFilterInput with limit and offset. Returns UserScrapingConnection with items array (UserScrapingRecord with id, userId, timestamp, version, source, searchContext, pagination, userInfo, applicationInfo, createdAt, updatedAt) and pageInfo. User isolation enforced - users can only view their own scraping records.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/salesNavigatorService.ts",
+  "service_methods": [
+    "listSalesNavigatorRecords"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

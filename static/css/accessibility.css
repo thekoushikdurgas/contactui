@@ -1,0 +1,305 @@
+/**
+ * Accessibility Styles
+ * 
+ * Styles for accessibility features including:
+ * - Skip links
+ * - Screen reader only content
+ * - Focus indicators
+ * - High contrast mode support
+ */
+
+/* Skip Links */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary-500);
+    color: white;
+    padding: var(--spacing-2) var(--spacing-4);
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 0 0 var(--radius-md) 0;
+    font-weight: var(--font-weight-medium);
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid var(--color-primary-600);
+    outline-offset: 2px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--spacing-2) var(--spacing-4);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Enhanced Focus Indicators */
+*:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Remove default focus for mouse users */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High Contrast Focus */
+@media (prefers-contrast: high) {
+    *:focus-visible {
+        outline: 3px solid;
+        outline-offset: 3px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-border: #000000;
+        --color-text-primary: #000000;
+        --color-bg-primary: #ffffff;
+    }
+    
+    [data-theme="dark"] {
+        --color-border: #ffffff;
+        --color-text-primary: #ffffff;
+        --color-bg-primary: #000000;
+    }
+    
+    .btn,
+    .form-input,
+    .form-select,
+    .form-textarea {
+        border-width: 2px;
+    }
+}
+
+/* Focus Trap Indicator (for debugging) */
+.focus-trap-active {
+    position: relative;
+}
+
+.focus-trap-active::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px dashed var(--color-primary-500);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ARIA Live Regions */
+.aria-live-region {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Loading Announcements */
+.loading-announcement {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Error Announcements */
+.error-announcement {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Success Announcements */
+.success-announcement {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-user *:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.mouse-user *:focus {
+    outline: none;
+}
+
+/* Ensure interactive elements are keyboard accessible */
+[role="button"],
+[role="tab"],
+[role="menuitem"] {
+    cursor: pointer;
+}
+
+[role="button"]:focus,
+[role="tab"]:focus,
+[role="menuitem"]:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* Disabled state accessibility */
+[aria-disabled="true"],
+[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+[aria-disabled="true"]:focus,
+[disabled]:focus {
+    outline: 2px solid var(--color-text-tertiary);
+}
+
+/* Required field indicators */
+.required-indicator::after {
+    content: ' *';
+    color: var(--color-error-500);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Error state accessibility */
+[aria-invalid="true"] {
+    border-color: var(--color-error-500);
+}
+
+[aria-invalid="true"]:focus {
+    outline-color: var(--color-error-500);
+    ring-color: var(--color-error-500);
+}
+
+/* Loading state accessibility */
+[aria-busy="true"] {
+    cursor: wait;
+}
+
+/* Hidden but accessible to screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Landmark regions */
+[role="banner"],
+[role="navigation"],
+[role="main"],
+[role="complementary"],
+[role="contentinfo"] {
+    outline: none; /* Remove focus outline from landmarks */
+}
+
+/* Tab navigation enhancement */
+[role="tablist"] {
+    display: flex;
+}
+
+[role="tab"] {
+    position: relative;
+}
+
+[role="tab"][aria-selected="true"] {
+    z-index: 1;
+}
+
+[role="tab"]:focus {
+    z-index: 2;
+}
+
+/* List accessibility */
+[role="list"] {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+[role="listitem"] {
+    margin-bottom: var(--spacing-2);
+}
+
+/* Dialog/Modal accessibility */
+[role="dialog"] {
+    position: relative;
+    z-index: var(--z-index-modal);
+}
+
+[role="dialog"][aria-hidden="true"] {
+    display: none;
+}
+
+/* Alert accessibility */
+[role="alert"] {
+    color: var(--color-error-500);
+    font-weight: var(--font-weight-medium);
+}
+
+[role="status"] {
+    color: var(--color-success-500);
+}
+
+/* Progress indicators */
+[role="progressbar"] {
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+[role="progressbar"]::before {
+    content: '';
+    display: block;
+    height: 100%;
+    background-color: var(--color-primary-500);
+    transition: width var(--transition-base) var(--transition-ease);
+}

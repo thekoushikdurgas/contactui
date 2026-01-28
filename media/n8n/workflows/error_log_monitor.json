@@ -1,0 +1,232 @@
+{
+  "name": "Error Log Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Error Log Monitoring and Alerts\n\nThis workflow:\n1. Checks error CSV files in scripts/data/error/\n2. Counts new errors since last check\n3. If errors > threshold:\n   - Sends Slack alert with error summary\n   - Creates error report\n   - Tags errors by type (ingestion/cleaning/analysis)",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) as error_count, error_type FROM (SELECT 'ingestion' as error_type UNION ALL SELECT 'cleaning' UNION ALL SELECT 'analysis') types LEFT JOIN (SELECT error_type FROM error_logs WHERE created_at > NOW() - INTERVAL '15 minutes') errors ON types.error_type = errors.error_type GROUP BY error_type",
+        "options": {}
+      },
+      "id": "check-errors-1",
+      "name": "Check Error Logs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate error counts\nconst items = $input.all();\nconst totalErrors = items.reduce((sum, item) => sum + (parseInt(item.json.error_count) || 0), 0);\nconst errorsByType = {};\n\nitems.forEach(item => {\n  const type = item.json.error_type || 'unknown';\n  errorsByType[type] = (errorsByType[type] || 0) + (parseInt(item.json.error_count) || 0);\n});\n\nreturn {\n  json: {\n    total_errors: totalErrors,\n    errors_by_type: errorsByType,\n    threshold: parseInt(process.env.ERROR_THRESHOLD) || 10\n  }\n};"
+      },
+      "id": "aggregate-errors-1",
+      "name": "Aggregate Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.total_errors}}",
+              "rightValue": "={{$json.threshold}}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-threshold-1",
+      "name": "Check Error Threshold",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#alerts",
+        "text": "⚠️ Error Threshold Exceeded\n\nTotal Errors (last 15 min): {{$json.total_errors}}\nThreshold: {{$json.threshold}}\n\nErrors by Type:\n{{JSON.stringify($json.errors_by_type, null, 2)}}",
+        "otherOptions": {}
+      },
+      "id": "slack-alert-1",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        410,
+        100
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create error report\nconst report = {\n  timestamp: new Date().toISOString(),\n  total_errors: $input.item.json.total_errors,\n  errors_by_type: $input.item.json.errors_by_type,\n  threshold: $input.item.json.threshold\n};\n\nreturn {\n  json: {\n    report: JSON.stringify(report, null, 2),\n    filename: `error_report_${new Date().toISOString().split('T')[0]}.json`\n  }\n};"
+      },
+      "id": "create-report-1",
+      "name": "Create Error Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        410,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "={{$env.S3_BUCKET_NAME}}",
+        "fileName": "={{$json.filename}}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "upload-s3-1",
+      "name": "Upload Report to S3",
+      "type": "n8n-nodes-base.aws",
+      "typeVersion": 1,
+      "position": [
+        590,
+        -100
+      ],
+      "credentials": {
+        "aws": {
+          "id": "AWS_CREDENTIALS",
+          "name": "AWS account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Error Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Error Logs": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Errors": {
+      "main": [
+        [
+          {
+            "node": "Check Error Threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Error Threshold": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Error Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Error Report": {
+      "main": [
+        [
+          {
+            "node": "Upload Report to S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "error_log_monitor"
+}

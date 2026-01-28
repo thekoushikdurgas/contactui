@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_create_plan_graphql-001",
+  "endpoint_id": "mutation_create_plan_graphql",
+  "endpoint_path": "graphql/CreatePlan",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new subscription plan. Accepts CreatePlanInput with tier (required, String, unique identifier), name (required, String), category (required, enum: STARTER, PROFESSIONAL, BUSINESS, ENTERPRISE), periods (required, array of PlanPeriodInput with periodType: monthly/yearly, price, credits), isActive (optional, Boolean, default true). Returns CreatePlanResponse with message (String), tier (String). Raises ConflictError (409) if tier already exists. Raises ForbiddenError (403) if not SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/billing/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/billingService.ts",
+  "service_methods": [
+    "createPlan"
+  ],
+  "repository_methods": [
+    "create_plan"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreatePlan($input: CreatePlanInput!) { billing { createPlan(input: $input) { message tier } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

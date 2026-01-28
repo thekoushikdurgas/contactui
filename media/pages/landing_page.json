@@ -1,0 +1,261 @@
+{
+  "_id": "landing_page-001",
+  "page_id": "landing_page",
+  "page_type": "marketing",
+  "metadata": {
+    "route": "/",
+    "file_path": "contact360/docs/1/contact360---precision-b2b-data/App.tsx",
+    "purpose": "Landing page with hero section, features showcase, product demonstrations, pricing tiers, and footer. The world's most accurate B2B data platform with 200M+ verified contacts.",
+    "s3_key": "data/pages/landing_page.json",
+    "status": "published",
+    "authentication": "Not required (public page)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2025-01-27T12:00:00.000000+00:00",
+    "uses_endpoints": [],
+    "ui_components": [
+      {
+        "name": "Navbar",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Navbar.tsx"
+      },
+      {
+        "name": "Hero",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Hero.tsx"
+      },
+      {
+        "name": "Features",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Features.tsx"
+      },
+      {
+        "name": "ProductShowcase",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/ProductShowcase.tsx"
+      },
+      {
+        "name": "Pricing",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Pricing.tsx"
+      },
+      {
+        "name": "Footer",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Footer.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 0,
+    "api_versions": [],
+    "content_sections": {
+      "navbar": {
+        "title": "Contact360",
+        "navigation_items": [
+          {
+            "label": "Data",
+            "href": "#features",
+            "page": "landing"
+          },
+          {
+            "label": "Pricing",
+            "href": "#pricing",
+            "page": "landing"
+          },
+          {
+            "label": "Integrations",
+            "page": "integrations"
+          },
+          {
+            "label": "API",
+            "page": "api"
+          }
+        ],
+        "cta_buttons": [
+          {
+            "label": "Sign In",
+            "action": "navigate",
+            "page": "login"
+          },
+          {
+            "label": "Get Started",
+            "action": "navigate",
+            "page": "register"
+          }
+        ]
+      },
+      "hero": {
+        "badge_text": "Now with 200M+ Verified Contacts",
+        "headline": "The World's Most Accurate Data",
+        "subheading": "The only B2B data platform where you pay strictly for verified emails.",
+        "cta_primary": {
+          "text": "Start Prospecting for Free",
+          "action": "navigate",
+          "page": "register"
+        },
+        "cta_secondary": {
+          "text": "View Live Demo",
+          "action": "navigate",
+          "page": "about"
+        },
+        "trust_section": {
+          "label": "Trusted by growth teams at",
+          "companies": [
+            "Acme Corp",
+            "GlobalTech",
+            "Nebula",
+            "FoxRun",
+            "Circle"
+          ]
+        }
+      },
+      "features": {
+        "title": "Try our tools now, it's free",
+        "description": "Start prospecting with the most accurate data in the industry.",
+        "items": [
+          {
+            "title": "Email Finder",
+            "description": "Find any email address from a first name, last name and company name.",
+            "icon": "Search"
+          },
+          {
+            "title": "Email Verifier",
+            "description": "Pay only for verified emails. Upload your list and verify deliverability instantly.",
+            "icon": "ShieldCheck"
+          },
+          {
+            "title": "Prospect Finder",
+            "description": "Find high-quality B2B leads from our database of 200M+ verified contacts.",
+            "icon": "Users"
+          }
+        ]
+      },
+      "product_showcase": {
+        "email_finder": {
+          "badge": "Email Finder",
+          "title": "Find anyone's professional email.",
+          "description": "Enter a name and company to reveal verified contact info instantly. Our 3D enrichment technology ensures 99% accuracy.",
+          "cta": "Start Searching"
+        },
+        "email_verifier": {
+          "badge": "Email Verifier",
+          "title": "Never bounce again.",
+          "description": "Protect your sender reputation. Verify lists of up to 100k emails in minutes with our real-time SMTP handshake protocol.",
+          "cta": "Verify List"
+        },
+        "prospect_finder": {
+          "badge": "Prospect Finder",
+          "title": "Build your dream list.",
+          "description": "Filter through 200M+ contacts by Industry, Title, Location and more. Save searches and get alerted when new prospects match your criteria.",
+          "cta": "Explore Database"
+        }
+      },
+      "pricing": {
+        "title": "Simple, transparent pricing.",
+        "description": "Pay only for valid emails. Credits never expire.",
+        "tiers": [
+          {
+            "name": "Starter",
+            "price": "$0",
+            "credits": 50,
+            "features": [
+              "50 Verified Emails / mo",
+              "Basic Search Filters",
+              "Chrome Extension",
+              "CSV Export"
+            ],
+            "recommended": false,
+            "cta_text": "Start for Free"
+          },
+          {
+            "name": "Growth",
+            "price": "$99",
+            "credits": 1000,
+            "features": [
+              "1,000 Verified Emails / mo",
+              "Advanced Filters",
+              "CRM Integration",
+              "Mobile Direct Dials",
+              "Priority Support"
+            ],
+            "recommended": true,
+            "cta_text": "Get Started"
+          },
+          {
+            "name": "Scale",
+            "price": "$299",
+            "credits": 5000,
+            "features": [
+              "5,000 Verified Emails / mo",
+              "Intent Data Access",
+              "API Access",
+              "Dedicated Account Manager",
+              "Unlimited Team Seats"
+            ],
+            "recommended": false,
+            "cta_text": "Get Started"
+          }
+        ]
+      },
+      "footer": {
+        "company_name": "Contact360",
+        "tagline": "The world's most accurate B2B data platform. Double-verified emails, direct dials, and AI-powered outreach.",
+        "sections": [
+          {
+            "title": "Product",
+            "links": [
+              {
+                "label": "Data Search",
+                "page": "app"
+              },
+              {
+                "label": "Chrome Extension",
+                "page": "chrome-extension"
+              },
+              {
+                "label": "API",
+                "page": "api"
+              },
+              {
+                "label": "Integrations",
+                "page": "integrations"
+              }
+            ]
+          },
+          {
+            "title": "Company",
+            "links": [
+              {
+                "label": "About Us",
+                "page": "about"
+              },
+              {
+                "label": "Careers",
+                "page": "careers"
+              },
+              {
+                "label": "Privacy Policy",
+                "page": "privacy"
+              },
+              {
+                "label": "Terms of Service",
+                "page": "terms"
+              }
+            ]
+          },
+          {
+            "title": "Connect",
+            "social_links": [
+              "Twitter",
+              "LinkedIn",
+              "Github"
+            ]
+          }
+        ],
+        "copyright": "© 2025 Contact360 Inc. All rights reserved.",
+        "attribution": "Designed with TheKoushikDurgas"
+      }
+    }
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

@@ -1,0 +1,47 @@
+{
+  "_id": "list_exports_graphql-001",
+  "endpoint_id": "list_exports_graphql",
+  "endpoint_path": "graphql/ListExports",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List exports for current user with filtering. Accepts optional ExportFilterInput with status (enum: PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED), exportType (enum: contact, company), limit (Int, default 100), offset (Int, default 0). Returns ExportConnection with items (array of Export), total, limit, offset, hasNext, hasPrevious. User isolation enforced.",
+  "created_at": "2026-01-19T12:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/exports/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/exportsService.ts",
+  "service_methods": [
+    "exports"
+  ],
+  "repository_methods": [
+    "get_exports_by_user"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/dashboard",
+      "page_title": "Dashboard Page",
+      "via_service": "exportsService",
+      "via_hook": "useDashboardPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/export",
+      "page_title": "Export Page",
+      "via_service": "exportsService",
+      "via_hook": "useExportPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": "50 requests/minute",
+  "graphql_operation": "query ListExports($input: ExportFilterInput) { exports { exports(input: $input) { items { id name status progress downloadUrl createdAt } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 2,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

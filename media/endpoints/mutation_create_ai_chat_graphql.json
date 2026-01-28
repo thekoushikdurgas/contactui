@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_create_ai_chat_graphql-001",
+  "endpoint_id": "mutation_create_ai_chat_graphql",
+  "endpoint_path": "graphql/CreateAIChat",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new AI chat conversation. Accepts optional CreateAIChatInput with title (optional, String, max 255 chars). Returns AIChat with uuid, title (auto-generated if not provided: 'New Chat YYYY-MM-DD HH:MM'), createdAt, updatedAt. Uses Lambda AI service for chat management. User isolation enforced. Raises ForbiddenError (403) if user is not ProUser or higher.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "createChat"
+  ],
+  "repository_methods": [
+    "create_chat"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/ai-chat",
+      "page_title": "Ai Chat Page",
+      "via_service": "aiChatsService",
+      "via_hook": "useAiChat",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateAIChat($input: CreateAIChatInput) { aiChats { createChat(input: $input) { uuid title createdAt } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

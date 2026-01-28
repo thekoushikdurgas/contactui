@@ -1,0 +1,499 @@
+
+Here’s a concise overview of routing in your Django project and a full route list.
+
+---
+
+# Django routing in `contact360/docsai`
+
+## How routing is structured
+
+1. **Root config**  
+   `docsai/docsai/urls.py` defines the main `urlpatterns` and `include()`s app URL modules. Each app is mounted at a prefix (e.g. `docs/`, `api/v1/`).
+
+2. **App-level URLs**  
+   Each app has its own `urls.py` with `path()` (and sometimes `re_path()`). Some apps also use **nested** `include()` (e.g. Durgasman’s `api/`) or **DRF** `DefaultRouter` (e.g. Tasks API).
+
+3. **Namespaces**  
+   Apps set `app_name = '...'`. The Documentation API v1 uses `namespace='api_v1'`. You reverse URLs like `documentation:page_detail` or `api_v1:pages_list`.
+
+4. **DEBUG-only routes**  
+   When `DEBUG=True`, `urlpatterns` is extended with `static()` for `MEDIA_URL` and `STATIC_URL`.
+
+---
+
+## Full route list (by prefix)
+
+Below, **path** is relative to the project root (e.g. `/docs/...`). **Name** is the Django `name` used in `reverse()` / `{% url %}`.
+
+---
+
+### 1. **`/`** — Core (auth, dashboard)  
+**Module:** `apps.core.urls`  
+**Auth:** Login, register, and logout use the appointment360 GraphQL API (token-based). Theme toggle is client-side only.
+
+| Path | Name | View |
+|------|------|------|
+| `` | `core:dashboard` | `dashboard_view` |
+| `login/` | `core:login` | `login_view` |
+| `register/` | `core:register` | `register_view` |
+| `logout/` | `core:logout` | `logout_view` |
+
+---
+
+### 2. **`/docs/`** — Documentation app  
+**Module:** `apps.documentation.urls` (`app_name = 'documentation'`)  
+
+**Dashboard**  
+| Path | Name | View |
+|------|------|------|
+| `docs/` | `documentation:dashboard` | `documentation_dashboard` |
+| `docs/pages/` | `documentation:dashboard_pages` | `documentation_dashboard` |
+| `docs/endpoints/` | `documentation:dashboard_endpoints` | `documentation_dashboard` |
+| `docs/relationships/` | `documentation:dashboard_relationships` | `documentation_dashboard` |
+
+**Dashboard APIs (pagination, bulk)**  
+| Path | Name |
+|------|------|
+| `docs/api/dashboard/pages/` | `api_dashboard_pages` |
+| `docs/api/dashboard/endpoints/` | `api_dashboard_endpoints` |
+| `docs/api/dashboard/relationships/` | `api_dashboard_relationships` |
+| `docs/api/dashboard/postman/` | `api_dashboard_postman` |
+| `docs/api/dashboard/bulk-delete/` | `api_dashboard_bulk_delete` |
+
+**Health & stats**  
+| Path | Name |
+|------|------|
+| `docs/api/health/` | `health_status_api` |
+| `docs/api/stats/` | `dashboard_stats_api` |
+
+**Pages (CRUD + API)**  
+| Path | Name |
+|------|------|
+| `docs/pages/list/` | `pages_list` |
+| `docs/pages/<page_id>/` | `page_detail` |
+| `docs/pages/create/` | `page_create` |
+| `docs/pages/<page_id>/edit/` | `page_edit` |
+| `docs/pages/<page_id>/update/` | `page_update` |
+| `docs/pages/<page_id>/delete/` | `page_delete` |
+| `docs/api/pages/` | `api_page_create` |
+| `docs/api/pages/<page_id>/` | `api_page_update` |
+| `docs/api/pages/<page_id>/delete/` | `api_page_delete` |
+
+**Endpoints (CRUD + API)**  
+| Path | Name |
+|------|------|
+| `docs/endpoints/list/` | `endpoints_list` |
+| `docs/endpoints/<endpoint_id>/` | `endpoint_detail` |
+| `docs/endpoints/create/` | `endpoint_create` |
+| `docs/endpoints/<endpoint_id>/edit/` | `endpoint_edit` |
+| `docs/endpoints/<endpoint_id>/delete/` | `endpoint_delete` |
+| `docs/api/endpoints/` | `api_endpoint_create` |
+| `docs/api/endpoints/<endpoint_id>/` | `api_endpoint_update` |
+| `docs/api/endpoints/<endpoint_id>/delete/` | `api_endpoint_delete` |
+
+**Relationships (CRUD + API)**  
+| Path | Name |
+|------|------|
+| `docs/relationships/list/` | `relationships_list` |
+| `docs/relationships/<relationship_id>/` | `relationship_detail` |
+| `docs/relationships/create/` | `relationship_create` |
+| `docs/relationships/<relationship_id>/edit/` | `relationship_edit` |
+| `docs/api/relationships/` | `api_relationship_create` |
+| `docs/api/relationships/<relationship_id>/` | `api_relationship_update` |
+| `docs/api/relationships/<relationship_id>/delete/` | `api_relationship_delete` |
+
+**Media manager & file ops**  
+| Path | Name |
+|------|------|
+| `docs/media-manager/` | `media_manager` |
+| `docs/media/preview/<path:file_path>` | `media_file_preview` |
+| `docs/media/viewer/<path:file_path>` | `media_file_viewer` |
+| `docs/media/form/create/` | `media_file_form` |
+| `docs/media/form/edit/<path:file_path>` | `media_file_form_edit` |
+| `docs/media/delete/<path:file_path>` | `media_file_delete_confirm` |
+| `docs/media/file/<path:file_path>/analyze/` | `media_file_analyze` |
+| `docs/media/file/<path:file_path>/validate/` | `media_file_validate` |
+| `docs/media/file/<path:file_path>/generate-json/` | `media_file_generate_json` |
+| `docs/media/file/<path:file_path>/upload-s3/` | `media_file_upload_s3` |
+
+**Media API**  
+| Path | Name |
+|------|------|
+| `docs/api/media/files/` | `api_media_files` |
+| `docs/api/media/files/create/` | `api_media_file_create` |
+| `docs/api/media/sync-status/` | `api_media_sync_status` |
+| `docs/api/media/bulk-sync/` | `api_media_bulk_sync` |
+| `docs/api/media/indexes/regenerate/pages/` | `api_media_regenerate_pages_index` |
+| `docs/api/media/indexes/regenerate/endpoints/` | `api_media_regenerate_endpoints_index` |
+| `docs/api/media/indexes/regenerate/postman/` | `api_media_regenerate_postman_index` |
+| `docs/api/media/indexes/regenerate/relationships/` | `api_media_regenerate_relationships_index` |
+| `docs/api/media/indexes/regenerate/all/` | `api_media_regenerate_all_indexes` |
+| `docs/api/media/files/<path:file_path>/` | `api_media_file` |
+| `docs/api/media/files/<path:file_path>/update/` | `api_media_file_update` |
+| `docs/api/media/files/<path:file_path>/delete/` | `api_media_file_delete` |
+| `docs/api/media/sync/<path:file_path>/` | `api_media_sync_file` |
+
+**Operations**  
+| Path | Name |
+|------|------|
+| `docs/operations/` | `operations_dashboard` |
+| `docs/operations/analyze/` | `operations_analyze` |
+| `docs/operations/validate/` | `operations_validate` |
+| `docs/operations/generate-json/` | `operations_generate_json` |
+| `docs/operations/generate-postman/` | `operations_generate_postman` |
+| `docs/operations/upload/` | `operations_upload` |
+| `docs/operations/seed/` | `operations_seed` |
+| `docs/operations/workflow/` | `operations_workflow` |
+| `docs/operations/status/` | `operations_status` |
+| `docs/operations/tasks/` | `operations_tasks` |
+| `docs/operations/tasks/<task_id>/` | `operations_task_detail` |
+
+**Legacy (backward compat)**  
+| Path | Name |
+|------|------|
+| `docs/list/` | `list` |
+| `docs/<page_id>/` | `detail` |
+| `docs/create/` | `create` |
+| `docs/<page_id>/update/` | `update` |
+| `docs/<page_id>/delete/` | `delete` |
+
+---
+
+### 3. **`/durgasman/`** — API studio  
+**Module:** `apps.durgasman.urls`  
+
+| Path | Name | View |
+|------|------|------|
+| `durgasman/` | `durgasman:dashboard` | `dashboard` |
+| `durgasman/collection/<int:collection_id>/` | `durgasman:collection_detail` | `collection_detail` |
+| `durgasman/import/` | `durgasman:import` | `import_view` |
+| `durgasman/api/collections/` | `durgasman:api_collections` | `api_collections` |
+| `durgasman/api/collections/<id>/requests/` | `durgasman:api_collection_requests` | `api_collection_requests` |
+| `durgasman/api/requests/<id>/` | `durgasman:api_request_detail` | `api_request_detail` |
+| `durgasman/api/environments/` | `durgasman:api_environments` | `api_environments` |
+| `durgasman/api/history/` | `durgasman:api_history` | `api_history` |
+| `durgasman/api/execute/` | `durgasman:api_execute` | `execute_request` |
+| `durgasman/api/analyze/` | `durgasman:api_analyze` | `api_analyze_response` |
+| `durgasman/api/mocks/` | `durgasman:api_mocks` | `api_mocks` |
+
+---
+
+### 4. **`/analytics/`**  
+| Path | Name |
+|------|------|
+| `analytics/` | `analytics:dashboard` |
+
+---
+
+### 5. **`/ai/`** — AI agent UI  
+| Path | Name |
+|------|------|
+| `ai/` | `ai_agent:index` (redirect → `ai_agent:chat`) |
+| `ai/chat/` | `ai_agent:chat` |
+| `ai/sessions/` | `ai_agent:sessions` |
+| `ai/sessions/<session_id>/` | `ai_agent:session_detail` |
+| `ai/api/chat/` | `ai_agent:chat_completion_api` |
+
+---
+
+### 6. **`/codebase/`**  
+| Path | Name |
+|------|------|
+| `codebase/` | `codebase:dashboard` |
+| `codebase/scan/` | `codebase:scan` |
+| `codebase/analyses/<analysis_id>/` | `codebase:analysis_detail` |
+| `codebase/analyses/<analysis_id>/files/` | `codebase:file_list` |
+| `codebase/analyses/<analysis_id>/files/<path:file_path>/` | `codebase:file_detail` |
+| `codebase/analyses/<analysis_id>/dependencies/` | `codebase:dependencies` |
+| `codebase/analyses/<analysis_id>/patterns/` | `codebase:patterns` |
+| `codebase/api/scan/` | `codebase:scan_api` |
+
+---
+
+### 7. **`/tasks/`**  
+| Path | Name |
+|------|------|
+| `tasks/` | `tasks:list` |
+| `tasks/create/` | `tasks:create` |
+| `tasks/<task_id>/` | `tasks:detail` |
+| `tasks/<task_id>/start/` | `tasks:start` |
+| `tasks/<task_id>/complete/` | `tasks:complete` |
+| `tasks/<task_id>/edit/` | `tasks:edit` |
+| `tasks/api/` | `tasks:api_create` |
+| `tasks/api/<task_id>/` | `tasks:api_update` |
+
+---
+
+### 8. **`/media/`** — Media app (distinct from docs media)  
+| Path | Name |
+|------|------|
+| `media/` | `media:list` |
+
+---
+
+### 9. **`/graph/`**  
+| Path | Name |
+|------|------|
+| `graph/` | `graph:visualization` |
+
+---
+
+### 10. **`/tests/`**  
+| Path | Name |
+|------|------|
+| `tests/` | `test_runner:dashboard` |
+
+---
+
+### 11. **`/accessibility/`**  
+| Path | Name |
+|------|------|
+| `accessibility/` | `accessibility:dashboard` |
+
+---
+
+### 12. **`/roadmap/`**  
+| Path | Name |
+|------|------|
+| `roadmap/` | `roadmap:dashboard` |
+
+---
+
+### 13. **`/postman/`**  
+| Path | Name |
+|------|------|
+| `postman/` | `postman:homepage` |
+| `postman/dashboard/` | `postman:dashboard` |
+
+---
+
+### 14. **`/templates/`**  
+| Path | Name |
+|------|------|
+| `templates/` | `templates:list` |
+
+---
+
+### 15. **`/architecture/`**  
+| Path | Name |
+|------|------|
+| `architecture/` | `architecture:blueprint` |
+
+---
+
+### 16. **`/database/`**  
+| Path | Name |
+|------|------|
+| `database/` | `database:schema` |
+
+---
+
+### 17. **`/json-store/`**  
+| Path | Name |
+|------|------|
+| `json-store/` | `json_store:list` |
+
+---
+
+### 18. **`/operations/`** — Operations app (distinct from `docs/operations/`)  
+| Path | Name |
+|------|------|
+| `operations/` | `operations:dashboard` |
+
+---
+
+### 19. **`/page-builder/`**  
+| Path | Name |
+|------|------|
+| `page-builder/` | `page_builder:editor` |
+
+---
+
+### 20. **`/knowledge/`**  
+| Path | Name |
+|------|------|
+| `knowledge/` | `knowledge:list` |
+| `knowledge/create/` | `knowledge:create` |
+| `knowledge/<uuid:knowledge_id>/` | `knowledge:detail` |
+| `knowledge/<uuid:knowledge_id>/edit/` | `knowledge:edit` |
+| `knowledge/<uuid:knowledge_id>/delete/` | `knowledge:delete` |
+| `knowledge/search/` | `knowledge:search` |
+
+---
+
+### 21. **`/api/v1/`** — Documentation REST API v1  
+**Module:** `apps.documentation.api.v1.urls` (`app_name = 'api_v1'`, `namespace='api_v1'`)  
+
+| Path | Name |
+|------|------|
+| `api/v1/` | `api_v1:root` |
+| `api/v1/health/` | `api_v1:health` |
+| `api/v1/pages/` | `api_v1:pages_list` |
+| `api/v1/pages/<page_id>/` | `api_v1:pages_detail` |
+| `api/v1/endpoints/` | `api_v1:endpoints_list` |
+| `api/v1/endpoints/<endpoint_id>/` | `api_v1:endpoints_detail` |
+| `api/v1/relationships/` | `api_v1:relationships_list` |
+| `api/v1/relationships/<relationship_id>/` | `api_v1:relationships_detail` |
+| `api/v1/postman/` | `api_v1:postman_list` |
+| `api/v1/postman/<postman_id>/` | `api_v1:postman_detail` |
+| `api/v1/dashboard/pages/` | `api_v1:dashboard_pages` |
+| `api/v1/dashboard/endpoints/` | `api_v1:dashboard_endpoints` |
+| `api/v1/dashboard/relationships/` | `api_v1:dashboard_relationships` |
+| `api/v1/dashboard/postman/` | `api_v1:dashboard_postman` |
+
+---
+
+### 22. **`/api/v2/`** — Documentation API v2 (unified views)  
+**Module:** `apps.documentation.api.urls` (`app_name = 'documentation_api'`)  
+
+| Path | Name |
+|------|------|
+| `api/v2/pages/` | `documentation_api:pages_api` |
+| `api/v2/pages/<page_id>/` | `documentation_api:page_api` |
+| `api/v2/endpoints/` | `documentation_api:endpoints_api` |
+| `api/v2/endpoints/<endpoint_id>/` | `documentation_api:endpoint_api` |
+| `api/v2/relationships/` | `documentation_api:relationships_api` |
+| `api/v2/relationships/<relationship_id>/` | `documentation_api:relationship_api` |
+
+---
+
+### 23. **`/api/ai/`** — AI agent API  
+| Path | Name |
+|------|------|
+| `api/ai/chat/` | `ai_agent_api:chat` |
+| `api/ai/sessions/` | `ai_agent_api:sessions` |
+| `api/ai/sessions/<session_id>/` | `ai_agent_api:session_detail` |
+
+---
+
+### 24. **`/api/knowledge/`**  
+| Path | Name |
+|------|------|
+| `api/knowledge/` | `knowledge_api:list` |
+| `api/knowledge/search/` | `knowledge_api:search` |
+| `api/knowledge/<knowledge_id>/` | `knowledge_api:detail` |
+| `api/knowledge/<knowledge_id>/update/` | `knowledge_api:update` |
+| `api/knowledge/<knowledge_id>/delete/` | `knowledge_api:delete` |
+| `api/knowledge/create/` | `knowledge_api:create` |
+
+---
+
+### 25. **`/api/tasks/`** — DRF Task API  
+**Router:** `DefaultRouter` + `TaskViewSet` (`lookup_field='task_id'`).  
+
+| Path | Name |
+|------|------|
+| `api/tasks/` | list (GET), create (POST) |
+| `api/tasks/<task_id>/` | retrieve (GET), update (PUT), partial_update (PATCH), destroy (DELETE) |
+
+---
+
+### 26. **`/durgasflow/`** — Workflow automation UI  
+**Module:** `apps.durgasflow.urls`  
+
+| Path | Name |
+|------|------|
+| `durgasflow/` | `durgasflow:dashboard` |
+| `durgasflow/workflows/` | `durgasflow:workflow_list` |
+| `durgasflow/workflow/create/` | `durgasflow:workflow_create` |
+| `durgasflow/workflow/<uuid:workflow_id>/` | `durgasflow:workflow_detail` |
+| `durgasflow/workflow/<uuid:workflow_id>/edit/` | `durgasflow:workflow_edit` |
+| `durgasflow/workflow/<uuid:workflow_id>/delete/` | `durgasflow:workflow_delete` |
+| `durgasflow/editor/<uuid:workflow_id>/` | `durgasflow:editor` |
+| `durgasflow/editor/new/` | `durgasflow:editor_new` |
+| `durgasflow/executions/` | `durgasflow:execution_list` |
+| `durgasflow/execution/<uuid:execution_id>/` | `durgasflow:execution_detail` |
+| `durgasflow/workflow/<uuid:workflow_id>/execute/` | `durgasflow:workflow_execute` |
+| `durgasflow/workflow/<uuid:workflow_id>/activate/` | `durgasflow:workflow_activate` |
+| `durgasflow/workflow/<uuid:workflow_id>/deactivate/` | `durgasflow:workflow_deactivate` |
+| `durgasflow/credentials/` | `durgasflow:credential_list` |
+| `durgasflow/credential/create/` | `durgasflow:credential_create` |
+| `durgasflow/credential/<uuid:credential_id>/` | `durgasflow:credential_detail` |
+| `durgasflow/credential/<uuid:credential_id>/delete/` | `durgasflow:credential_delete` |
+| `durgasflow/templates/` | `durgasflow:template_list` |
+| `durgasflow/template/<uuid:template_id>/use/` | `durgasflow:template_use` |
+| `durgasflow/import/n8n/<path:workflow_path>/` | `durgasflow:import_n8n` |
+| `durgasflow/webhook/<uuid:workflow_id>/<str:webhook_path>/` | `durgasflow:webhook_handler` |
+
+---
+
+### 27. **`/api/durgasflow/`** — Durgasflow REST API  
+| Path | Name |
+|------|------|
+| `api/durgasflow/workflows/` | `workflow_list` |
+| `api/durgasflow/workflows/<workflow_id>/` | `workflow_detail` |
+| `api/durgasflow/workflows/<workflow_id>/graph/` | `workflow_graph` |
+| `api/durgasflow/workflows/<workflow_id>/execute/` | `workflow_execute` |
+| `api/durgasflow/workflows/<workflow_id>/activate/` | `workflow_activate` |
+| `api/durgasflow/workflows/<workflow_id>/deactivate/` | `workflow_deactivate` |
+| `api/durgasflow/workflows/<workflow_id>/duplicate/` | `workflow_duplicate` |
+| `api/durgasflow/workflows/<workflow_id>/export/` | `workflow_export` |
+| `api/durgasflow/workflows/import/` | `workflow_import` |
+| `api/durgasflow/executions/` | `execution_list` |
+| `api/durgasflow/executions/<execution_id>/` | `execution_detail` |
+| `api/durgasflow/executions/<execution_id>/cancel/` | `execution_cancel` |
+| `api/durgasflow/executions/<execution_id>/retry/` | `execution_retry` |
+| `api/durgasflow/executions/<execution_id>/logs/` | `execution_logs` |
+| `api/durgasflow/nodes/` | `node_types` |
+| `api/durgasflow/nodes/<node_type>/` | `node_schema` |
+| `api/durgasflow/credentials/` | `credential_list` |
+| `api/durgasflow/credentials/<credential_id>/` | `credential_detail` |
+| `api/durgasflow/templates/` | `template_list` |
+| `api/durgasflow/templates/<template_id>/` | `template_detail` |
+| `api/durgasflow/stats/` | `stats` |
+
+---
+
+## Unused / not mounted
+
+- **`apps.codebase.api.urls`** (`codebase_api`): not included in root or in `codebase` app. Routes like `api/codebase/...` don’t exist unless you add an `include` (e.g. under `codebase/` or at root).
+- **`apps.operations.api.urls`** (`operations_api`): same; not included anywhere. The `operations` app exposes only `operations:dashboard` at `/operations/`.
+
+---
+
+## Summary stats
+
+| Category | Approx. count |
+|----------|----------------|
+| **Root-mounted prefixes** | 22 (admin + core + docs + 18 apps + API groups) |
+| **`/docs/` routes** | ~75 (dashboard, CRUD, media, operations, legacy) |
+| **`/api/*` routes** | v1: 14, v2: 6, ai: 3, knowledge: 6, tasks: 2 (REST), durgasflow: 22 |
+| **`/durgasflow/` UI** | 22 |
+| **`/durgasman/`** | 11 |
+| **Other app roots** | 1–7 each |
+
+---
+
+## Smaller tasks for “learn, understand, analyse”
+
+1. **Map root → apps**  
+   Trace each `include()` in `docsai/urls.py` to its app and list which URLs live under which prefix.
+
+2. **Docs app deep-dive**  
+   Split `documentation` routes into: dashboard, pages/endpoints/relationships CRUD, media, operations, legacy. Note which views are HTML vs JSON and how they use `dashboard_api`, `media_views`, etc.
+
+3. **API layering**  
+   Compare `api/v1` vs `api/v2` vs `docs/api/...`: same resources, different styles (REST vs unified views). List which consumers use which (e.g. frontend, Lambda, Postman).
+
+4. **Conflicts and overlap**  
+   Check `docs/<page_id>/` vs `docs/pages/<page_id>/`, `docs/operations/` vs `/operations/`, `/media/` vs `docs/media-manager/` and `docs/media/...`. Decide which are legacy and which to standardise.
+
+5. **Orphan URL configs**  
+   Confirm `codebase.api` and `operations.api` are unused; either wire them (e.g. `codebase/api/`, `api/operations/`) or remove/deprecate.
+
+6. **Router-based APIs**  
+   Inspect `TaskViewSet` and any other ViewSets: supported methods, `lookup_field`/`lookup_url_kwarg`, and corresponding routes from the router.
+
+7. **Namespaces and reverse()**  
+   List all `app_name` and `namespace` values. Grep for `reverse(` / `{% url %}` and ensure they use the correct namespace and name.
+
+8. **Path converters**  
+   List use of `<uuid:...>`, `<str:...>`, `<path:...>`, `<int:...>` and ensure views expect those types (e.g. `task_id` vs UUID).
+
+9. **Static/media in DEBUG**  
+   Review how `static()` is appended and when `MEDIA_URL` / `STATIC_URL` are used; ensure they don’t clash with app routes.
+
+10. **Document and maintain**  
+    Add a small `ROUTES.md` (or section in `ARCHITECTURE_OVERVIEW.md`) that lists prefix → app → main routes and any “legacy vs preferred” notes, and keep it updated when adding/changing URLs.
+
+If you want, we can go through a specific app (e.g. `documentation` or `durgasflow`) and map each route to its view and template/response type next.

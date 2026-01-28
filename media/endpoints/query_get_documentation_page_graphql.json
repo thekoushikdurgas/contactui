@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_documentation_page_graphql-001",
+  "endpoint_id": "query_get_documentation_page_graphql",
+  "endpoint_path": "graphql/GetDocumentationPage",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get a documentation page by page_id. Accepts pageId (String!, required, non-empty string, max 255 characters). Returns DocumentationPage with pageId, title, description, category, contentUrl (presigned S3 URL), lastUpdated, version, and id. Uses LambdaDocumentationClient.get_page to retrieve page metadata. Response structure is validated before conversion to GraphQL type. Raises NotFoundError if page doesn't exist. Public endpoint (no authentication required). Response is cached.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/documentation/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/documentationService.ts",
+  "service_methods": [
+    "getDocumentationPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

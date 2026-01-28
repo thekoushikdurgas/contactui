@@ -1,0 +1,56 @@
+{
+  "_id": "get_activities_graphql-001",
+  "endpoint_id": "get_activities_graphql",
+  "endpoint_path": "graphql/GetActivities",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get user activities with filtering, pagination, and sorting. Accepts optional ActivityFilterInput with serviceType (enum: export, import, auth, email, contact, company, search, ai), actionType (enum: create, update, delete, export, import, login, logout, search, find), status (enum: success, failure, pending), startDate/endDate (DateTime range), limit (Int, default 100), offset (Int, default 0). Returns ActivityConnection with items (array of Activity with id, serviceType, actionType, status, metadata, createdAt), total, limit, offset, hasNext, hasPrevious. User isolation enforced.",
+  "created_at": "2026-01-19T12:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/activities/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/activitiesService.ts",
+  "service_methods": [
+    "activities"
+  ],
+  "repository_methods": [
+    "get_activities_by_user"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/activities",
+      "page_title": "Activities Page",
+      "via_service": "activitiesService",
+      "via_hook": "useActivitiesPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/dashboard",
+      "page_title": "Dashboard Page",
+      "via_service": "activitiesService",
+      "via_hook": "useDashboardPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/verifier",
+      "page_title": "Verifier Page",
+      "via_service": "activitiesService",
+      "via_hook": "useVerifier",
+      "usage_type": "secondary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": "100 requests/minute",
+  "graphql_operation": "query GetActivities($input: ActivityFilterInput) { activities { activities(input: $input) { items { id serviceType actionType status metadata createdAt } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 3,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

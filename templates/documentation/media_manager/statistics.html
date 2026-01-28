@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Statistics - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Statistics</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Comprehensive statistics overview</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <!-- Statistics Sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Pages Statistics -->
+        {% if pages_statistics %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Pages Statistics</h2>
+            <dl class="space-y-2">
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Pages</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ pages_statistics.total|default:"0" }}</dd>
+                </div>
+                {% if pages_statistics.statistics %}
+                {% for stat in pages_statistics.statistics.by_type %}
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ stat.type|title }}</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ stat.count|default:"0" }}</dd>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </dl>
+        </div>
+        {% endif %}
+        
+        <!-- Endpoints Statistics -->
+        {% if endpoints_statistics %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Endpoints Statistics</h2>
+            <dl class="space-y-2">
+                {% if endpoints_statistics.versions %}
+                {% for version in endpoints_statistics.versions %}
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ version.api_version|default:"Unknown" }}</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ version.count|default:"0" }}</dd>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </dl>
+        </div>
+        {% endif %}
+        
+        <!-- Relationships Statistics -->
+        {% if relationships_statistics %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Relationships Statistics</h2>
+            <dl class="space-y-2">
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Relationships</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ relationships_statistics.total_relationships|default:"0" }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unique Pages</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ relationships_statistics.unique_pages|default:"0" }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unique Endpoints</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ relationships_statistics.unique_endpoints|default:"0" }}</dd>
+                </div>
+            </dl>
+        </div>
+        {% endif %}
+        
+        <!-- Postman Statistics -->
+        {% if postman_statistics %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Postman Statistics</h2>
+            <dl class="space-y-2">
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Configurations</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ postman_statistics.total_configurations|default:"0" }}</dd>
+                </div>
+                {% if postman_statistics.by_state %}
+                {% for state, count in postman_statistics.by_state.items %}
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ state|title }}</dt>
+                    <dd class="text-sm text-gray-900 dark:text-gray-100">{{ count }}</dd>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </dl>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

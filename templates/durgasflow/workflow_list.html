@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Workflows - Durgasflow{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Workflows</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Manage your automated workflows</p>
+        </div>
+        <a href="{% url 'durgasflow:editor_new' %}" class="px-5 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all shadow-lg shadow-blue-200 dark:shadow-blue-900/50 flex items-center gap-2 w-fit">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New Workflow
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4">
+        <form method="get" class="flex flex-wrap items-center gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <input type="text" name="search" value="{{ search }}" placeholder="Search workflows..." class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <select name="status" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
+                <option value="">All Statuses</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <select name="trigger" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
+                <option value="">All Triggers</option>
+                <option value="manual" {% if trigger_filter == 'manual' %}selected{% endif %}>Manual</option>
+                <option value="webhook" {% if trigger_filter == 'webhook' %}selected{% endif %}>Webhook</option>
+                <option value="schedule" {% if trigger_filter == 'schedule' %}selected{% endif %}>Scheduled</option>
+            </select>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- Workflow Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for workflow in workflows %}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center {% if workflow.is_active %}bg-green-100 dark:bg-green-900/30{% else %}bg-gray-100 dark:bg-gray-700{% endif %}">
+                            <svg class="w-5 h-5 {% if workflow.is_active %}text-green-600 dark:text-green-400{% else %}text-gray-500 dark:text-gray-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <a href="{% url 'durgasflow:workflow_detail' workflow.id %}" class="font-bold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400">{{ workflow.name }}</a>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ workflow.trigger_type|title }} trigger</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-lg {% if workflow.is_active %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400{% endif %}">
+                        {{ workflow.status|title }}
+                    </span>
+                </div>
+                
+                {% if workflow.description %}
+                <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{{ workflow.description }}</p>
+                {% endif %}
+                
+                <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
+                    <span>{{ workflow.execution_count }} executions</span>
+                    <span>Updated {{ workflow.updated_at|timesince }} ago</span>
+                </div>
+            </div>
+            
+            <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'durgasflow:editor' workflow.id %}" class="p-2 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors" title="Edit">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </a>
+                    <form method="post" action="{% url 'durgasflow:workflow_execute' workflow.id %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="p-2 text-gray-500 hover:text-green-600 dark:hover:text-green-400 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/30 transition-colors" title="Execute">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                {% if workflow.is_active %}
+                <form method="post" action="{% url 'durgasflow:workflow_deactivate' workflow.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline">Deactivate</button>
+                </form>
+                {% else %}
+                <form method="post" action="{% url 'durgasflow:workflow_activate' workflow.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-xs font-semibold text-green-600 dark:text-green-400 hover:underline">Activate</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-12">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">No workflows found</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{% if search or status_filter or trigger_filter %}Try adjusting your filters{% else %}Create your first workflow to get started{% endif %}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if workflows.has_other_pages %}
+    <div class="flex justify-center">
+        <nav class="flex items-center gap-2">
+            {% if workflows.has_previous %}
+            <a href="?page={{ workflows.previous_page_number }}&search={{ search }}&status={{ status_filter }}&trigger={{ trigger_filter }}" class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700">Previous</a>
+            {% endif %}
+            
+            <span class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">Page {{ workflows.number }} of {{ workflows.paginator.num_pages }}</span>
+            
+            {% if workflows.has_next %}
+            <a href="?page={{ workflows.next_page_number }}&search={{ search }}&status={{ status_filter }}&trigger={{ trigger_filter }}" class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700">Next</a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

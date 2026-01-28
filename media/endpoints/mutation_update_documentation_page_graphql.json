@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_update_documentation_page_graphql-001",
+  "endpoint_id": "mutation_update_documentation_page_graphql",
+  "endpoint_path": "graphql/UpdateDocumentationPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update an existing documentation page. Accepts pageId (String!, required, non-empty string, max 255 characters) and UpdateDocumentationPageInput with optional fields: title (String, max 500 characters), description (String, max 1000 characters), category (String, max 100 characters), and content (String, max 100000 characters). At least one field must be provided. Returns DocumentationPage with pageId, title, description, category, contentUrl, lastUpdated, version, and id. Role check via UserProfileRepository (must be Admin or SuperAdmin). Uses LambdaDocumentationClient.update_page to update page. Only provided fields are updated (partial update). Raises NotFoundError if page doesn't exist. Response structure is validated before conversion to GraphQL type.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/documentationService.ts",
+  "service_methods": [
+    "updateDocumentationPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

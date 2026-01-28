@@ -1,0 +1,1091 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ endpoint.endpoint_id }} - Documentation{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/form-responsive.css' %}?v=20260124d">
+<style>
+/* Tab button styles for link-based tabs */
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+.tab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+.tab-button.active {
+    color: #9333ea;
+    border-bottom-color: #9333ea;
+}
+.dark .tab-button {
+    color: #9ca3af;
+}
+.dark .tab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+.dark .tab-button.active {
+    color: #a855f7;
+    border-bottom-color: #a855f7;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:dashboard' %}?tab=endpoints" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Endpoints</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium truncate max-w-xs">{{ endpoint.endpoint_id }}</span>
+    </nav>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-start justify-between">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ endpoint.endpoint_id|default:"Unknown Endpoint" }}</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-mono mt-0.5">{{ endpoint.endpoint_path|default:"" }}</p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                            {% include 'components/badge.html' with type='method' method=endpoint.method|default:'QUERY' text=endpoint.method|default:'QUERY' %}
+                            {% if endpoint.api_version %}
+                            {% include 'components/badge.html' with type='resource' resource_type='endpoints' text=endpoint.api_version size='sm' %}
+                            {% endif %}
+                            {% if endpoint.endpoint_state %}
+                            {% include 'components/badge.html' with type='status' status=endpoint.endpoint_state text=endpoint.endpoint_state|title %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'documentation:endpoint_edit' endpoint_id=endpoint.endpoint_id %}" class="inline-flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors font-medium text-sm shadow-sm">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                    </a>
+                    <a href="{% url 'documentation:endpoint_delete' endpoint_id=endpoint.endpoint_id %}" class="inline-flex items-center px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=overview" class="tab-button group {% if active_tab == 'overview' %}active{% endif %}" data-tab="overview" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Overview</span>
+                </a>
+                <a href="?tab=request" class="tab-button group {% if active_tab == 'request' %}active{% endif %}" data-tab="request" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10m-7 4h7" />
+                    </svg>
+                    <span>Request</span>
+                </a>
+                <a href="?tab=response" class="tab-button group {% if active_tab == 'response' %}active{% endif %}" data-tab="response" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Response</span>
+                </a>
+                {% if endpoint.api_version == 'graphql' or endpoint.graphql_operation %}
+                <a href="?tab=graphql" class="tab-button group {% if active_tab == 'graphql' %}active{% endif %}" data-tab="graphql" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>GraphQL</span>
+                </a>
+                {% endif %}
+                <a href="?tab=relationships" class="tab-button group {% if active_tab == 'relationships' %}active{% endif %}" data-tab="relationships" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Relationships</span>
+                    {% if pages_count or relationships_count %}
+                    {% with pages=pages_count|default:0 %}{% with rels=relationships_count|default:0 %}<span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full">{{ pages|add:rels }}</span>{% endwith %}{% endwith %}
+                    {% endif %}
+                </a>
+                {% if endpoint.lambda_services or endpoint.files %}
+                <a href="?tab=lambda-services" class="tab-button group {% if active_tab == 'lambda-services' %}active{% endif %}" data-tab="lambda-services" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                    </svg>
+                    <span>Lambda</span>
+                </a>
+                {% endif %}
+                {% if endpoint.files %}
+                <a href="?tab=files" class="tab-button group {% if active_tab == 'files' %}active{% endif %}" data-tab="files" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+                    </svg>
+                    <span>Files</span>
+                </a>
+                {% endif %}
+                {% if endpoint.methods %}
+                <a href="?tab=methods" class="tab-button group {% if active_tab == 'methods' %}active{% endif %}" data-tab="methods" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Methods</span>
+                </a>
+                {% endif %}
+                {% if endpoint.access_control %}
+                <a href="?tab=access" class="tab-button group {% if active_tab == 'access' %}active{% endif %}" data-tab="access" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Access</span>
+                </a>
+                {% endif %}
+                <a href="?tab=raw" class="tab-button group {% if active_tab == 'raw' %}active{% endif %}" data-tab="raw" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <span>Raw JSON</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-6">
+            <!-- Overview Tab -->
+            <div class="tab-content {% if active_tab == 'overview' %}active{% endif %}" id="tab-overview" role="tabpanel">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Basic Info -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Basic Information
+                        </h3>
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Endpoint ID</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ endpoint.endpoint_id }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Method</dt>
+                                <dd>{% include 'components/badge.html' with type='method' method=endpoint.method|default:'QUERY' text=endpoint.method|default:'QUERY' %}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Path</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ endpoint.endpoint_path|default:"-" }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">API Version</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ endpoint.api_version|default:"v1" }}</dd>
+                            </div>
+                            {% if endpoint.endpoint_state %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">State</dt>
+                                <dd>{% include 'components/badge.html' with type='status' status=endpoint.endpoint_state text=endpoint.endpoint_state|title %}</dd>
+                            </div>
+                            {% endif %}
+                        </dl>
+                    </div>
+
+                    <!-- Description & Details -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                            Description
+                        </h3>
+                        {% if endpoint.description %}
+                        <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ endpoint.description }}</p>
+                        {% else %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 italic">No description provided</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ endpoint.used_by_pages|length|default:0 }}</div>
+                            <div class="text-xs text-purple-600/70 dark:text-purple-400/70 mt-1">Pages Using</div>
+                        </div>
+                        {% if endpoint.methods %}
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                {% with service_count=endpoint.methods.service_methods|length|default:0 %}{% with repo_count=endpoint.methods.repository_methods|length|default:0 %}{{ service_count|add:repo_count }}{% endwith %}{% endwith %}
+                            </div>
+                            <div class="text-xs text-blue-600/70 dark:text-blue-400/70 mt-1">Methods</div>
+                        </div>
+                        {% endif %}
+                        {% if endpoint.files %}
+                        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+                                {% if endpoint.files.service_file %}1{% else %}0{% endif %}
+                                {% if endpoint.files.router_file %}+1{% endif %}
+                                {% if endpoint.files.repository_file %}+1{% endif %}
+                                {% if endpoint.files.schema_file %}+1{% endif %}
+                                {% if endpoint.files.test_file %}+1{% endif %}
+                            </div>
+                            <div class="text-xs text-green-600/70 dark:text-green-400/70 mt-1">Files</div>
+                        </div>
+                        {% endif %}
+                        {% if endpoint.lambda_services %}
+                        <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                                {% with deps_count=endpoint.lambda_services.dependencies|length|default:0 %}{{ deps_count|add:1 }}{% endwith %}
+                            </div>
+                            <div class="text-xs text-orange-600/70 dark:text-orange-400/70 mt-1">Lambda Services</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Tab -->
+            <div class="tab-content {% if active_tab == 'request' %}active{% endif %}" id="tab-request" role="tabpanel">
+                <div class="space-y-6">
+                    <!-- Method and Path -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                HTTP Method
+                            </h3>
+                            <div class="flex items-center">
+                                {% include 'components/badge.html' with type='method' method=endpoint.method|default:'QUERY' text=endpoint.method|default:'QUERY' %}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                Endpoint Path
+                            </h3>
+                            <p class="text-sm text-gray-900 dark:text-gray-100 font-mono break-all">{{ endpoint.endpoint_path|default:"-" }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Headers -->
+                    {% if endpoint.request_headers or endpoint.headers %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10m-7 4h7" />
+                            </svg>
+                            Request Headers
+                        </h3>
+                        <div class="space-y-2">
+                            {% with headers=endpoint.request_headers|default:endpoint.headers|default:"" %}
+                            {% if headers %}
+                            {% for header in headers %}
+                            <div class="flex justify-between items-center p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                                <span class="text-sm font-mono text-gray-900 dark:text-gray-100">{{ header.key|default:header.name|default:header }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-mono">{{ header.value|default:header }}</span>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Parameters -->
+                    {% if endpoint.request_parameters or endpoint.parameters %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            Request Parameters
+                        </h3>
+                        <div class="space-y-2">
+                            {% with params=endpoint.request_parameters|default:endpoint.parameters|default:"" %}
+                            {% if params %}
+                            {% for param in params %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100 font-mono">{{ param.name|default:param.key|default:param }}</span>
+                                    {% if param.required %}
+                                    <span class="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded">Required</span>
+                                    {% endif %}
+                                </div>
+                                {% if param.type %}
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Type: <span class="font-mono">{{ param.type }}</span></p>
+                                {% endif %}
+                                {% if param.description %}
+                                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">{{ param.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Request Body -->
+                    {% if endpoint.request_body or endpoint.body %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Request Body
+                        </h3>
+                        <pre class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto"><code>{{ endpoint.request_body|default:endpoint.body|default:"{}"|safe }}</code></pre>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Response Tab -->
+            <div class="tab-content {% if active_tab == 'response' %}active{% endif %}" id="tab-response" role="tabpanel">
+                <div class="space-y-6">
+                    <!-- Response Schema -->
+                    {% if endpoint.response_schema %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Response Schema
+                        </h3>
+                        <pre class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto max-h-96"><code>{{ endpoint.response_schema|safe }}</code></pre>
+                    </div>
+                    {% endif %}
+
+                    <!-- Response Examples -->
+                    {% if endpoint.response_examples or endpoint.examples %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Response Examples
+                        </h3>
+                        <div class="space-y-4">
+                            {% with examples=endpoint.response_examples|default:endpoint.examples|default:"" %}
+                            {% if examples %}
+                            {% for example in examples %}
+                            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                                {% if example.status_code %}
+                                <div class="mb-2">
+                                    <span class="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">{{ example.status_code }}</span>
+                                </div>
+                                {% endif %}
+                                <pre class="text-sm text-gray-800 dark:text-gray-200 overflow-x-auto"><code>{{ example.body|default:example|safe }}</code></pre>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Status Codes -->
+                    {% if endpoint.status_codes %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Status Codes
+                        </h3>
+                        <div class="space-y-2">
+                            {% for status in endpoint.status_codes %}
+                            <div class="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ status.code|default:status }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ status.description|default:status.message|default:"" }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- GraphQL Tab -->
+            {% if endpoint.api_version == 'graphql' or endpoint.graphql_operation %}
+            <div class="tab-content {% if active_tab == 'graphql' %}active{% endif %}" id="tab-graphql" role="tabpanel">
+                <div class="space-y-6">
+                    {% if endpoint.graphql_operation %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            GraphQL Operation
+                        </h3>
+                        <pre class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto"><code>{{ endpoint.graphql_operation }}</code></pre>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.graphql_query %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Query
+                        </h3>
+                        <pre class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto"><code>{{ endpoint.graphql_query }}</code></pre>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.graphql_mutation %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Mutation
+                        </h3>
+                        <pre class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto"><code>{{ endpoint.graphql_mutation }}</code></pre>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Lambda Services Tab -->
+            {% if endpoint.lambda_services or endpoint.files %}
+            <div class="tab-content {% if active_tab == 'lambda-services' %}active{% endif %}" id="tab-lambda-services" role="tabpanel">
+                <div class="space-y-6">
+                    {% if endpoint.lambda_services %}
+                    <!-- Primary Lambda Service -->
+                    {% if endpoint.lambda_services.primary %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                            Primary Lambda Service
+                        </h3>
+                        <dl class="space-y-3">
+                            {% if endpoint.lambda_services.primary.service_name %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Service Name</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ endpoint.lambda_services.primary.service_name }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.lambda_services.primary.function_name %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Function Name</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ endpoint.lambda_services.primary.function_name }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.lambda_services.primary.runtime %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Runtime</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ endpoint.lambda_services.primary.runtime }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.lambda_services.primary.memory_mb %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Memory</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ endpoint.lambda_services.primary.memory_mb }} MB</dd>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.lambda_services.primary.timeout_seconds %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Timeout</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ endpoint.lambda_services.primary.timeout_seconds }}s</dd>
+                            </div>
+                            {% endif %}
+                        </dl>
+                    </div>
+                    {% endif %}
+
+                    <!-- Dependencies -->
+                    {% if endpoint.lambda_services.dependencies %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Dependencies ({{ endpoint.lambda_services.dependencies|length }})
+                        </h3>
+                        <div class="space-y-2">
+                            {% for dep in endpoint.lambda_services.dependencies %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="font-medium text-sm text-gray-900 dark:text-gray-100">{{ dep.service_name|default:"Unknown" }}</div>
+                                {% if dep.function_name %}
+                                <div class="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1">{{ dep.function_name }}</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Environment Variables -->
+                    {% if endpoint.lambda_services.environment %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            Environment Variables
+                        </h3>
+                        <div class="space-y-2">
+                            {% for key, value in endpoint.lambda_services.environment.items %}
+                            <div class="flex justify-between items-center p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                                <span class="text-sm font-mono text-gray-900 dark:text-gray-100">{{ key }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-mono">{{ value|truncatechars:30 }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Lambda Services</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No Lambda services configured for this endpoint.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Files Tab -->
+            {% if endpoint.files %}
+            <div class="tab-content {% if active_tab == 'files' %}active{% endif %}" id="tab-files" role="tabpanel">
+                <div class="space-y-4">
+                    {% if endpoint.files.service_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span class="font-medium text-gray-900 dark:text-gray-100">Service File</span>
+                                <span class="px-2 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Required</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.service_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.router_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span class="font-medium text-gray-900 dark:text-gray-100">Router File</span>
+                                <span class="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">Required</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.router_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.repository_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">Repository File</span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.repository_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.schema_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">Schema File</span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.schema_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.test_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">Test File</span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.test_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.graphql_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">GraphQL File</span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.graphql_file }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.files.sql_file %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                            </svg>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">SQL File</span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ endpoint.files.sql_file }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Methods Tab -->
+            {% if endpoint.methods %}
+            <div class="tab-content {% if active_tab == 'methods' %}active{% endif %}" id="tab-methods" role="tabpanel">
+                <div class="space-y-6">
+                    {% if endpoint.methods.service_methods %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                            Service Methods ({{ endpoint.methods.service_methods|length }})
+                        </h3>
+                        <div class="space-y-2">
+                            {% for method in endpoint.methods.service_methods %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 font-mono">{{ method }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.methods.repository_methods %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Repository Methods ({{ endpoint.methods.repository_methods|length }})
+                        </h3>
+                        <div class="space-y-2">
+                            {% for method in endpoint.methods.repository_methods %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 font-mono">{{ method }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.methods.validation_methods %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Validation Methods ({{ endpoint.methods.validation_methods|length }})
+                        </h3>
+                        <div class="space-y-2">
+                            {% for method in endpoint.methods.validation_methods %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 font-mono">{{ method }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if endpoint.methods.middleware_methods %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            Middleware Methods ({{ endpoint.methods.middleware_methods|length }})
+                        </h3>
+                        <div class="space-y-2">
+                            {% for method in endpoint.methods.middleware_methods %}
+                            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 font-mono">{{ method }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Relationships Tab -->
+            <div class="tab-content {% if active_tab == 'relationships' %}active{% endif %}" id="tab-relationships" role="tabpanel">
+                <div class="space-y-6">
+                    <!-- Pages Using This Endpoint -->
+                    {% if pages_using_endpoint %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Pages Using This Endpoint ({{ pages_count }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for page_usage in pages_using_endpoint %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <div>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">
+                                        {% if page_usage.page_path %}
+                                            {{ page_usage.page_path }}
+                                        {% elif page_usage.page_title %}
+                                            {{ page_usage.page_title }}
+                                        {% else %}
+                                            Unknown Page
+                                        {% endif %}
+                                    </span>
+                                    {% if page_usage.page_title and page_usage.page_path and page_usage.page_path != page_usage.page_title %}
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ page_usage.page_title }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if page_usage.via_service or page_usage.via_hook or page_usage.usage_type %}
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            {% if page_usage.via_service %}
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Service: {{ page_usage.via_service }}</span>
+                            {% endif %}
+                            {% if page_usage.via_hook %}
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">Hook: {{ page_usage.via_hook }}</span>
+                            {% endif %}
+                            {% if page_usage.usage_type %}
+                            <span class="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">{{ page_usage.usage_type|title }}</span>
+                            {% endif %}
+                            {% if page_usage.usage_context %}
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ page_usage.usage_context_display|default:page_usage.usage_context|title }}</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Relationships -->
+                    {% if endpoint_relationships %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Related Relationships ({{ relationships_count }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for rel in endpoint_relationships %}
+                            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">
+                                            {% if rel.relationship_id %}
+                                                {{ rel.relationship_id }}
+                                            {% elif rel.relationship_type %}
+                                                {{ rel.relationship_type }}
+                                            {% else %}
+                                                Unknown Relationship
+                                            {% endif %}
+                                        </span>
+                                        {% if rel.usage_type %}
+                                        <span class="px-2 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">{{ rel.usage_type|title }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if rel.page_id %}
+                                    <a href="{% url 'documentation:page_detail' page_id=rel.page_id %}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                                        View Page →
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                {% if rel.description %}
+                                <p class="text-sm text-gray-600 dark:text-gray-300">{{ rel.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if not pages_using_endpoint and not endpoint_relationships %}
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Relationships</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No relationships found for this endpoint. Create relationships to connect this endpoint with pages.</p>
+                        <a href="{% url 'documentation:relationship_create' %}" class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors text-sm font-medium">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create Relationship
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Access Control Tab -->
+            {% if endpoint.access_control %}
+            <div class="tab-content {% if active_tab == 'access' %}active{% endif %}" id="tab-access" role="tabpanel">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Role Permissions -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            Role Permissions
+                        </h3>
+                        <div class="space-y-3">
+                            {% if endpoint.access_control.super_admin %}
+                            <div class="flex items-center justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Super Admin</span>
+                                <div class="flex gap-2">
+                                    {% if endpoint.access_control.super_admin.can_access %}<span class="text-xs text-green-600">View</span>{% endif %}
+                                    {% if endpoint.access_control.super_admin.can_execute %}<span class="text-xs text-green-600">Execute</span>{% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.access_control.admin %}
+                            <div class="flex items-center justify-between p-2 bg-amber-50 dark:bg-amber-900/20 rounded">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Admin</span>
+                                <div class="flex gap-2">
+                                    {% if endpoint.access_control.admin.can_access %}<span class="text-xs text-green-600">View</span>{% endif %}
+                                    {% if endpoint.access_control.admin.can_execute %}<span class="text-xs text-green-600">Execute</span>{% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.access_control.pro_user %}
+                            <div class="flex items-center justify-between p-2 bg-purple-50 dark:bg-purple-900/20 rounded">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Pro User</span>
+                                <div class="flex gap-2">
+                                    {% if endpoint.access_control.pro_user.can_access %}<span class="text-xs text-green-600">View</span>{% endif %}
+                                    {% if endpoint.access_control.pro_user.can_execute %}<span class="text-xs text-green-600">Execute</span>{% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if endpoint.access_control.free_user %}
+                            <div class="flex items-center justify-between p-2 bg-blue-50 dark:bg-blue-900/20 rounded">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Free User</span>
+                                <div class="flex gap-2">
+                                    {% if endpoint.access_control.free_user.can_access %}<span class="text-xs text-green-600">View</span>{% endif %}
+                                    {% if endpoint.access_control.free_user.can_execute %}<span class="text-xs text-green-600">Execute</span>{% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Rate Limits -->
+                    {% if endpoint.rate_limit %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Rate Limits
+                        </h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">{{ endpoint.rate_limit }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Raw JSON Tab -->
+            <div class="tab-content {% if active_tab == 'raw' %}active{% endif %}" id="tab-raw" role="tabpanel">
+                <div class="bg-gray-900 rounded-lg overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                        <span class="text-sm text-gray-400">endpoint.json</span>
+                        <button type="button" onclick="copyJSON()" class="text-xs text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre id="json-content" class="p-4 text-sm text-gray-300 overflow-x-auto max-h-96"><code>{{ endpoint_json|default:"{}" }}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <a href="{% url 'documentation:dashboard' %}?tab=endpoints" class="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Endpoints
+                </a>
+                <div class="text-xs text-gray-400">
+                    {% if endpoint.updated_at %}
+                    Last updated: {{ endpoint.updated_at }}
+                    {% elif endpoint.created_at %}
+                    Created: {{ endpoint.created_at }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching functionality with URL state management
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Get active tab from URL or default to overview
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'overview';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks - links will handle navigation
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // If it's a link, let it navigate naturally
+            if (this.tagName === 'A') {
+                return;
+            }
+            
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update URL without page reload
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'overview';
+        
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+});
+
+// Copy JSON functionality
+function copyJSON() {
+    const jsonContent = document.getElementById('json-content').textContent;
+    navigator.clipboard.writeText(jsonContent).then(() => {
+        // Show brief feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Copied!';
+        setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+    });
+}
+</script>
+{% endblock %}

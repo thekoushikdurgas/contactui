@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_find_single_email_graphql-001",
+  "endpoint_id": "mutation_find_single_email_graphql",
+  "endpoint_path": "graphql/FindSingleEmail",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Find email address for a contact. Accepts FindSingleEmailInput with firstName (required, String), lastName (required, String), domain (optional, String) OR website (optional, String) - at least one required. Uses two-step approach: first tries email finder, then email verifier if finder fails. Returns SingleEmailResponse with email (String or null), source (enum: finder, verifier, null), confidence (Float). Uses LambdaEmailClient for Lambda Email service. Credits: 1 credit deducted per search (FreeUser/ProUser only, Admin/SuperAdmin unlimited). Activity logged (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/email/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/emailService.ts",
+  "service_methods": [
+    "findSingleEmail"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/app",
+      "page_title": "Finder Page",
+      "via_service": "emailService",
+      "via_hook": null,
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2025-01-27T12:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation FindSingleEmail($input: FindSingleEmailInput!) { email { findSingleEmail(input: $input) { email source confidence } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,126 @@
+/**
+ * Card Component Styles
+ * 
+ * Unified card component styles with variants
+ */
+
+.card {
+    background-color: var(--color-bg-primary);
+    border-radius: var(--card-border-radius, 1rem);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--card-shadow, var(--shadow-md));
+    overflow: hidden;
+    transition: all var(--transition-base) var(--transition-ease);
+}
+
+.card--elevated {
+    box-shadow: var(--shadow-lg);
+}
+
+.card--outlined {
+    box-shadow: none;
+    border-width: 2px;
+}
+
+.card--flat {
+    box-shadow: none;
+    border: none;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+}
+
+.card__header {
+    padding: var(--spacing-6, 1.5rem);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+}
+
+.card__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.card__body {
+    padding: var(--spacing-6, 1.5rem);
+}
+
+.card__footer {
+    padding: var(--spacing-6, 1.5rem);
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+}
+
+/* Resource-specific card colors */
+.card--resource-pages {
+    border-color: var(--color-resource-pages-border);
+    background-color: var(--color-resource-pages-bg);
+}
+
+.card--resource-endpoints {
+    border-color: var(--color-resource-endpoints-border);
+    background-color: var(--color-resource-endpoints-bg);
+}
+
+.card--resource-relationships {
+    border-color: var(--color-resource-relationships-border);
+    background-color: var(--color-resource-relationships-bg);
+}
+
+.card--resource-postman {
+    border-color: var(--color-resource-postman-border);
+    background-color: var(--color-resource-postman-bg);
+}
+
+.card--resource-graph {
+    border-color: var(--color-resource-graph-border);
+    background: var(--color-resource-graph-bg);
+}
+
+.card--resource-operations {
+    border-color: var(--color-resource-operations-border);
+    background-color: var(--color-resource-operations-bg);
+}
+
+/* Loading state */
+.card--loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.card__skeleton {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .card {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .card__header,
+[data-theme="dark"] .card__footer {
+    background-color: var(--color-bg-tertiary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .card__header,
+    .card__body,
+    .card__footer {
+        padding: var(--spacing-4, 1rem);
+    }
+}

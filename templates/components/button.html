@@ -1,0 +1,59 @@
+{% comment %}
+Button Component
+
+Usage:
+{% include 'components/button.html' with type='primary' size='md' text='Click Me' href='/path' %}
+
+Parameters:
+- type: Button type (primary, secondary, danger, success, warning, info, ghost, link) - default: primary
+- size: Button size (sm, md, lg) - default: md
+- text: Button text (required)
+- href: Link URL (if provided, renders as <a> instead of <button>)
+- icon: Icon name or SVG (optional)
+- icon_position: 'left' or 'right' - default: 'left'
+- disabled: Boolean - default: false
+- loading: Boolean - default: false
+- full_width: Boolean - default: false
+- onclick: JavaScript onclick handler (optional)
+- class: Additional CSS classes (optional)
+- id: Button ID (optional)
+- aria_label: ARIA label (optional)
+{% endcomment %}
+
+{% load static %}
+
+{% if href %}
+<a href="{{ href|default:'#' }}" 
+   class="btn btn-{{ type|default:'primary' }} btn-{{ size|default:'md' }}{% if full_width %} btn-full{% endif %}{% if disabled %} btn-disabled{% endif %}{% if loading %} btn-loading{% endif %} {{ class|default:'' }}"
+   {% if id %}id="{{ id }}"{% endif %}
+   {% if disabled %}aria-disabled="true" tabindex="-1"{% endif %}
+   {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+   {% if onclick %}onclick="{{ onclick }}"{% endif %}>
+    {% if loading %}
+        <span class="btn-spinner"></span>
+    {% elif icon and icon_position != 'right' %}
+        <span class="btn-icon btn-icon-left">{{ icon|safe }}</span>
+    {% endif %}
+    <span class="btn-text">{{ text|default:'Button' }}</span>
+    {% if icon and icon_position == 'right' %}
+        <span class="btn-icon btn-icon-right">{{ icon|safe }}</span>
+    {% endif %}
+</a>
+{% else %}
+<button type="button"
+        class="btn btn-{{ type|default:'primary' }} btn-{{ size|default:'md' }}{% if full_width %} btn-full{% endif %}{% if disabled %} btn-disabled{% endif %}{% if loading %} btn-loading{% endif %} {{ class|default:'' }}"
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if disabled %}disabled{% endif %}
+        {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+        {% if onclick %}onclick="{{ onclick }}"{% endif %}>
+    {% if loading %}
+        <span class="btn-spinner"></span>
+    {% elif icon and icon_position != 'right' %}
+        <span class="btn-icon btn-icon-left">{{ icon|safe }}</span>
+    {% endif %}
+    <span class="btn-text">{{ text|default:'Button' }}</span>
+    {% if icon and icon_position == 'right' %}
+        <span class="btn-icon btn-icon-right">{{ icon|safe }}</span>
+    {% endif %}
+</button>
+{% endif %}

@@ -1,0 +1,78 @@
+{% comment %}
+Input Component
+
+Usage:
+{% include 'components/input.html' with type='text' name='username' label='Username' placeholder='Enter username' required=True %}
+
+Parameters:
+- type: Input type (text, email, password, number, tel, url, search, etc.) - default: text
+- name: Input name (required)
+- id: Input ID (defaults to name if not provided)
+- label: Label text (optional)
+- placeholder: Placeholder text (optional)
+- value: Initial value (optional)
+- required: Boolean - default: false
+- disabled: Boolean - default: false
+- readonly: Boolean - default: false
+- size: Input size (sm, md, lg) - default: md
+- error: Error message (optional)
+- help_text: Help text (optional)
+- icon: Icon (left or right) (optional)
+- class: Additional CSS classes (optional)
+- aria_label: ARIA label (optional)
+- autocomplete: Autocomplete attribute (optional)
+- pattern: Pattern attribute (optional)
+- min: Min value (for number/date inputs)
+- max: Max value (for number/date inputs)
+- step: Step value (for number inputs)
+{% endcomment %}
+
+{% load static %}
+
+<div class="form-field">
+    {% if label %}
+    <label for="{{ id|default:name }}" class="form-label{% if required %} form-label-required{% endif %}">
+        {{ label }}
+    </label>
+    {% endif %}
+    
+    <div class="form-input-wrapper form-input-{{ size|default:'md' }}{% if error %} form-input-error{% endif %}{% if icon %} form-input-with-icon{% endif %}">
+        {% if icon and icon_position != 'right' %}
+        <span class="form-input-icon form-input-icon-left">{{ icon|safe }}</span>
+        {% endif %}
+        
+        <input type="{{ type|default:'text' }}"
+               name="{{ name }}"
+               id="{{ id|default:name }}"
+               class="form-input {{ class|default:'' }}"
+               {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+               {% if value %}value="{{ value }}"{% endif %}
+               {% if required %}required{% endif %}
+               {% if disabled %}disabled{% endif %}
+               {% if readonly %}readonly{% endif %}
+               {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+               {% if pattern %}pattern="{{ pattern }}"{% endif %}
+               {% if min is not None %}min="{{ min }}"{% endif %}
+               {% if max is not None %}max="{{ max }}"{% endif %}
+               {% if step is not None %}step="{{ step }}"{% endif %}
+               {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+               {% if error %}aria-invalid="true" aria-describedby="{{ id|default:name }}-error"{% endif %}
+               {% if help_text %}aria-describedby="{{ id|default:name }}-help"{% endif %}>
+        
+        {% if icon and icon_position == 'right' %}
+        <span class="form-input-icon form-input-icon-right">{{ icon|safe }}</span>
+        {% endif %}
+    </div>
+    
+    {% if error %}
+    <p id="{{ id|default:name }}-error" class="form-error" role="alert">
+        {{ error }}
+    </p>
+    {% endif %}
+    
+    {% if help_text and not error %}
+    <p id="{{ id|default:name }}-help" class="form-help">
+        {{ help_text }}
+    </p>
+    {% endif %}
+</div>

@@ -1,0 +1,532 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-01-22T21:46:29.721000+00:00",
+  "total": 51,
+  "pages": [
+    {
+      "page_id": "about_page",
+      "page_type": "marketing",
+      "route": "/about",
+      "file_name": "about_page.json"
+    },
+    {
+      "page_id": "activities_page",
+      "page_type": "dashboard",
+      "route": "/activities",
+      "file_name": "activities_page.json"
+    },
+    {
+      "page_id": "admin_dashboard_pages_page",
+      "page_type": "dashboard",
+      "route": "/admin/dashboard-pages",
+      "file_name": "admin_dashboard_pages_page.json"
+    },
+    {
+      "page_id": "admin_dashboard_pages_pageid_page",
+      "page_type": "dashboard",
+      "route": "/admin/dashboard-pages/[pageId]",
+      "file_name": "admin_dashboard_pages_pageid_page.json"
+    },
+    {
+      "page_id": "admin_logs_page",
+      "page_type": "dashboard",
+      "route": "/admin/logs",
+      "file_name": "admin_logs_page.json"
+    },
+    {
+      "page_id": "admin_marketing_new_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing/new",
+      "file_name": "admin_marketing_new_page.json"
+    },
+    {
+      "page_id": "admin_marketing_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing",
+      "file_name": "admin_marketing_page.json"
+    },
+    {
+      "page_id": "admin_marketing_pageid_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing/[pageId]",
+      "file_name": "admin_marketing_pageid_page.json"
+    },
+    {
+      "page_id": "admin_settings_page",
+      "page_type": "dashboard",
+      "route": "/admin/settings",
+      "file_name": "admin_settings_page.json"
+    },
+    {
+      "page_id": "admin_statistics_page",
+      "page_type": "dashboard",
+      "route": "/admin/statistics",
+      "file_name": "admin_statistics_page.json"
+    },
+    {
+      "page_id": "admin_system_status_page",
+      "page_type": "dashboard",
+      "route": "/admin/system-status",
+      "file_name": "admin_system_status_page.json"
+    },
+    {
+      "page_id": "admin_user_history_page",
+      "page_type": "dashboard",
+      "route": "/admin/user-history",
+      "file_name": "admin_user_history_page.json"
+    },
+    {
+      "page_id": "admin_users_page",
+      "page_type": "dashboard",
+      "route": "/admin/users",
+      "file_name": "admin_users_page.json"
+    },
+    {
+      "page_id": "ai_chat_page",
+      "page_type": "dashboard",
+      "route": "/ai-chat",
+      "file_name": "ai_chat_page.json"
+    },
+    {
+      "page_id": "analytics_page",
+      "page_type": "dashboard",
+      "route": "/analytics",
+      "file_name": "analytics_page.json"
+    },
+    {
+      "page_id": "api_docs_page",
+      "page_type": "marketing",
+      "route": "/api",
+      "file_name": "api_docs_page.json"
+    },
+    {
+      "page_id": "billing_cancel_page",
+      "page_type": "dashboard",
+      "route": "/billing/cancel",
+      "file_name": "billing_cancel_page.json"
+    },
+    {
+      "page_id": "billing_page",
+      "page_type": "dashboard",
+      "route": "/billing",
+      "file_name": "billing_page.json"
+    },
+    {
+      "page_id": "billing_success_page",
+      "page_type": "dashboard",
+      "route": "/billing/success",
+      "file_name": "billing_success_page.json"
+    },
+    {
+      "page_id": "careers_page",
+      "page_type": "marketing",
+      "route": "/careers",
+      "file_name": "careers_page.json"
+    },
+    {
+      "page_id": "chrome_extension_page",
+      "page_type": "marketing",
+      "route": "/chrome-extension",
+      "file_name": "chrome_extension_page.json"
+    },
+    {
+      "page_id": "companies_id_page",
+      "page_type": "dashboard",
+      "route": "/companies/[id]",
+      "file_name": "companies_id_page.json"
+    },
+    {
+      "page_id": "companies_page",
+      "page_type": "dashboard",
+      "route": "/companies",
+      "file_name": "companies_page.json"
+    },
+    {
+      "page_id": "contacts_page",
+      "page_type": "dashboard",
+      "route": "/contacts",
+      "file_name": "contacts_page.json"
+    },
+    {
+      "page_id": "dashboard_page",
+      "page_type": "dashboard",
+      "route": "/dashboard",
+      "file_name": "dashboard_page.json"
+    },
+    {
+      "page_id": "dashboard_pageid_page",
+      "page_type": "dashboard",
+      "route": "/dashboard/[pageId]",
+      "file_name": "dashboard_pageid_page.json"
+    },
+    {
+      "page_id": "data_search_page",
+      "page_type": "dashboard",
+      "route": "/data-search",
+      "file_name": "data_search_page.json"
+    },
+    {
+      "page_id": "docs_page",
+      "page_type": "docs",
+      "route": "/docs",
+      "file_name": "docs_page.json"
+    },
+    {
+      "page_id": "docs_pageid_page",
+      "page_type": "docs",
+      "route": "/docs/[pageId]",
+      "file_name": "docs_pageid_page.json"
+    },
+    {
+      "page_id": "export_page",
+      "page_type": "dashboard",
+      "route": "/export",
+      "file_name": "export_page.json"
+    },
+    {
+      "page_id": "finder_page",
+      "page_type": "dashboard",
+      "route": "/finder",
+      "file_name": "finder_page.json"
+    },
+    {
+      "page_id": "integrations_page",
+      "page_type": "marketing",
+      "route": "/integrations",
+      "file_name": "integrations_page.json"
+    },
+    {
+      "page_id": "landing_page",
+      "page_type": "marketing",
+      "route": "/",
+      "file_name": "landing_page.json"
+    },
+    {
+      "page_id": "linkedin_page",
+      "page_type": "dashboard",
+      "route": "/linkedin",
+      "file_name": "linkedin_page.json"
+    },
+    {
+      "page_id": "login_page",
+      "page_type": "docs",
+      "route": "/login",
+      "file_name": "login_page.json"
+    },
+    {
+      "page_id": "pages_index_example",
+      "page_type": "docs",
+      "route": "",
+      "file_name": "pages_index_example.json"
+    },
+    {
+      "page_id": "privacy_page",
+      "page_type": "marketing",
+      "route": "/privacy",
+      "file_name": "privacy_page.json"
+    },
+    {
+      "page_id": "products_ai_email_writer_page",
+      "page_type": "marketing",
+      "route": "/products/ai-email-writer",
+      "file_name": "products_ai_email_writer_page.json"
+    },
+    {
+      "page_id": "products_cfo_email_list_page",
+      "page_type": "marketing",
+      "route": "/products/cfo-email-list",
+      "file_name": "products_cfo_email_list_page.json"
+    },
+    {
+      "page_id": "products_chrome_extension_page",
+      "page_type": "marketing",
+      "route": "/products/chrome-extension",
+      "file_name": "products_chrome_extension_page.json"
+    },
+    {
+      "page_id": "products_email_finder_page",
+      "page_type": "marketing",
+      "route": "/products/email-finder",
+      "file_name": "products_email_finder_page.json"
+    },
+    {
+      "page_id": "products_email_verifier_page",
+      "page_type": "marketing",
+      "route": "/products/email-verifier",
+      "file_name": "products_email_verifier_page.json"
+    },
+    {
+      "page_id": "products_prospect_finder_page",
+      "page_type": "marketing",
+      "route": "/products/prospect-finder",
+      "file_name": "products_prospect_finder_page.json"
+    },
+    {
+      "page_id": "profile_page",
+      "page_type": "dashboard",
+      "route": "/profile",
+      "file_name": "profile_page.json"
+    },
+    {
+      "page_id": "register_page",
+      "page_type": "docs",
+      "route": "/register",
+      "file_name": "register_page.json"
+    },
+    {
+      "page_id": "root_page",
+      "page_type": "docs",
+      "route": "/",
+      "file_name": "root_page.json"
+    },
+    {
+      "page_id": "settings_page",
+      "page_type": "dashboard",
+      "route": "/settings",
+      "file_name": "settings_page.json"
+    },
+    {
+      "page_id": "terms_page",
+      "page_type": "marketing",
+      "route": "/terms",
+      "file_name": "terms_page.json"
+    },
+    {
+      "page_id": "ui_page",
+      "page_type": "marketing",
+      "route": "/ui",
+      "file_name": "ui_page.json"
+    },
+    {
+      "page_id": "usage_page",
+      "page_type": "dashboard",
+      "route": "/usage",
+      "file_name": "usage_page.json"
+    },
+    {
+      "page_id": "verifier_page",
+      "page_type": "dashboard",
+      "route": "/verifier",
+      "file_name": "verifier_page.json"
+    }
+  ],
+  "indexes": {
+    "by_type": {
+      "docs": [
+        "docs_page",
+        "docs_pageid_page",
+        "login_page",
+        "pages_index_example",
+        "register_page",
+        "root_page"
+      ],
+      "marketing": [
+        "about_page",
+        "api_docs_page",
+        "careers_page",
+        "chrome_extension_page",
+        "integrations_page",
+        "landing_page",
+        "privacy_page",
+        "products_ai_email_writer_page",
+        "products_cfo_email_list_page",
+        "products_chrome_extension_page",
+        "products_email_finder_page",
+        "products_email_verifier_page",
+        "products_prospect_finder_page",
+        "terms_page",
+        "ui_page"
+      ],
+      "dashboard": [
+        "activities_page",
+        "admin_dashboard_pages_page",
+        "admin_dashboard_pages_pageid_page",
+        "admin_logs_page",
+        "admin_marketing_new_page",
+        "admin_marketing_page",
+        "admin_marketing_pageid_page",
+        "admin_settings_page",
+        "admin_statistics_page",
+        "admin_system_status_page",
+        "admin_user_history_page",
+        "admin_users_page",
+        "ai_chat_page",
+        "analytics_page",
+        "billing_cancel_page",
+        "billing_page",
+        "billing_success_page",
+        "companies_id_page",
+        "companies_page",
+        "contacts_page",
+        "dashboard_page",
+        "dashboard_pageid_page",
+        "data_search_page",
+        "export_page",
+        "finder_page",
+        "linkedin_page",
+        "profile_page",
+        "settings_page",
+        "usage_page",
+        "verifier_page"
+      ]
+    },
+    "by_route": {
+      "/about": [
+        "about_page"
+      ],
+      "/activities": [
+        "activities_page"
+      ],
+      "/admin/dashboard-pages": [
+        "admin_dashboard_pages_page"
+      ],
+      "/admin/dashboard-pages/[pageId]": [
+        "admin_dashboard_pages_pageid_page"
+      ],
+      "/admin/logs": [
+        "admin_logs_page"
+      ],
+      "/admin/marketing/new": [
+        "admin_marketing_new_page"
+      ],
+      "/admin/marketing": [
+        "admin_marketing_page"
+      ],
+      "/admin/marketing/[pageId]": [
+        "admin_marketing_pageid_page"
+      ],
+      "/admin/settings": [
+        "admin_settings_page"
+      ],
+      "/admin/statistics": [
+        "admin_statistics_page"
+      ],
+      "/admin/system-status": [
+        "admin_system_status_page"
+      ],
+      "/admin/user-history": [
+        "admin_user_history_page"
+      ],
+      "/admin/users": [
+        "admin_users_page"
+      ],
+      "/ai-chat": [
+        "ai_chat_page"
+      ],
+      "/analytics": [
+        "analytics_page"
+      ],
+      "/api": [
+        "api_docs_page"
+      ],
+      "/billing/cancel": [
+        "billing_cancel_page"
+      ],
+      "/billing": [
+        "billing_page"
+      ],
+      "/billing/success": [
+        "billing_success_page"
+      ],
+      "/careers": [
+        "careers_page"
+      ],
+      "/chrome-extension": [
+        "chrome_extension_page"
+      ],
+      "/companies/[id]": [
+        "companies_id_page"
+      ],
+      "/companies": [
+        "companies_page"
+      ],
+      "/contacts": [
+        "contacts_page"
+      ],
+      "/dashboard": [
+        "dashboard_page"
+      ],
+      "/dashboard/[pageId]": [
+        "dashboard_pageid_page"
+      ],
+      "/data-search": [
+        "data_search_page"
+      ],
+      "/docs": [
+        "docs_page"
+      ],
+      "/docs/[pageId]": [
+        "docs_pageid_page"
+      ],
+      "/export": [
+        "export_page"
+      ],
+      "/finder": [
+        "finder_page"
+      ],
+      "/integrations": [
+        "integrations_page"
+      ],
+      "/": [
+        "landing_page",
+        "root_page"
+      ],
+      "/linkedin": [
+        "linkedin_page"
+      ],
+      "/login": [
+        "login_page"
+      ],
+      "/privacy": [
+        "privacy_page"
+      ],
+      "/products/ai-email-writer": [
+        "products_ai_email_writer_page"
+      ],
+      "/products/cfo-email-list": [
+        "products_cfo_email_list_page"
+      ],
+      "/products/chrome-extension": [
+        "products_chrome_extension_page"
+      ],
+      "/products/email-finder": [
+        "products_email_finder_page"
+      ],
+      "/products/email-verifier": [
+        "products_email_verifier_page"
+      ],
+      "/products/prospect-finder": [
+        "products_prospect_finder_page"
+      ],
+      "/profile": [
+        "profile_page"
+      ],
+      "/register": [
+        "register_page"
+      ],
+      "/settings": [
+        "settings_page"
+      ],
+      "/terms": [
+        "terms_page"
+      ],
+      "/ui": [
+        "ui_page"
+      ],
+      "/usage": [
+        "usage_page"
+      ],
+      "/verifier": [
+        "verifier_page"
+      ]
+    }
+  },
+  "statistics": {
+    "total": 51,
+    "by_type": {
+      "docs": 6,
+      "marketing": 15,
+      "dashboard": 30
+    }
+  }
+}

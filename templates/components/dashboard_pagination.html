@@ -1,0 +1,77 @@
+{% comment %}
+Dashboard Pagination Component
+
+Usage:
+{% include 'components/dashboard_pagination.html' with container_id='pages-pagination' total=100 current_page=1 page_size=20 %}
+
+Parameters:
+- container_id: ID of the container element (required)
+- total: Total number of items (required)
+- current_page: Current page number (default: 1)
+- page_size: Items per page (default: 20)
+- page_size_options: Array of page size options (default: [10, 20, 50, 100])
+- base_url: Base URL for pagination links (default: current path)
+- show_page_size: Show page size selector (default: true)
+- show_total: Show total count (default: true)
+{% endcomment %}
+<div id="{{ container_id|default:'dashboard-pagination' }}" class="dashboard-pagination"></div>
+
+<script>
+(function() {
+    'use strict';
+    
+    // Get parameters from template
+    const containerId = '{{ container_id|default:"dashboard-pagination" }}';
+    const total = {{ total|default:0 }};
+    const currentPage = {{ current_page|default:1 }};
+    const pageSize = {{ page_size|default:20 }};
+    const pageSizeOptions = {{ page_size_options|default:"[10, 20, 50, 100]"|safe }};
+    const baseUrl = '{{ base_url|default:"" }}';
+    const showPageSize = {{ show_page_size|default:"true"|lower }};
+    const showTotal = {{ show_total|default:"true"|lower }};
+    
+    // Initialize pagination when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPagination);
+    } else {
+        initPagination();
+    }
+    
+    function initPagination() {
+        // Check if DashboardPagination class is available
+        if (typeof DashboardPagination === 'undefined') {
+            console.error('DashboardPagination class not found. Make sure dashboard-pagination.js is loaded.');
+            return;
+        }
+        
+        // Get stored page size preference
+        let preferredPageSize = pageSize;
+        if (typeof localStorage !== 'undefined') {
+            const stored = localStorage.getItem('docsai_page_size');
+            if (stored && pageSizeOptions.includes(parseInt(stored))) {
+                preferredPageSize = parseInt(stored);
+            }
+        }
+        
+        // Create pagination instance
+        window[containerId + '_pagination'] = new DashboardPagination(containerId, {
+            total: total,
+            currentPage: currentPage,
+            pageSize: preferredPageSize,
+            pageSizeOptions: pageSizeOptions,
+            baseUrl: baseUrl || window.location.pathname,
+            showPageSize: showPageSize,
+            showTotal: showTotal,
+            updateURL: true,
+            onPageChange: function(page, pageSize) {
+                // This will be overridden by dashboard controller if needed
+                console.log('Page changed:', page, 'Page size:', pageSize);
+            },
+            onPageSizeChange: function(newPageSize, newPage) {
+                // This will be overridden by dashboard controller if needed
+                console.log('Page size changed:', newPageSize, 'New page:', newPage);
+            }
+        });
+    }
+})();
+</script>

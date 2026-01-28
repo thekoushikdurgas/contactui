@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Scan Codebase - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scan Codebase</h1>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="target_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Target Directory Path
+                </label>
+                <input 
+                    type="text" 
+                    id="target_path" 
+                    name="target_path" 
+                    required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="/path/to/codebase"
+                />
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Enter the absolute path to the directory you want to analyze</p>
+            </div>
+            
+            <div>
+                <label for="analysis_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Analysis Type
+                </label>
+                <select 
+                    id="analysis_type" 
+                    name="analysis_type"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                    <option value="full_scan">Full Scan</option>
+                    <option value="quick_scan">Quick Scan</option>
+                    <option value="dependencies_only">Dependencies Only</option>
+                </select>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                >
+                    Start Scan
+                </button>
+                <a href="{% url 'codebase:dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

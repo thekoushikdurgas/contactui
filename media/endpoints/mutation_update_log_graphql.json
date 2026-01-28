@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_update_log_graphql-001",
+  "endpoint_id": "mutation_update_log_graphql",
+  "endpoint_path": "graphql/UpdateLog",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update an existing log entry. Accepts UpdateLogInput with logId (required, must be valid log ID, 1-255 characters), message (optional, new message text), and context (optional, updated context object). At least one of message or context must be provided. Returns LogEntry with id, message, context, timestamp. Uses LambdaLogsClient.update_log to update log entry. Only provided fields are updated. Role check via UserProfileRepository (must be SuperAdmin).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "updateLog"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

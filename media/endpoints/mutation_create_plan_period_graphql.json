@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_create_plan_period_graphql-001",
+  "endpoint_id": "mutation_create_plan_period_graphql",
+  "endpoint_path": "graphql/CreatePlanPeriod",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create or update a plan period. Accepts CreatePlanPeriodInput with tier (required, String, existing plan tier), period (required, enum: monthly, quarterly, yearly), credits (required, Int), ratePerCredit (required, Float), price (required, Float), savingsAmount (optional, Float), savingsPercentage (optional, Int). Creates new period or updates existing. Returns CreatePlanPeriodResponse with message (String), tier (String), period (String). Raises NotFoundError (404) if plan tier not found. Raises ForbiddenError (403) if not SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/billing/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/billingService.ts",
+  "service_methods": [
+    "createPlanPeriod"
+  ],
+  "repository_methods": [
+    "create_plan_period"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreatePlanPeriod($input: CreatePlanPeriodInput!) { billing { createPlanPeriod(input: $input) { message tier period } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

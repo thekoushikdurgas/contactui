@@ -1,0 +1,36 @@
+{
+  "_id": "query_admin_marketing_pages_graphql-001",
+  "endpoint_id": "query_admin_marketing_pages_graphql",
+  "endpoint_path": "graphql/AdminMarketingPages",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List marketing pages with admin filters (drafts and deleted). Accepts optional filters (MarketingPageFilterInput) with includeDrafts (Boolean, default: false) and includeDeleted (Boolean, default: false). Returns MarketingPageList with pages array and total count. Role check via UserProfileRepository (must be Admin or SuperAdmin). Uses MarketingService.list_pages with filter options. Returns pages based on filter settings (drafts and/or deleted). Response structure is validated before conversion to GraphQL type.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/marketingService.ts",
+  "service_methods": [
+    "adminListMarketingPages"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/marketing",
+      "page_title": "Admin Marketing Page",
+      "via_service": "marketingService",
+      "via_hook": "useAdminMarketingPages",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

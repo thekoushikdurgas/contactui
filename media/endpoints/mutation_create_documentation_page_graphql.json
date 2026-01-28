@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_create_documentation_page_graphql-001",
+  "endpoint_id": "mutation_create_documentation_page_graphql",
+  "endpoint_path": "graphql/CreateDocumentationPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new documentation page. Accepts CreateDocumentationPageInput with pageId (required, String, max 255 chars), title (required, String, max 500 chars), description (optional, String, max 1000 chars), category (optional, String, max 100 chars), content (required, String, markdown, max 100000 chars). Returns DocumentationPage with pageId, title, description, category, contentUrl (presigned S3 URL), lastUpdated, version, id. Uses Lambda Documentation service - uploads markdown to S3, saves metadata to MongoDB. Raises ConflictError (409) if pageId exists. Raises ForbiddenError (403) if not Admin/SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/documentation/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/documentationService.ts",
+  "service_methods": [
+    "createDocumentationPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateDocumentationPage($input: CreateDocumentationPageInput!) { documentation { createDocumentationPage(input: $input) { pageId title description category contentUrl version } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

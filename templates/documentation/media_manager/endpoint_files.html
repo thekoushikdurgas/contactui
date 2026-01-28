@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ endpoint_id }} - Files - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">{{ endpoint_id }}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Endpoint Files</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:endpoint_detail_enhanced' endpoint_id %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Endpoint
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Files Content -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Files</h2>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% if service_file %}
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Service File</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono">{{ service_file }}</dd>
+                </div>
+            {% endif %}
+            {% if router_file %}
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Router File</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono">{{ router_file }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+        {% if files %}
+            <div class="mt-4">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Additional Files</h3>
+                <div class="space-y-2">
+                    {% for file in files %}
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <pre class="text-sm overflow-x-auto">{{ file|safe|pprint }}</pre>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if not service_file and not router_file and not files %}
+            <p class="text-sm text-gray-500 dark:text-gray-400">No files associated with this endpoint</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

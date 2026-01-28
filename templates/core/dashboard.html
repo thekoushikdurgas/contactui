@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-fade-in-up">
+    <!-- Welcome Banner -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 dark:from-blue-800 dark:via-blue-900 dark:to-purple-900 p-8 rounded-3xl shadow-xl">
+        <!-- Decorative Elements -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-400/20 rounded-full blur-2xl"></div>
+        
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-blue-200 text-sm font-medium">{{ "now"|date:"l, F j" }}</span>
+                    <span class="px-2 py-0.5 bg-white/20 rounded-full text-xs font-semibold text-white">Pro</span>
+                </div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Welcome back, {{ user.first_name|default:user.username }}!</h1>
+                <p class="text-blue-100/80 mt-2 max-w-lg">Your documentation hub is ready. You have {{ total_pages|default:"0" }} pages and {{ active_sessions|default:"0" }} active AI sessions.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{% url 'documentation:dashboard' %}" class="px-5 py-2.5 bg-white text-blue-700 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Documentation
+                </a>
+                <a href="{% url 'durgasflow:dashboard' %}" class="px-5 py-2.5 bg-white/10 text-white border border-white/20 rounded-xl font-semibold hover:bg-white/20 transition-all flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"></path>
+                    </svg>
+                    Workflows
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Pages -->
+        {% include 'components/stat_card.html' with label="Total Pages" value=total_pages|default:"0" change="12%" trend="up" color="bg-blue-50 text-blue-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>' %}
+        
+        <!-- Active Sessions -->
+        {% include 'components/stat_card.html' with label="Active Sessions" value=active_sessions|default:"0" change="5%" trend="up" color="bg-purple-50 text-purple-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>' %}
+        
+        <!-- Completed Tasks -->
+        {% include 'components/stat_card.html' with label="Completed Tasks" value=completed_tasks|default:"0" change="2.4%" trend="down" color="bg-green-50 text-green-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>' %}
+        
+        <!-- Code Health (placeholder) -->
+        {% include 'components/stat_card.html' with label="Code Health (placeholder)" value=code_health|default:"—" change="" trend="" color="bg-orange-50 text-orange-600" icon='<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>' %}
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="{% url 'ai_agent:chat' %}" class="group p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-700 transition-all card-hover">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">AI Assistant</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Chat with AI</p>
+        </a>
+        
+        <a href="{% url 'durgasflow:editor_new' %}" class="group p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-purple-200 dark:hover:border-purple-700 transition-all card-hover">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">New Workflow</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Create automation</p>
+        </a>
+        
+        <a href="{% url 'knowledge:list' %}" class="group p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-amber-200 dark:hover:border-amber-700 transition-all card-hover">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Knowledge</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Browse articles</p>
+        </a>
+        
+        <a href="{% url 'codebase:dashboard' %}" class="group p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-cyan-200 dark:hover:border-cyan-700 transition-all card-hover">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Codebase</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Analyze code</p>
+        </a>
+    </div>
+    
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Documentation Activity -->
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Recent Activity</h2>
+                <select class="text-sm bg-gray-100 dark:bg-gray-700 border-none rounded-lg px-3 py-1.5 font-medium text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Last 7 days</option>
+                    <option>Last 30 days</option>
+                    <option>All time</option>
+                </select>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <!-- Activity Items -->
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Documentation updated</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">API endpoints were refreshed automatically</p>
+                        </div>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">2h ago</span>
+                    </div>
+                    
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Workflow completed</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Data sync workflow executed successfully</p>
+                        </div>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">5h ago</span>
+                    </div>
+                    
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">AI Session created</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">New conversation with AI Assistant started</p>
+                        </div>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">1d ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Task Queue -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Tasks</h2>
+                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-lg">{{ recent_tasks|length|default:"0" }}</span>
+            </div>
+            <div class="p-4 space-y-3">
+                {% for task in recent_tasks|slice:":5" %}
+                    <a href="{% if task.task_id %}{% url 'tasks:detail' task_id=task.task_id %}{% else %}{% url 'tasks:list' %}{% endif %}" class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer group block">
+                        <div class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-600 shadow-sm text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ task.title|default:"Task "|add:forloop.counter }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ task.created_at|timesince|default:"2h" }} ago</p>
+                        </div>
+                        <span class="w-2 h-2 rounded-full {% if task.status == 'completed' %}bg-green-500{% elif task.status == 'in_progress' %}bg-blue-500 animate-pulse{% else %}bg-gray-400{% endif %}"></span>
+                    </a>
+                {% empty %}
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">No recent tasks</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700">
+                <a href="{% url 'tasks:list' %}" class="w-full py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-center block">
+                    View All Tasks
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

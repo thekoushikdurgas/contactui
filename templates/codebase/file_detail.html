@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}File Detail - Codebase Analysis{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">File Detail</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ file_path }}</p>
+        </div>
+        <a href="{% url 'codebase:file_list' analysis_id=analysis_id %}" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+            Back to Files
+        </a>
+    </div>
+    
+    {% if file_data %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">File Information</h2>
+                <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Path</dt>
+                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono">{{ file_data.path|default:file_path }}</dd>
+                    </div>
+                    {% if file_data.lines %}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Lines</dt>
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ file_data.lines }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if file_data.language %}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Language</dt>
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ file_data.language }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if file_data.size %}
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Size</dt>
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ file_data.size }} bytes</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+            </div>
+            
+            {% if file_data.content %}
+                <div>
+                    <h3 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-3">Content Preview</h3>
+                    <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto text-sm font-mono text-gray-900 dark:text-gray-100"><code>{{ file_data.content|truncatewords:100 }}</code></pre>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-8">File data not available</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

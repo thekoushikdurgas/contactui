@@ -1,0 +1,26 @@
+{
+  "_id": "get_contact_filters_graphql-001",
+  "endpoint_id": "get_contact_filters_graphql",
+  "endpoint_path": "graphql/GetContactFilters",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get filter definitions available for contact filtering. No input required. Returns array of FilterDefinition with key (filter field name), type (data type: string, number, boolean, date, enum), label (display label), displayName (human-readable name), operators (supported filter operators), options (for enum types, array of valid values), isDerived (whether filter is computed), isActive (whether filter is enabled). Used by frontend filter builder UI.",
+  "created_at": "2026-01-19T12:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/contacts/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/contactsService.ts",
+  "service_methods": [
+    "contactFilters"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "query GetContactFilters { contacts { contactFilters { key type label displayName operators options isDerived isActive } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

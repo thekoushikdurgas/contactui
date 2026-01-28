@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_export_download_url_graphql-001",
+  "endpoint_id": "query_get_export_download_url_graphql",
+  "endpoint_path": "graphql/GetExportDownloadUrl",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get download URL for completed export job. Accepts jobUuid (required, must be valid UUID format). Returns String (presigned download URL). Fetches job by UUID, validates that job status is 'completed', extracts S3 key from job_response.s3_key, and uses S3Service.generate_presigned_url to generate download URL. Raises NotFoundError if job doesn't exist, BadRequestError if job is not completed or S3 key is missing.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/jobsService.ts",
+  "service_methods": [
+    "getExportDownloadUrl"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

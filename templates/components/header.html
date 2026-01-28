@@ -1,0 +1,52 @@
+{% load static %}
+{# Deprecated: Use layouts/header.html. Base uses layouts/header; no templates include this. #}
+<header class="sticky top-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-gray-100 z-20 flex items-center justify-between px-8">
+    <div class="flex items-center gap-8">
+        <h1 class="text-xl font-bold text-gray-900">
+            {% if current_view == 'dashboard' and request.resolver_match.app_name == 'core' %}Overview
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'analytics' %}System Analytics
+            {% elif current_view == 'list' and request.resolver_match.app_name == 'documentation' %}Documentation Hub
+            {% elif current_view == 'list' and request.resolver_match.app_name == 'media' %}Media Repository
+            {% elif current_view == 'visualization' %}System Visualization
+            {% elif current_view == 'chat' %}AI Agent Assistant
+            {% elif current_view == 'sessions' %}Learning Sessions
+            {% elif current_view == 'session_detail' %}Session Analysis
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'operations' %}Operations Dashboard
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'codebase' %}Codebase Analytics
+            {% elif current_view == 'list' and request.resolver_match.app_name == 'tasks' %}Task Management
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'test_runner' %}Test Execution
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'accessibility' %}Accessibility Compliance
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'roadmap' %}System Dev Roadmap
+            {% elif current_view == 'dashboard' and request.resolver_match.app_name == 'postman' %}API Client Console
+            {% elif current_view == 'list' and request.resolver_match.app_name == 'templates' %}Structural Templates
+            {% elif current_view == 'blueprint' %}Architecture Blueprint
+            {% elif current_view == 'schema' %}Database Schema
+            {% elif current_view == 'list' and request.resolver_match.app_name == 'json_store' %}JSON Store
+            {% elif current_view == 'editor' %}Page Configurator
+            {% else %}DocsAI{% endif %}
+        </h1>
+        
+        <div class="hidden md:flex items-center bg-gray-100 px-4 py-2 rounded-full w-96 gap-2">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input 
+                type="text" 
+                placeholder="Search documentation, endpoints, sessions..." 
+                class="bg-transparent border-none outline-none text-sm w-full placeholder:text-gray-400"
+            />
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+            New Analysis
+        </button>
+    </div>
+</header>

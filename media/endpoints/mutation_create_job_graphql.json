@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_create_job_graphql-001",
+  "endpoint_id": "mutation_create_job_graphql",
+  "endpoint_path": "graphql/CreateJob",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new background job (generic). Accepts CreateJobInput with jobType (required, String, validated job types: insert_csv_file, export_csv_file, etc.), jobData (required, JSON object), retryCount (optional, Int, default 3, max 10). Returns Job with uuid (placeholder - Connectra returns async), jobType, status (pending), data, createdAt. Uses ConnectraClient.create_job to create job in Connectra. Raises ValidationError (422) if jobType or retryCount invalid.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/jobs/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/jobsService.ts",
+  "service_methods": [
+    "createJob"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateJob($input: CreateJobInput!) { jobs { createJob(input: $input) { uuid jobType status data createdAt } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

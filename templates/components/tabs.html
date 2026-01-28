@@ -1,0 +1,187 @@
+{% comment %}
+Tabs Component
+
+Usage:
+{% include 'components/tabs.html' with tabs=tabs active='overview' id='my-tabs' %}
+
+Parameters:
+- tabs: List of tab objects [{'id': 'tab1', 'label': 'Tab 1', 'icon': '<svg>...</svg>', 'badge': 5}]
+- active: ID of the active tab
+- id: Container ID (default: 'tabs')
+- variant: Tab style variant (default, pills, underline) - default: default
+- size: Tab size (sm, md, lg) - default: md
+- full_width: Boolean - tabs take full width (default: false)
+- vertical: Boolean - vertical tabs (default: false)
+{% endcomment %}
+
+{% load static %}
+
+<div id="{{ id|default:'tabs' }}" class="tabs-container {% if vertical %}flex gap-4{% endif %}">
+    <!-- Tab List -->
+    <div 
+        class="tabs-list flex 
+            {% if vertical %}flex-col min-w-[200px]{% else %}flex-row{% endif %}
+            {% if full_width %}w-full{% endif %}
+            {% if variant == 'pills' %}gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl
+            {% elif variant == 'underline' %}border-b border-gray-200 dark:border-gray-700 gap-6
+            {% else %}gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl{% endif %}"
+        role="tablist"
+        aria-label="Tabs"
+    >
+        {% for tab in tabs %}
+        <button 
+            type="button"
+            id="tab-{{ tab.id }}"
+            class="tab-button flex items-center gap-2 transition-all
+                {% if size == 'sm' %}px-3 py-1.5 text-xs
+                {% elif size == 'lg' %}px-6 py-3 text-base
+                {% else %}px-4 py-2 text-sm{% endif %}
+                {% if full_width %}flex-1 justify-center{% endif %}
+                {% if variant == 'pills' %}rounded-lg font-medium
+                    {% if active == tab.id %}bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm
+                    {% else %}text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white/50 dark:hover:bg-gray-700/50{% endif %}
+                {% elif variant == 'underline' %}font-medium pb-3 border-b-2 -mb-px
+                    {% if active == tab.id %}border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400
+                    {% else %}border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600{% endif %}
+                {% else %}rounded-lg font-medium
+                    {% if active == tab.id %}bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm
+                    {% else %}text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white/50 dark:hover:bg-gray-700/50{% endif %}{% endif %}"
+            role="tab"
+            aria-selected="{% if active == tab.id %}true{% else %}false{% endif %}"
+            aria-controls="tabpanel-{{ tab.id }}"
+            data-tab-id="{{ tab.id }}"
+            {% if active != tab.id %}tabindex="-1"{% endif %}
+            onclick="switchTab('{{ id|default:'tabs' }}', '{{ tab.id }}')"
+        >
+            {% if tab.icon %}
+            <span class="tab-icon w-4 h-4">{{ tab.icon|safe }}</span>
+            {% endif %}
+            <span>{{ tab.label }}</span>
+            {% if tab.badge %}
+            <span class="tab-badge px-1.5 py-0.5 text-xs font-semibold rounded-full
+                {% if active == tab.id %}bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300
+                {% else %}bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400{% endif %}">
+                {{ tab.badge }}
+            </span>
+            {% endif %}
+        </button>
+        {% endfor %}
+    </div>
+
+    <!-- Tab Panels -->
+    <div class="tabs-content {% if vertical %}flex-1{% else %}mt-4{% endif %}">
+        {% for tab in tabs %}
+        <div 
+            id="tabpanel-{{ tab.id }}"
+            class="tab-panel {% if active != tab.id %}hidden{% endif %}"
+            role="tabpanel"
+            aria-labelledby="tab-{{ tab.id }}"
+            {% if active != tab.id %}hidden{% endif %}
+            tabindex="0"
+        >
+            {% block tab_content %}
+            <!-- Tab content will be placed here or injected via JavaScript -->
+            {% endblock %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function switchTab(containerId, tabId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // Update tab buttons
+    const buttons = container.querySelectorAll('.tab-button');
+    buttons.forEach(btn => {
+        const isActive = btn.dataset.tabId === tabId;
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        btn.tabIndex = isActive ? 0 : -1;
+        
+        // Update classes based on variant
+        if (container.querySelector('.tabs-list').classList.contains('border-b')) {
+            // Underline variant
+            if (isActive) {
+                btn.classList.remove('border-transparent', 'text-gray-600', 'dark:text-gray-400');
+                btn.classList.add('border-blue-600', 'dark:border-blue-400', 'text-blue-600', 'dark:text-blue-400');
+            } else {
+                btn.classList.add('border-transparent', 'text-gray-600', 'dark:text-gray-400');
+                btn.classList.remove('border-blue-600', 'dark:border-blue-400', 'text-blue-600', 'dark:text-blue-400');
+            }
+        } else {
+            // Default/Pills variant
+            if (isActive) {
+                btn.classList.remove('text-gray-600', 'dark:text-gray-400');
+                btn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'shadow-sm');
+            } else {
+                btn.classList.add('text-gray-600', 'dark:text-gray-400');
+                btn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'shadow-sm');
+            }
+        }
+        
+        // Update badge colors
+        const badge = btn.querySelector('.tab-badge');
+        if (badge) {
+            if (isActive) {
+                badge.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-600', 'dark:text-gray-400');
+                badge.classList.add('bg-blue-100', 'dark:bg-blue-900/50', 'text-blue-700', 'dark:text-blue-300');
+            } else {
+                badge.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-600', 'dark:text-gray-400');
+                badge.classList.remove('bg-blue-100', 'dark:bg-blue-900/50', 'text-blue-700', 'dark:text-blue-300');
+            }
+        }
+    });
+    
+    // Update tab panels
+    const panels = container.querySelectorAll('.tab-panel');
+    panels.forEach(panel => {
+        const panelId = panel.id.replace('tabpanel-', '');
+        if (panelId === tabId) {
+            panel.classList.remove('hidden');
+            panel.removeAttribute('hidden');
+        } else {
+            panel.classList.add('hidden');
+            panel.setAttribute('hidden', '');
+        }
+    });
+    
+    // Dispatch custom event
+    container.dispatchEvent(new CustomEvent('tabchange', { 
+        detail: { tabId },
+        bubbles: true 
+    }));
+}
+
+// Keyboard navigation for tabs
+document.addEventListener('keydown', function(e) {
+    const tab = e.target.closest('.tab-button');
+    if (!tab) return;
+    
+    const tabsList = tab.closest('.tabs-list');
+    const tabs = Array.from(tabsList.querySelectorAll('.tab-button'));
+    const currentIndex = tabs.indexOf(tab);
+    const isVertical = tabsList.classList.contains('flex-col');
+    
+    let nextIndex = currentIndex;
+    
+    if ((isVertical && e.key === 'ArrowDown') || (!isVertical && e.key === 'ArrowRight')) {
+        nextIndex = currentIndex + 1 >= tabs.length ? 0 : currentIndex + 1;
+        e.preventDefault();
+    } else if ((isVertical && e.key === 'ArrowUp') || (!isVertical && e.key === 'ArrowLeft')) {
+        nextIndex = currentIndex - 1 < 0 ? tabs.length - 1 : currentIndex - 1;
+        e.preventDefault();
+    } else if (e.key === 'Home') {
+        nextIndex = 0;
+        e.preventDefault();
+    } else if (e.key === 'End') {
+        nextIndex = tabs.length - 1;
+        e.preventDefault();
+    }
+    
+    if (nextIndex !== currentIndex) {
+        tabs[nextIndex].focus();
+        tabs[nextIndex].click();
+    }
+});
+</script>

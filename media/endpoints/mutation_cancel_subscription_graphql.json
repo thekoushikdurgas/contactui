@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_cancel_subscription_graphql-001",
+  "endpoint_id": "mutation_cancel_subscription_graphql",
+  "endpoint_path": "graphql/CancelSubscription",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Cancel the current user subscription. No input required. Sets subscriptionStatus to 'cancelled', subscription remains active until subscriptionEndsAt date. Returns CancelSubscriptionResponse with success (Boolean), message (String), subscriptionEndsAt (DateTime, when access will end). Raises BadRequestError (400) if no active subscription exists. Activity logged (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/billing/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/billingService.ts",
+  "service_methods": [
+    "cancelSubscription"
+  ],
+  "repository_methods": [
+    "update_user_subscription"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/billing",
+      "page_title": "Billing Page",
+      "via_service": "billingService",
+      "via_hook": "useBilling",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CancelSubscription { billing { cancelSubscription { success message subscriptionEndsAt } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

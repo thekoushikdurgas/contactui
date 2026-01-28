@@ -1,0 +1,156 @@
+{% comment %}
+Tooltip Component - Accessible tooltip with positioning.
+
+Usage:
+{% include 'components/tooltip.html' with text='Tooltip text' position='top' %}
+  <button>Hover me</button>
+{% endinclude %}
+
+Parameters:
+- text: Tooltip text (required)
+- position: Tooltip position (top, bottom, left, right) - default: top
+- delay: Delay in milliseconds (default: 300)
+- id: Tooltip ID (optional, auto-generated if not provided)
+- class: Additional CSS classes (optional)
+{% endcomment %}
+
+{% load static %}
+
+{% if not id %}
+    {% with tooltip_id="tooltip-"|add:forloop.counter0|default:"tooltip-1" %}
+{% else %}
+    {% with tooltip_id=id %}
+{% endif %}
+
+<div class="tooltip-wrapper relative inline-block {{ class|default:'' }}" 
+     data-tooltip="{{ text }}"
+     data-tooltip-position="{{ position|default:'top' }}"
+     data-tooltip-delay="{{ delay|default:300 }}"
+     id="{{ tooltip_id }}"
+     role="tooltip"
+     aria-label="{{ text }}">
+    {% block tooltip_content %}{% endblock %}
+</div>
+
+{% endwith %}
+
+<style>
+.tooltip-wrapper {
+    position: relative;
+}
+
+.tooltip-wrapper::before,
+.tooltip-wrapper::after {
+    content: '';
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base, 200ms) ease, transform var(--transition-base, 200ms) ease;
+    z-index: var(--z-index-tooltip, 1070);
+}
+
+.tooltip-wrapper::before {
+    content: attr(data-tooltip);
+    padding: var(--tooltip-padding, 0.5rem 0.75rem);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: var(--tooltip-border-radius, 0.375rem);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    max-width: var(--tooltip-max-width, 250px);
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: center;
+}
+
+.tooltip-wrapper::after {
+    border: 4px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+{% if position == 'top' or not position %}
+.tooltip-wrapper::before {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    margin-bottom: 8px;
+}
+
+.tooltip-wrapper::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: rgba(0, 0, 0, 0.9);
+    border-bottom: none;
+    margin-bottom: 4px;
+}
+{% elif position == 'bottom' %}
+.tooltip-wrapper::before {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    margin-top: 8px;
+}
+
+.tooltip-wrapper::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: rgba(0, 0, 0, 0.9);
+    border-top: none;
+    margin-top: 4px;
+}
+{% elif position == 'left' %}
+.tooltip-wrapper::before {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+    margin-right: 8px;
+}
+
+.tooltip-wrapper::after {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: rgba(0, 0, 0, 0.9);
+    border-right: none;
+    margin-right: 4px;
+}
+{% elif position == 'right' %}
+.tooltip-wrapper::before {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
+    margin-left: 8px;
+}
+
+.tooltip-wrapper::after {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: rgba(0, 0, 0, 0.9);
+    border-left: none;
+    margin-left: 4px;
+}
+{% endif %}
+
+.tooltip-wrapper:hover::before,
+.tooltip-wrapper:hover::after,
+.tooltip-wrapper:focus::before,
+.tooltip-wrapper:focus::after {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+[data-theme="dark"] .tooltip-wrapper::before {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #111827;
+}
+
+[data-theme="dark"] .tooltip-wrapper::after {
+    border-top-color: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.9);
+    border-left-color: rgba(255, 255, 255, 0.9);
+    border-right-color: rgba(255, 255, 255, 0.9);
+}
+</style>

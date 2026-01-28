@@ -1,0 +1,138 @@
+{% comment %}
+Button Components Library
+
+Usage:
+{% include 'components/buttons.html' %}
+
+Then use classes like:
+- .btn-primary
+- .btn-secondary
+- .btn-danger
+- .btn-success
+- .btn-outline
+- .btn-ghost
+- .btn-sm, .btn-md, .btn-lg
+{% endcomment %}
+
+{% load static %}
+
+<style>
+/* Button Base Styles */
+.btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Button Variants */
+.btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400;
+}
+
+.btn-secondary {
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-400;
+}
+
+.btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-400;
+}
+
+.btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-400;
+}
+
+.btn-warning {
+    @apply bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-400;
+}
+
+.btn-outline {
+    @apply border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-gray-400;
+}
+
+.btn-ghost {
+    @apply bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800 dark:focus:ring-gray-400;
+}
+
+/* Button Sizes */
+.btn-sm {
+    @apply px-3 py-1.5 text-xs;
+}
+
+.btn-md {
+    @apply px-4 py-2 text-sm;
+}
+
+.btn-lg {
+    @apply px-6 py-3 text-base;
+}
+
+.btn-xl {
+    @apply px-8 py-4 text-lg;
+}
+
+/* Button with Icons */
+.btn-icon {
+    @apply p-2;
+}
+
+.btn-icon.btn-sm {
+    @apply p-1.5;
+}
+
+.btn-icon.btn-lg {
+    @apply p-3;
+}
+
+/* Button Groups */
+.btn-group {
+    @apply inline-flex rounded-lg shadow-sm;
+}
+
+.btn-group .btn {
+    @apply rounded-none border-r border-gray-300 dark:border-gray-600;
+}
+
+.btn-group .btn:first-child {
+    @apply rounded-l-lg border-r;
+}
+
+.btn-group .btn:last-child {
+    @apply rounded-r-lg border-r-0;
+}
+
+.btn-group .btn:only-child {
+    @apply rounded-lg border-r-0;
+}
+
+/* Loading State */
+.btn-loading {
+    @apply relative;
+}
+
+.btn-loading::after {
+    content: '';
+    @apply absolute inset-0 flex items-center justify-center;
+    background: inherit;
+}
+
+.btn-loading::before {
+    content: '';
+    @apply absolute inset-0 w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+}
+
+/* Special Purpose Buttons */
+.btn-link {
+    @apply text-blue-600 hover:text-blue-700 underline underline-offset-2 hover:underline-offset-4 transition-all dark:text-blue-400 dark:hover:text-blue-300;
+}
+
+/* Status Buttons */
+.btn-status-synced {
+    @apply bg-green-100 text-green-800 hover:bg-green-200 focus:ring-green-500 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 dark:focus:ring-green-400;
+}
+
+.btn-status-out-of-sync {
+    @apply bg-yellow-100 text-yellow-800 hover:bg-yellow-200 focus:ring-yellow-500 dark:bg-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/50 dark:focus:ring-yellow-400;
+}
+
+.btn-status-error {
+    @apply bg-red-100 text-red-800 hover:bg-red-200 focus:ring-red-500 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 dark:focus:ring-red-400;
+}
+</style>

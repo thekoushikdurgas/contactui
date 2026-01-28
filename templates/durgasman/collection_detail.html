@@ -1,0 +1,134 @@
+{% extends 'durgasman/base.html' %}
+
+{% block durgasman_content %}
+<div class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- Collection Header -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-6 border border-slate-700">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-white mb-2">{{ collection.name }}</h1>
+                {% if collection.description %}
+                <p class="text-slate-400">{{ collection.description }}</p>
+                {% endif %}
+                <div class="flex items-center space-x-4 mt-4">
+                    <div class="text-sm text-slate-500">
+                        {{ collection.requests.count }} requests
+                    </div>
+                    <div class="text-sm text-slate-500">
+                        Created {{ collection.created_at|date:"M j, Y" }}
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors">
+                    Run All Tests
+                </button>
+                <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                    Export
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Requests Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-white">Requests</h2>
+                        <button class="px-3 py-1 bg-orange-600 hover:bg-orange-500 text-white text-sm rounded transition-colors">
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <div class="p-4 space-y-2 max-h-96 overflow-y-auto">
+                    {% for request in requests %}
+                    <div class="p-3 bg-slate-800 hover:bg-slate-700 rounded-lg cursor-pointer transition-colors border border-slate-600 request-item"
+                         data-request-id="{{ request.id }}">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="px-2 py-0.5 text-xs font-bold rounded
+                                {% if request.method == 'GET' %}bg-green-500/20 text-green-400
+                                {% elif request.method == 'POST' %}bg-blue-500/20 text-blue-400
+                                {% elif request.method == 'PUT' %}bg-purple-500/20 text-purple-400
+                                {% elif request.method == 'DELETE' %}bg-red-500/20 text-red-400
+                                {% else %}bg-gray-500/20 text-gray-400{% endif %}">
+                                {{ request.method }}
+                            </span>
+                            <div class="text-sm font-medium text-white truncate">{{ request.name }}</div>
+                        </div>
+                        <div class="text-xs text-slate-500 truncate">{{ request.url }}</div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-8 text-slate-500">
+                        <div class="text-4xl mb-2">📄</div>
+                        <div>No requests yet</div>
+                        <div class="text-sm">Add your first API request</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="lg:col-span-3 space-y-6">
+            <!-- Request Builder -->
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden" id="request-builder-container">
+                <div class="p-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Request Builder</h2>
+                </div>
+                <div id="request-builder-content" class="p-4">
+                    <div class="text-center py-12 text-slate-500">
+                        <div class="text-4xl mb-4">⚡</div>
+                        <div>Select a request to start testing</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Viewer -->
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden" id="response-viewer-container">
+                <div class="p-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Response</h2>
+                </div>
+                <div id="response-viewer-content" class="p-4">
+                    <div class="text-center py-12 text-slate-500">
+                        <div class="text-4xl mb-4">📊</div>
+                        <div>Send a request to see the response</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+// Initialize Durgasman components
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize request builder and response viewer
+    if (window.RequestBuilder && window.ResponseViewer) {
+        window.requestBuilder = new RequestBuilder('request-builder-content');
+        window.responseViewer = new ResponseViewer('response-viewer-content');
+    }
+
+    // Handle request selection
+    document.querySelectorAll('.request-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const requestId = this.dataset.requestId;
+
+            // Load request data
+            fetch(`/durgasman/api/requests/${requestId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (window.requestBuilder) {
+                        window.requestBuilder.loadRequest(data);
+                    }
+                })
+                .catch(error => console.error('Error loading request:', error));
+        });
+    });
+});
+</script>
+{% endblock %}

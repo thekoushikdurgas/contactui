@@ -1,0 +1,284 @@
+{% comment %}
+Badge component - Unified badge design with multiple variants.
+
+Usage:
+{% include 'components/badge.html' with text="Active" variant="success" %}
+{% include 'components/badge.html' with text="Page" type="resource" resource_type="pages" %}
+{% include 'components/badge.html' with text="GET" type="method" method="GET" %}
+
+Parameters:
+- text: Badge text (required)
+- variant: Badge variant (success, error, warning, info, secondary, primary) - for status badges
+- type: Badge type (status, resource, method) - default: status
+- resource_type: Resource type (pages, endpoints, relationships, postman, graph, operations) - for resource badges
+- method: HTTP method (GET, POST, PUT, DELETE, PATCH, QUERY, MUTATION) - for method badges
+- status: Status value (draft, published, active, inactive, archived) - for status badges
+- icon: Icon name (optional)
+- size: Badge size (sm, md, lg) - default: md
+- class: Additional CSS classes (optional)
+{% endcomment %}
+
+{% load static %}
+
+{% if size == 'sm' %}
+    {% with badge_padding="px-2 py-0.5" badge_text="text-[10px]" %}
+        {% if type == 'resource' %}
+            {% if resource_type == 'pages' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'endpoints' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'relationships' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'postman' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% elif type == 'method' %}
+            {% if method == 'GET' or method == 'QUERY' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'POST' or method == 'MUTATION' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PUT' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'DELETE' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PATCH' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% endif %}
+        {% else %}
+            {# Status badge #}
+            {% if status %}
+                {% include 'components/status_badge.html' with status=status %}
+            {% elif variant == 'success' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'error' or variant == 'danger' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'warning' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'info' or variant == 'primary' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
+{% elif size == 'lg' %}
+    {% with badge_padding="px-3 py-1.5" badge_text="text-sm" %}
+        {% if type == 'resource' %}
+            {% if resource_type == 'pages' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'endpoints' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'relationships' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'postman' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% elif type == 'method' %}
+            {% if method == 'GET' or method == 'QUERY' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'POST' or method == 'MUTATION' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PUT' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'DELETE' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PATCH' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% endif %}
+        {% else %}
+            {# Status badge #}
+            {% if status %}
+                {% include 'components/status_badge.html' with status=status %}
+            {% elif variant == 'success' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'error' or variant == 'danger' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'warning' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'info' or variant == 'primary' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
+{% else %}
+    {% with badge_padding="px-2.5 py-1" badge_text="text-xs" %}
+        {% if type == 'resource' %}
+            {% if resource_type == 'pages' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'endpoints' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'relationships' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif resource_type == 'postman' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% elif type == 'method' %}
+            {% if method == 'GET' or method == 'QUERY' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'POST' or method == 'MUTATION' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PUT' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'DELETE' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% elif method == 'PATCH' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-bold rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 {{ class|default:'' }}">
+                    {{ text|default:method }}
+                </span>
+            {% endif %}
+        {% else %}
+            {# Status badge #}
+            {% if status %}
+                {% include 'components/status_badge.html' with status=status %}
+            {% elif variant == 'success' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'error' or variant == 'danger' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'warning' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% elif variant == 'info' or variant == 'primary' %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center {{ badge_padding }} {{ badge_text }} font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 {{ class|default:'' }}">
+                    {% if icon %}<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+                    {{ text }}
+                </span>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
+{% endif %}

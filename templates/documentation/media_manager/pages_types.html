@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Page Types - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Page Types</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Pages grouped by type</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_pages' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Pages
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Types List -->
+    {% if types %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for type_item in types %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ type_item.type|title }}</h3>
+                        <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ type_item.count }}</span>
+                    </div>
+                    <a href="{% url 'documentation:pages_by_type' type_item.type %}" 
+                       class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
+                        View all {{ type_item.type }} pages →
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Total -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <span class="text-lg font-semibold text-gray-900 dark:text-gray-100">Total Pages</span>
+                <span class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ total }}</span>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No page types found</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

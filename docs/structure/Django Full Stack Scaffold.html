@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Project Structure Best Practices</title>
+    <style>
+        :root {
+            --color-primary: #208391;
+            --color-surface: #fdfcf9;
+            --color-text: #134252;
+            --color-text-secondary: #626c7c;
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-bg-1: rgba(33, 128, 141, 0.08);
+            --color-bg-2: rgba(230, 129, 97, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            color: var(--color-primary);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 16px;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-bg-1);
+            padding-bottom: 10px;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 3px solid var(--color-primary);
+            padding: 12px 16px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        .file-tree {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .file-tree .folder { color: var(--color-primary); font-weight: 600; }
+        .file-tree .file { color: var(--color-text); }
+        .indent-1 { padding-left: 20px; }
+        .indent-2 { padding-left: 40px; }
+        .indent-3 { padding-left: 60px; }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-top: 20px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            transition: all 200ms ease;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist input {
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-essential { background: var(--color-bg-1); color: var(--color-primary); }
+        .badge-recommended { background: var(--color-bg-2); color: #a85d2f; }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid, .two-col {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 24px; }
+            .section h2 { font-size: 18px; }
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0 10px 25px;
+            position: relative;
+            color: var(--color-text);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .copy-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            float: right;
+            margin-top: -30px;
+            margin-right: -16px;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Django Project Structure Best Practices</h1>
+            <p class="subtitle">Production-ready folder organization for scalable Django applications (2025)</p>
+        </header>
+
+        <!-- Overview Section -->
+        <div class="section">
+            <h2>Standard Project Structure</h2>
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--color-text);">Recommended Directory Layout</h3>
+                <span class="badge badge-essential">ESSENTIAL</span>
+                <div class="file-tree">
+<span class="folder">myproject/</span>
+<span class="indent-1"><span class="file">├── manage.py</span></span>
+<span class="indent-1"><span class="file">├── .env.example</span></span>
+<span class="indent-1"><span class="file">├── .gitignore</span></span>
+<span class="indent-1"><span class="file">├── requirements.txt</span></span>
+<span class="indent-1"><span class="file">├── README.md</span></span>
+<span class="indent-1"><span class="folder">├── config/</span> <span style="color: #999;"># Project settings</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="file">├── settings/</span></span>
+<span class="indent-3"><span class="file">├── __init__.py</span></span>
+<span class="indent-3"><span class="file">├── base.py</span></span>
+<span class="indent-3"><span class="file">├── development.py</span></span>
+<span class="indent-3"><span class="file">└── production.py</span></span>
+<span class="indent-2"><span class="file">├── urls.py</span></span>
+<span class="indent-2"><span class="file">├── wsgi.py</span></span>
+<span class="indent-2"><span class="file">└── asgi.py</span></span>
+<span class="indent-1"><span class="folder">├── apps/</span> <span style="color: #999;"># Business domains</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-3"><span class="file">├── migrations/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">├── serializers.py</span></span>
+<span class="indent-3"><span class="file">├── urls.py</span></span>
+<span class="indent-3"><span class="file">├── admin.py</span></span>
+<span class="indent-3"><span class="file">├── tests.py</span></span>
+<span class="indent-3"><span class="file">└── apps.py</span></span>
+<span class="indent-2"><span class="folder">├── api/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">└── serializers.py</span></span>
+<span class="indent-2"><span class="folder">├── payments/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── services.py</span></span>
+<span class="indent-3"><span class="file">└── tasks.py</span></span>
+<span class="indent-2"><span class="folder">└── common/</span> <span style="color: #999;"># Shared utilities</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── utils.py</span></span>
+<span class="indent-3"><span class="file">├── decorators.py</span></span>
+<span class="indent-3"><span class="file">└── mixins.py</span></span>
+<span class="indent-1"><span class="folder">├── static/</span> <span style="color: #999;"># CSS, JS, images</span></span>
+<span class="indent-2"><span class="file">├── css/</span></span>
+<span class="indent-2"><span class="file">├── js/</span></span>
+<span class="indent-2"><span class="file">└── images/</span></span>
+<span class="indent-1"><span class="folder">├── templates/</span></span>
+<span class="indent-2"><span class="file">├── base.html</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-2"><span class="folder">└── api/</span></span>
+<span class="indent-1"><span class="folder">├── tests/</span> <span style="color: #999;"># Unit & integration tests</span></span>
+<span class="indent-2"><span class="file">├── conftest.py</span></span>
+<span class="indent-2"><span class="file">├── test_users.py</span></span>
+<span class="indent-2"><span class="file">└── test_api.py</span></span>
+<span class="indent-1"><span class="folder">├── docker/</span> <span style="color: #999;"># Docker configuration</span></span>
+<span class="indent-2"><span class="file">├── Dockerfile</span></span>
+<span class="indent-2"><span class="file">├── entrypoint.sh</span></span>
+<span class="indent-2"><span class="folder">└── nginx/</span></span>
+<span class="indent-1"><span class="file">├── docker-compose.yml</span></span>
+<span class="indent-1"><span class="file">└── .dockerignore</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Patterns -->
+        <div class="section">
+            <h2>Architecture Approaches</h2>
+            <div class="grid">
+                <div class="card">
+                    <h2>Layered Architecture (Recommended)</h2>
+                    <span class="badge badge-essential">PRODUCTION-READY</span>
+                    <p style="margin-top: 10px; color: var(--color-text-secondary);">Separates concerns into distinct layers:</p>
+                    <ul class="feature-list">
+                        <li><strong>Models Layer:</strong> ORM & Database</li>
+                        <li><strong>Service Layer:</strong> Business logic</li>
+                        <li><strong>View/API Layer:</strong> Endpoints</li>
+                        <li><strong>Serializer Layer:</strong> Data validation</li>
+                    </ul>
+                    <p style="font-size: 13px; color: #a85d2f; margin-top: 15px;"><strong>Best for:</strong> Medium-large projects, DRF APIs, clear separation of concerns</p>
+                </div>
+
+                <div class="card">
+                    <h2>Domain-Driven Design (DDD)</h2>
+                    <span class="badge badge-recommended">ADVANCED</span>
+                    <p style="margin-top: 10px; color: var(--color-text-secondary);">Organize by business domain/feature:</p>
+                    <ul class="feature-list">
+                        <li><strong>Feature-based:</strong> /users, /payments, /products</li>
+                        <li><strong>Self-contained:</strong> Models, views, serializers per domain</li>
+                        <li><strong>Loose coupling:</strong> Minimal inter-domain dependencies</li>
+                        <li><strong>Shared core:</strong> Common utilities & base models</li>
+                    </ul>
+                    <p style="font-size: 13px; color: #a85d2f; margin-top: 15px;"><strong>Best for:</strong> Large teams, complex domains, scalability</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Management -->
+        <div class="section">
+            <h2>Settings Management</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Multi-Environment Configuration</h2>
+                <span class="badge badge-essential">ESSENTIAL</span>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'settings-structure')">Structure</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'settings-base')">Base Settings</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'settings-env')">Environment</button>
+                </div>
+
+                <div id="settings-structure" class="tab-content active">
+                    <p><strong>config/settings/__init__.py</strong></p>
+                    <div class="code-block">import os
+from dotenv import load_dotenv
+
+env = os.getenv('DJANGO_ENV', 'development')
+
+if env == 'production':
+    from .production import *
+else:
+    from .development import *</div>
+                </div>
+
+                <div id="settings-base" class="tab-content">
+                    <p><strong>config/settings/base.py</strong></p>
+                    <div class="code-block">from pathlib import Path
+import environ
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'apps.users',
+    'apps.api',
+    'apps.common',
+]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env('DB_HOST'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+    }
+}</div>
+                </div>
+
+                <div id="settings-env" class="tab-content">
+                    <p><strong>.env.example</strong></p>
+                    <div class="code-block">DJANGO_ENV=development
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+DB_ENGINE=django.db.backends.postgresql
+DB_HOST=localhost
+DB_NAME=myproject_db
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_PORT=5432
+
+REDIS_URL=redis://localhost:6379/1
+CELERY_BROKER_URL=redis://localhost:6379/0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apps Organization -->
+        <div class="section">
+            <h2>Apps Organization Pattern</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Single App Structure</h2>
+                <span class="badge badge-essential">STANDARD</span>
+                <div class="code-block">apps/users/
+├── migrations/
+├── __init__.py
+├── models.py          # ORM models
+├── views.py           # APIView or ViewSets
+├── serializers.py     # DRF Serializers
+├── urls.py            # URL routing
+├── admin.py           # Admin config
+├── apps.py            # App config
+├── forms.py           # Forms (if needed)
+├── services.py        # Business logic
+├── tasks.py           # Celery tasks
+├── permissions.py     # Custom permissions
+├── filters.py         # Query filters
+├── signals.py         # Django signals
+└── tests.py           # Unit tests</div>
+
+                <h3 style="margin-top: 20px; color: var(--color-text);">App Guidelines</h3>
+                <ul class="feature-list">
+                    <li>Keep apps focused on a single domain/feature</li>
+                    <li>Each app should be reusable across projects</li>
+                    <li>Place business logic in <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">services.py</code></li>
+                    <li>Use <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">models.py</code> for data structure only</li>
+                    <li>Implement tests within the app folder</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Services Layer -->
+        <div class="section">
+            <h2>Service Layer (Business Logic)</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">Recommended Pattern</h2>
+                <span class="badge badge-recommended">RECOMMENDED</span>
+                <div class="code-block"># apps/users/services.py
+class UserService:
+    @staticmethod
+    def create_user(email, password, **kwargs):
+        user = User.objects.create_user(
+            email=email, 
+            password=password, 
+            **kwargs
+        )
+        # Business logic here
+        return user
+    
+    @staticmethod
+    def activate_user(user_id):
+        user = User.objects.get(id=user_id)
+        user.is_active = True
+        user.save()
+        # Send email notification
+        return user
+
+# apps/users/views.py
+from .services import UserService
+
+class UserViewSet(viewsets.ModelViewSet):
+    def create(self, request):
+        user = UserService.create_user(**request.data)
+        return Response(UserSerializer(user).data)</div>
+            </div>
+        </div>
+
+        <!-- Testing -->
+        <div class="section">
+            <h2>Testing Structure</h2>
+            <div class="grid">
+                <div class="card">
+                    <h2>App-Level Tests</h2>
+                    <span class="badge badge-essential">ESSENTIAL</span>
+                    <p style="margin-top: 10px;">Keep tests alongside app code:</p>
+                    <div class="code-block">apps/users/
+├── tests.py
+├── test_models.py
+├── test_views.py
+└── test_services.py</div>
+                </div>
+
+                <div class="card">
+                    <h2>Centralized Tests</h2>
+                    <span class="badge badge-recommended">ALTERNATIVE</span>
+                    <p style="margin-top: 10px;">For larger projects with shared setup:</p>
+                    <div class="code-block">tests/
+├── conftest.py
+├── fixtures/
+├── test_users/
+└── test_api/</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist -->
+        <div class="section">
+            <h2>Implementation Checklist</h2>
+            <div class="card">
+                <ul class="checklist">
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">config/</code> directory for all settings</li>
+                    <li><input type="checkbox"> Split settings into base, development, production</li>
+                    <li><input type="checkbox"> Use <code style="background: #f0f0f0; padding: 2px 6px;">django-environ</code> for environment variables</li>
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">apps/</code> directory with domain-focused apps</li>
+                    <li><input type="checkbox"> Implement service layer for business logic</li>
+                    <li><input type="checkbox"> Setup DRF serializers for validation</li>
+                    <li><input type="checkbox"> Use <code style="background: #f0f0f0; padding: 2px 6px;">.env.example</code> for documentation</li>
+                    <li><input type="checkbox"> Create <code style="background: #f0f0f0; padding: 2px 6px;">docker-compose.yml</code> for local development</li>
+                    <li><input type="checkbox"> Setup Celery for async tasks (if needed)</li>
+                    <li><input type="checkbox"> Write tests for each app</li>
+                    <li><input type="checkbox"> Configure logging per environment</li>
+                    <li><input type="checkbox"> Document API endpoints with drf-spectacular</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Complete File Structure -->
+        <div class="section">
+            <h2>Complete Production File Structure</h2>
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--color-text);">Enterprise-Ready Django Project</h3>
+                <span class="badge badge-essential">FULL STRUCTURE</span>
+                <div class="file-tree">
+<span class="folder">myproject/</span>
+<span class="indent-1"><span class="file">├── manage.py</span></span>
+<span class="indent-1"><span class="file">├── .env.example</span></span>
+<span class="indent-1"><span class="file">├── .env.local</span></span>
+<span class="indent-1"><span class="file">├── .gitignore</span></span>
+<span class="indent-1"><span class="file">├── .dockerignore</span></span>
+<span class="indent-1"><span class="file">├── requirements.txt</span></span>
+<span class="indent-1"><span class="file">├── requirements-dev.txt</span></span>
+<span class="indent-1"><span class="file">├── pyproject.toml</span></span>
+<span class="indent-1"><span class="file">├── setup.py</span></span>
+<span class="indent-1"><span class="file">├── pytest.ini</span></span>
+<span class="indent-1"><span class="file">├── Makefile</span></span>
+<span class="indent-1"><span class="file">├── README.md</span></span>
+<span class="indent-1"><span class="file">├── docker-compose.yml</span></span>
+<span class="indent-1"><span class="file">├── docker-compose.prod.yml</span></span>
+<span class="indent-1"><span class="folder">├── config/</span> <span style="color: #999;"># Core settings & URL routing</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="folder">├── settings/</span></span>
+<span class="indent-3"><span class="file">├── __init__.py</span></span>
+<span class="indent-3"><span class="file">├── base.py</span></span>
+<span class="indent-3"><span class="file">├── development.py</span></span>
+<span class="indent-3"><span class="file">├── production.py</span></span>
+<span class="indent-3"><span class="file">├── staging.py</span></span>
+<span class="indent-3"><span class="file">└── testing.py</span></span>
+<span class="indent-2"><span class="file">├── urls.py</span></span>
+<span class="indent-2"><span class="file">├── wsgi.py</span></span>
+<span class="indent-2"><span class="file">├── asgi.py</span></span>
+<span class="indent-2"><span class="file">└── celery.py</span></span>
+<span class="indent-1"><span class="folder">├── apps/</span> <span style="color: #999;"># Feature/domain-based apps</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-3"><span class="file">├── __init__.py</span></span>
+<span class="indent-3"><span class="file">├── migrations/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">├── serializers.py</span></span>
+<span class="indent-3"><span class="file">├── urls.py</span></span>
+<span class="indent-3"><span class="file">├── admin.py</span></span>
+<span class="indent-3"><span class="file">├── apps.py</span></span>
+<span class="indent-3"><span class="file">├── services.py</span></span>
+<span class="indent-3"><span class="file">├── managers.py</span></span>
+<span class="indent-3"><span class="file">├── tasks.py</span></span>
+<span class="indent-3"><span class="file">├── signals.py</span></span>
+<span class="indent-3"><span class="file">├── permissions.py</span></span>
+<span class="indent-3"><span class="file">├── filters.py</span></span>
+<span class="indent-3"><span class="file">├── exceptions.py</span></span>
+<span class="indent-3"><span class="file">├── validators.py</span></span>
+<span class="indent-3"><span class="file">├── constants.py</span></span>
+<span class="indent-3"><span class="file">├── decorators.py</span></span>
+<span class="indent-3"><span class="file">├── tests.py</span></span>
+<span class="indent-3"><span class="file">└── apps.py</span></span>
+<span class="indent-2"><span class="folder">├── api/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── views.py</span></span>
+<span class="indent-3"><span class="file">├── serializers.py</span></span>
+<span class="indent-3"><span class="file">├── urls.py</span></span>
+<span class="indent-3"><span class="file">├── services.py</span></span>
+<span class="indent-3"><span class="file">├── permissions.py</span></span>
+<span class="indent-3"><span class="file">└── tests.py</span></span>
+<span class="indent-2"><span class="folder">├── payments/</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── services.py</span></span>
+<span class="indent-3"><span class="file">├── tasks.py</span></span>
+<span class="indent-3"><span class="file">├── webhooks.py</span></span>
+<span class="indent-3"><span class="file">└── tests.py</span></span>
+<span class="indent-2"><span class="folder">└── common/</span> <span style="color: #999;"># Shared across apps</span></span>
+<span class="indent-3"><span class="file">├── __init__.py</span></span>
+<span class="indent-3"><span class="file">├── models.py</span></span>
+<span class="indent-3"><span class="file">├── utils.py</span></span>
+<span class="indent-3"><span class="file">├── exceptions.py</span></span>
+<span class="indent-3"><span class="file">├── decorators.py</span></span>
+<span class="indent-3"><span class="file">├── mixins.py</span></span>
+<span class="indent-3"><span class="file">├── pagination.py</span></span>
+<span class="indent-3"><span class="file">├── permissions.py</span></span>
+<span class="indent-3"><span class="file">├── authentication.py</span></span>
+<span class="indent-3"><span class="file">├── serializers.py</span></span>
+<span class="indent-3"><span class="file">├── filters.py</span></span>
+<span class="indent-3"><span class="file">├── constants.py</span></span>
+<span class="indent-3"><span class="file">├── validators.py</span></span>
+<span class="indent-3"><span class="file">├── caching.py</span></span>
+<span class="indent-3"><span class="file">└── logging.py</span></span>
+<span class="indent-1"><span class="folder">├── core/</span> <span style="color: #999;"># Infrastructure & support</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="file">├── models.py</span></span>
+<span class="indent-2"><span class="file">├── managers.py</span></span>
+<span class="indent-2"><span class="file">├── choices.py</span></span>
+<span class="indent-2"><span class="file">├── middleware.py</span></span>
+<span class="indent-2"><span class="file">├── context_processors.py</span></span>
+<span class="indent-2"><span class="file">└── exception_handlers.py</span></span>
+<span class="indent-1"><span class="folder">├── static/</span></span>
+<span class="indent-2"><span class="file">├── css/</span></span>
+<span class="indent-2"><span class="file">├── js/</span></span>
+<span class="indent-2"><span class="file">└── images/</span></span>
+<span class="indent-1"><span class="folder">├── templates/</span></span>
+<span class="indent-2"><span class="file">├── base.html</span></span>
+<span class="indent-2"><span class="folder">├── users/</span></span>
+<span class="indent-2"><span class="folder">├── api/</span></span>
+<span class="indent-2"><span class="folder">├── emails/</span></span>
+<span class="indent-2"><span class="folder">└── errors/</span></span>
+<span class="indent-1"><span class="folder">├── tests/</span> <span style="color: #999;"># Centralized test suite</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="file">├── conftest.py</span></span>
+<span class="indent-2"><span class="file">├── factories.py</span></span>
+<span class="indent-2"><span class="file">├── fixtures.py</span></span>
+<span class="indent-2"><span class="folder">├── unit/</span></span>
+<span class="indent-3"><span class="file">├── test_users.py</span></span>
+<span class="indent-3"><span class="file">├── test_api.py</span></span>
+<span class="indent-3"><span class="file">└── test_payments.py</span></span>
+<span class="indent-2"><span class="folder">├── integration/</span></span>
+<span class="indent-3"><span class="file">├── test_payment_flow.py</span></span>
+<span class="indent-3"><span class="file">└── test_user_signup.py</span></span>
+<span class="indent-2"><span class="folder">└── e2e/</span></span>
+<span class="indent-3"><span class="file">├── test_api_endpoints.py</span></span>
+<span class="indent-3"><span class="file">└── test_workflows.py</span></span>
+<span class="indent-1"><span class="folder">├── scripts/</span> <span style="color: #999;"># Management & utility scripts</span></span>
+<span class="indent-2"><span class="file">├── __init__.py</span></span>
+<span class="indent-2"><span class="file">├── seed_data.py</span></span>
+<span class="indent-2"><span class="file">├── migrate_data.py</span></span>
+<span class="indent-2"><span class="file">├── backup_db.py</span></span>
+<span class="indent-2"><span class="file">└── generate_report.py</span></span>
+<span class="indent-1"><span class="folder">├── docker/</span></span>
+<span class="indent-2"><span class="file">├── Dockerfile</span></span>
+<span class="indent-2"><span class="file">├── Dockerfile.prod</span></span>
+<span class="indent-2"><span class="file">├── entrypoint.sh</span></span>
+<span class="indent-2"><span class="file">├── entrypoint.prod.sh</span></span>
+<span class="indent-2"><span class="folder">└── nginx/</span></span>
+<span class="indent-3"><span class="file">├── Dockerfile</span></span>
+<span class="indent-3"><span class="file">└── nginx.conf</span></span>
+<span class="indent-1"><span class="folder">├── deploy/</span> <span style="color: #999;"># AWS/Infrastructure as Code</span></span>
+<span class="indent-2"><span class="file">├── docker-compose.yml</span></span>
+<span class="indent-2"><span class="file">├── Dockerfile</span></span>
+<span class="indent-2"><span class="folder">├── terraform/</span></span>
+<span class="indent-3"><span class="file">├── main.tf</span></span>
+<span class="indent-3"><span class="file">├── variables.tf</span></span>
+<span class="indent-3"><span class="file">├── outputs.tf</span></span>
+<span class="indent-3"><span class="file">└── rds.tf</span></span>
+<span class="indent-2"><span class="folder">└── github-actions/</span></span>
+<span class="indent-3"><span class="file">├── deploy.yml</span></span>
+<span class="indent-3"><span class="file">├── test.yml</span></span>
+<span class="indent-3"><span class="file">└── lint.yml</span></span>
+<span class="indent-1"><span class="folder">├── docs/</span> <span style="color: #999;"># Documentation</span></span>
+<span class="indent-2"><span class="file">├── setup.md</span></span>
+<span class="indent-2"><span class="file">├── architecture.md</span></span>
+<span class="indent-2"><span class="file">├── api.md</span></span>
+<span class="indent-2"><span class="file">├── deployment.md</span></span>
+<span class="indent-2"><span class="file">└── contributing.md</span></span>
+<span class="indent-1"><span class="file">└── .github/workflows/</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Examples Section -->
+        <div class="section">
+            <h2>Production Code Patterns</h2>
+            <div class="card">
+                <h2 style="margin-top: 0;">1. Settings Management (Multi-Environment)</h2>
+                <span class="badge badge-essential">CRITICAL</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">config/settings/base.py</p>
+                <div class="code-block">from pathlib import Path
+import os
+import environ
+from datetime import timedelta
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    
+    'rest_framework',
+    'corsheaders',
+    'django_filters',
+    'drf_spectacular',
+    
+    'apps.users.apps.UsersConfig',
+    'apps.api.apps.ApiConfig',
+    'apps.payments.apps.PaymentsConfig',
+    'apps.common.apps.CommonConfig',
+    'apps.core.apps.CoreConfig',
+]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env('DB_HOST'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'PORT': env.int('DB_PORT', 5432),
+        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', 600),
+        'OPTIONS': {
+            'connect_timeout': 10,
+        }
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': env('REDIS_URL'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50}
+        }
+    }
+}
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'apps.common.pagination.StandardPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}</div>
+            </div>
+        </div>
+
+        <!-- Service Layer Pattern -->
+        <div class="section">
+            <div class="card">
+                <h2 style="margin-top: 0;">2. Service Layer (Business Logic)</h2>
+                <span class="badge badge-essential">BEST PRACTICE</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">apps/users/services.py</p>
+                <div class="code-block">from django.db import transaction
+from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
+from .models import User
+from .exceptions import UserAlreadyExists, InvalidPassword
+from apps.common.utils import generate_token
+
+class UserService:
+    @staticmethod
+    @transaction.atomic
+    def create_user(email, password, **kwargs):
+        """Create new user with email verification"""
+        if User.objects.filter(email=email).exists():
+            raise UserAlreadyExists(f"User {email} already exists")
+        
+        if not len(password) >= 8:
+            raise InvalidPassword("Password must be at least 8 chars")
+        
+        user = User.objects.create(
+            email=email,
+            password=make_password(password),
+            **kwargs
+        )
+        
+        token = generate_token(user.id)
+        send_mail(
+            'Verify your email',
+            f'Verify: {token}',
+            'noreply@example.com',
+            [email],
+        )
+        
+        return user
+    
+    @staticmethod
+    def activate_user(user_id):
+        """Activate user account"""
+        user = User.objects.get(id=user_id)
+        user.is_active = True
+        user.email_verified = True
+        user.save()
+        return user
+
+class AuthService:
+    @staticmethod
+    def validate_credentials(email, password):
+        """Validate login credentials"""
+        try:
+            user = User.objects.get(email=email)
+            if user.check_password(password) and user.is_active:
+                return user
+            return None
+        except User.DoesNotExist:
+            return None</div>
+            </div>
+        </div>
+
+        <!-- Models & ORM Patterns -->
+        <div class="section">
+            <div class="card">
+                <h2 style="margin-top: 0;">3. Models with Managers (ORM Optimization)</h2>
+                <span class="badge badge-essential">CORE PATTERN</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">apps/users/models.py</p>
+                <div class="code-block">from django.db import models
+from django.utils.translation import gettext_lazy as _
+from apps.core.models import TimeStampedModel
+from .managers import UserManager
+
+class User(TimeStampedModel):
+    """Custom user model with extended fields"""
+    
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, unique=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    
+    email_verified = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=20, blank=True)
+    
+    last_login = models.DateTimeField(null=True, blank=True)
+    
+    objects = UserManager()
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    
+    class Meta:
+        db_table = 'users'
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['username']),
+            models.Index(fields=['-created_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.email} ({self.username})"
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
+
+class UserQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True)
+    
+    def staff(self):
+        return self.filter(is_staff=True)
+    
+    def verified(self):
+        return self.filter(email_verified=True)
+    
+    def by_email(self, email):
+        return self.filter(email__iexact=email)
+
+class UserManager(models.Manager):
+    def get_queryset(self):
+        return UserQuerySet(self.model, using=self._db)
+    
+    def active(self):
+        return self.get_queryset().active()
+    
+    def create_user(self, email, password=None, **extra):
+        user = self.model(email=email, **extra)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user</div>
+            </div>
+        </div>
+
+        <!-- ViewSets & Serializers -->
+        <div class="section">
+            <div class="card">
+                <h2 style="margin-top: 0;">4. ViewSets & Serializers (DRF)</h2>
+                <span class="badge badge-essential">API LAYER</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">apps/users/views.py</p>
+                <div class="code-block">from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import User
+from .serializers import UserSerializer
+from .services import UserService
+from .permissions import IsOwnerOrAdmin
+from .filters import UserFilter
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = UserFilter
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return User.objects.all()
+        return User.objects.filter(id=user.id)
+    
+    def create(self, request, *args, **kwargs):
+        """Register new user"""
+        try:
+            user = UserService.create_user(
+                email=request.data['email'],
+                password=request.data['password'],
+            )
+            serializer = self.get_serializer(user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        """Get current user profile"""
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def change_password(self, request):
+        """Change user password"""
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        
+        if not user.check_password(old_password):
+            return Response(
+                {'error': 'Invalid password'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        user.set_password(new_password)
+        user.save()
+        return Response({'success': True})
+
+from rest_framework import serializers
+from .models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 
+                  'is_active', 'email_verified', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']</div>
+            </div>
+        </div>
+
+        <!-- Celery Tasks -->
+        <div class="section">
+            <div class="card">
+                <h2 style="margin-top: 0;">5. Async Tasks (Celery + Redis)</h2>
+                <span class="badge badge-recommended">ASYNC PATTERN</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">apps/payments/tasks.py</p>
+                <div class="code-block">from celery import shared_task
+from django.core.mail import send_mass_mail
+from django.utils import timezone
+from .models import Payment
+from .services import PaymentService
+
+@shared_task(bind=True, max_retries=3)
+def process_payment(self, payment_id):
+    """Process payment with retry logic"""
+    try:
+        payment = Payment.objects.get(id=payment_id)
+        result = PaymentService.process(payment)
+        payment.status = 'completed'
+        payment.save()
+        
+        send_payment_confirmation.delay(payment_id)
+        return result
+    except Exception as exc:
+        self.retry(exc=exc, countdown=300)
+
+@shared_task
+def send_payment_confirmation(payment_id):
+    """Send payment confirmation email"""
+    payment = Payment.objects.get(id=payment_id)
+    send_mail(
+        'Payment Confirmation',
+        f'Your payment of ${payment.amount} is confirmed',
+        'noreply@example.com',
+        [payment.user.email],
+    )
+
+@shared_task
+def cleanup_expired_payments():
+    """Cleanup expired pending payments"""
+    cutoff = timezone.now() - timedelta(hours=24)
+    Payment.objects.filter(
+        status='pending',
+        created_at__lt=cutoff
+    ).delete()</div>
+            </div>
+        </div>
+
+        <!-- Testing Pattern -->
+        <div class="section">
+            <div class="card">
+                <h2 style="margin-top: 0;">6. Testing (Pytest + Fixtures)</h2>
+                <span class="badge badge-recommended">TESTING</span>
+                <p style="margin-top: 10px; color: var(--color-text-secondary);">tests/conftest.py</p>
+                <div class="code-block">import pytest
+from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
+from factory import SubFactory, Sequence
+import factory
+
+User = get_user_model()
+
+@pytest.fixture
+def api_client():
+    return APIClient()
+
+@pytest.fixture
+def authenticated_user(db):
+    return User.objects.create_user(
+        email='test@example.com',
+        password='testpass123',
+        username='testuser'
+    )
+
+@pytest.fixture
+def authenticated_api_client(api_client, authenticated_user):
+    api_client.force_authenticate(user=authenticated_user)
+    return api_client
+
+class UserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+    
+    email = Sequence(lambda n: f'user{n}@example.com')
+    username = Sequence(lambda n: f'user{n}')
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+    is_active = True
+
+@pytest.mark.django_db
+class TestUserService:
+    def test_create_user_success(self):
+        user = UserService.create_user(
+            email='new@example.com',
+            password='securepass123'
+        )
+        assert user.email == 'new@example.com'
+        assert user.is_active == False
+    
+    def test_create_duplicate_user_fails(self):
+        UserFactory(email='test@example.com')
+        with pytest.raises(UserAlreadyExists):
+            UserService.create_user(
+                email='test@example.com',
+                password='pass123'
+            )
+
+@pytest.mark.django_db
+class TestUserAPI:
+    def test_list_users(self, authenticated_api_client):
+        UserFactory.create_batch(5)
+        response = authenticated_api_client.get('/api/users/')
+        assert response.status_code == 200
+        assert len(response.data['results']) == 5
+    
+    def test_get_me(self, authenticated_api_client, authenticated_user):
+        response = authenticated_api_client.get('/api/users/me/')
+        assert response.status_code == 200
+        assert response.data['email'] == authenticated_user.email</div>
+            </div>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div class="section">
+            <h2>Common Mistakes to Avoid</h2>
+            <div class="grid">
+                <div class="card" style="border-left: 3px solid #d84040;">
+                    <h2 style="color: #d84040;">❌ Incorrect</h2>
+                    <ul class="feature-list" style="margin-top: 10px;">
+                        <li>Single monolithic settings.py file</li>
+                        <li>Hardcoded database credentials</li>
+                        <li>All apps in root directory</li>
+                        <li>Business logic in views</li>
+                        <li>No test structure planning</li>
+                        <li>Missing indexes on frequently queried fields</li>
+                        <li>Synchronous tasks blocking requests</li>
+                        <li>No pagination for large querysets</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-left: 3px solid var(--color-primary);">
+                    <h2 style="color: var(--color-primary);">✅ Correct</h2>
+                    <ul class="feature-list" style="margin-top: 10px;">
+                        <li>Multiple environment-specific settings</li>
+                        <li>Environment variables via .env</li>
+                        <li>Apps organized in apps/ directory</li>
+                        <li>Dedicated services.py for logic</li>
+                        <li>Structured tests/ folder with factories</li>
+                        <li>Strategic indexes via Meta options</li>
+                        <li>Celery for long-running tasks</li>
+                        <li>Built-in pagination in serializers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

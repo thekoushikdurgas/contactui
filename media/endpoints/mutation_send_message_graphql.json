@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_send_message_graphql-001",
+  "endpoint_id": "mutation_send_message_graphql",
+  "endpoint_path": "graphql/SendMessage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Send a message to an AI chat and receive AI-generated response. Accepts SendMessageInput with chatId (required, UUID), message (required, String, max 10000 chars). Returns MessageResponse with messageId (UUID), userMessage (String), aiResponse (String), createdAt (DateTime). Uses Lambda AI service with Google Gemini AI for response generation. Chat history is maintained for context. Raises NotFoundError (404) if chat doesn't exist. Raises ForbiddenError (403) if user doesn't own the chat. Raises RateLimitError (429) if rate limit exceeded.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "sendMessage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/ai-chat",
+      "page_title": "Ai Chat Page",
+      "via_service": "aiChatsService",
+      "via_hook": "useAiChat",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": "10 requests/minute",
+  "graphql_operation": "mutation SendMessage($input: SendMessageInput!) { aiChats { sendMessage(input: $input) { messageId userMessage aiResponse createdAt } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

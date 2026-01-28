@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_parse_filters_graphql-001",
+  "endpoint_id": "mutation_parse_filters_graphql",
+  "endpoint_path": "graphql/ParseFilters",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Parse natural language query into structured contact filters using AI. Accepts ParseFiltersInput with query (required, String, non-empty, max 1000 chars). Returns ParseFiltersResponse with jobTitles (array of String), companyNames (array of String), industry (array of String), location (array of String), employees (array of Int as [min, max] range), seniority (array of String). Example: 'Find CTOs at tech companies in San Francisco' -> {jobTitles: ['CTO'], industry: ['Technology'], location: ['San Francisco']}. Uses LambdaAIClient with Google Gemini AI.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "parseFilters"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation ParseFilters($input: ParseFiltersInput!) { aiChats { parseFilters(input: $input) { jobTitles companyNames industry location employees seniority } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

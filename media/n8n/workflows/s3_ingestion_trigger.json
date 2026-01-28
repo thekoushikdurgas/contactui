@@ -1,0 +1,450 @@
+{
+  "name": "S3 Ingestion Trigger",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: S3 File Upload Trigger for Data Ingestion\n\nThis workflow:\n1. Detects new CSV files in S3 bucket\n2. Classifies CSV type (company/contact)\n3. Calls appropriate ingestion API endpoint\n4. Monitors job status\n5. Sends Slack notification on completion/error\n6. Logs to Google Sheets",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "bucketName": "={{$env.S3_BUCKET_NAME}}",
+        "prefix": "data/",
+        "options": {
+          "maxKeys": 100
+        }
+      },
+      "id": "s3-list-1",
+      "name": "List S3 Files",
+      "type": "n8n-nodes-base.aws",
+      "typeVersion": 1,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "aws": {
+          "id": "AWS_CREDENTIALS",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.Key}}",
+              "rightValue": ".csv",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-csv-1",
+      "name": "Filter CSV Files",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Classify CSV type based on filename\nconst key = $input.item.json.Key.toLowerCase();\nlet dataType = 'unknown';\nlet endpoint = '';\n\nif (key.includes('company') || key.includes('companies')) {\n  dataType = 'companies';\n  endpoint = '/v3/data-pipeline/ingest/companies/s3';\n} else if (key.includes('contact') || key.includes('contacts')) {\n  dataType = 'contacts';\n  endpoint = '/v3/data-pipeline/ingest/contacts/s3';\n}\n\nreturn {\n  json: {\n    ...$input.item.json,\n    dataType,\n    endpoint,\n    objectKey: $input.item.json.Key\n  }\n};"
+      },
+      "id": "classify-csv-1",
+      "name": "Classify CSV Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.dataType}}",
+              "rightValue": "unknown",
+              "operator": {
+                "type": "string",
+                "operation": "notEqual"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-1",
+      "name": "Filter Valid Types",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}{{$json.endpoint}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "object_key",
+              "value": "={{$json.objectKey}}"
+            },
+            {
+              "name": "batch_size",
+              "value": "1000"
+            },
+            {
+              "name": "max_threads",
+              "value": "3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Trigger Ingestion API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        590,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/job/{{$json.job_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": false,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "check-status-1",
+      "name": "Check Job Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        770,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-completed-1",
+      "name": "Check if Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        950,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#data-pipeline",
+        "text": "✅ S3 Ingestion Completed\n\nFile: {{$('Classify CSV Type').item.json.objectKey}}\nType: {{$('Classify CSV Type').item.json.dataType}}\nJob ID: {{$json.job_id}}\nStatus: {{$json.status}}\nErrors: {{$json.error_count || 0}}",
+        "otherOptions": {}
+      },
+      "id": "slack-success-1",
+      "name": "Slack Success",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1130,
+        -100
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#alerts",
+        "text": "❌ S3 Ingestion Failed\n\nFile: {{$('Classify CSV Type').item.json.objectKey}}\nType: {{$('Classify CSV Type').item.json.dataType}}\nJob ID: {{$json.job_id}}\nStatus: {{$json.status}}\nError: {{$json.message || $json.error}}",
+        "otherOptions": {}
+      },
+      "id": "slack-error-1",
+      "name": "Slack Error",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1130,
+        100
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{$env.GOOGLE_SHEET_ID}}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Ingestion Log",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$now}}",
+            "File": "={{$('Classify CSV Type').item.json.objectKey}}",
+            "Type": "={{$('Classify CSV Type').item.json.dataType}}",
+            "Job ID": "={{$json.job_id}}",
+            "Status": "={{$json.status}}",
+            "Errors": "={{$json.error_count || 0}}"
+          },
+          "schema": []
+        }
+      },
+      "id": "log-sheets-1",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1310,
+        -100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SHEETS_API",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "List S3 Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List S3 Files": {
+      "main": [
+        [
+          {
+            "node": "Filter CSV Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter CSV Files": {
+      "main": [
+        [
+          {
+            "node": "Classify CSV Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify CSV Type": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Types",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Types": {
+      "main": [
+        [
+          {
+            "node": "Trigger Ingestion API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Ingestion API": {
+      "main": [
+        [
+          {
+            "node": "Check Job Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Job Status": {
+      "main": [
+        [
+          {
+            "node": "Check if Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Completed": {
+      "main": [
+        [
+          {
+            "node": "Slack Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Success": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "s3_ingestion_trigger"
+}

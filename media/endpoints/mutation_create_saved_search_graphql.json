@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_create_saved_search_graphql-001",
+  "endpoint_id": "mutation_create_saved_search_graphql",
+  "endpoint_path": "graphql/CreateSavedSearch",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new saved search. Accepts CreateSavedSearchInput with name (required, String, max 255 chars), description (optional, String), searchType (required, enum: contacts, companies), filters (optional, JSON, VQL filter structure), searchTerm (optional, String), sort (optional, JSON, array of sort objects). Returns SavedSearch with uuid, name, description, searchType, filters, searchTerm, sort, useCount, lastUsedAt, createdAt, updatedAt. User isolation enforced.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/saved_searches/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/savedSearchesService.ts",
+  "service_methods": [
+    "createSavedSearch"
+  ],
+  "repository_methods": [
+    "create_saved_search"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/contacts",
+      "page_title": "Contacts Page",
+      "via_service": "savedSearchesService",
+      "via_hook": "useSavedSearches",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateSavedSearch($input: CreateSavedSearchInput!) { savedSearches { createSavedSearch(input: $input) { uuid name description searchType filters createdAt } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

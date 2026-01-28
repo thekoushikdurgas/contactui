@@ -1,0 +1,204 @@
+/**
+ * Error Message Component Styles
+ * 
+ * Styles for error, warning, and info messages
+ */
+
+.error-message {
+    padding: var(--spacing-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid;
+    margin-bottom: var(--spacing-4);
+}
+
+.error-message-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+}
+
+.error-message-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.125rem;
+}
+
+.error-message-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.error-message-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 var(--spacing-1) 0;
+    color: inherit;
+}
+
+.error-message-description {
+    font-size: var(--font-size-sm);
+    margin: 0;
+    color: inherit;
+    line-height: var(--line-height-relaxed);
+}
+
+.error-message-dismiss {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    opacity: 0.7;
+    transition: opacity var(--transition-base) var(--transition-ease);
+}
+
+.error-message-dismiss:hover {
+    opacity: 1;
+}
+
+.error-message-dismiss:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.error-message-actions {
+    margin-top: var(--spacing-3);
+    padding-top: var(--spacing-3);
+    border-top: 1px solid currentColor;
+    opacity: 0.7;
+}
+
+.error-message-action-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: 1px solid currentColor;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-base) var(--transition-ease);
+}
+
+.error-message-action-btn:hover {
+    opacity: 1;
+    background-color: currentColor;
+    color: white;
+}
+
+.error-message-action-btn:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Error Type Styles */
+.error-message-error {
+    background-color: var(--color-error-50);
+    border-color: var(--color-error-500);
+    color: var(--color-error-700);
+}
+
+[data-theme="dark"] .error-message-error {
+    background-color: rgba(220, 38, 38, 0.1);
+    border-color: var(--color-error-500);
+    color: var(--color-error-400);
+}
+
+.error-message-warning {
+    background-color: var(--color-warning-50);
+    border-color: var(--color-warning-500);
+    color: var(--color-warning-700);
+}
+
+[data-theme="dark"] .error-message-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: var(--color-warning-500);
+    color: var(--color-warning-400);
+}
+
+.error-message-info {
+    background-color: var(--color-info-50);
+    border-color: var(--color-info-500);
+    color: var(--color-info-700);
+}
+
+[data-theme="dark"] .error-message-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-info-500);
+    color: var(--color-info-400);
+}
+
+/* Success Message (using info style) */
+.error-message-success {
+    background-color: var(--color-success-50);
+    border-color: var(--color-success-500);
+    color: var(--color-success-700);
+}
+
+[data-theme="dark"] .error-message-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: var(--color-success-500);
+    color: var(--color-success-400);
+}
+
+/* Inline Error (for form fields) */
+.error-message-inline {
+    padding: var(--spacing-2);
+    margin-top: var(--spacing-1);
+    margin-bottom: 0;
+    font-size: var(--font-size-xs);
+}
+
+/* Compact Error */
+.error-message-compact {
+    padding: var(--spacing-2) var(--spacing-3);
+}
+
+.error-message-compact .error-message-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.error-message-compact .error-message-title {
+    font-size: var(--font-size-xs);
+    margin-bottom: 0;
+}
+
+.error-message-compact .error-message-description {
+    font-size: var(--font-size-xs);
+}
+
+/* Full Width */
+.error-message-full {
+    width: 100%;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .error-message {
+        padding: var(--spacing-3);
+    }
+    
+    .error-message-content {
+        gap: var(--spacing-2);
+    }
+    
+    .error-message-actions {
+        margin-top: var(--spacing-2);
+        padding-top: var(--spacing-2);
+    }
+}

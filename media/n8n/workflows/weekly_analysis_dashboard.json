@@ -1,0 +1,260 @@
+{
+  "name": "Weekly Analysis Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Weekly Analysis Dashboard\n\nThis workflow:\n1. Runs all analysis types\n2. Generates visualizations (charts)\n3. Creates dashboard in Google Sheets\n4. Sends summary email\n5. Posts to Slack channel",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/comprehensive",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "analysis_type",
+              "value": "comprehensive"
+            },
+            {
+              "name": "batch_size",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Run Comprehensive Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/job/{{$json.job_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-status-1",
+      "name": "Check Analysis Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{$env.GOOGLE_SHEET_ID}}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Weekly Dashboard",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Week": "={{$now.toFormat('yyyy-MM-dd')}}",
+            "Company Total": "={{$json.statistics.company_names.total || 0}}",
+            "Company Valid": "={{$json.statistics.company_names.valid || 0}}",
+            "Company Invalid": "={{$json.statistics.company_names.invalid || 0}}",
+            "Keyword Total": "={{$json.statistics.keywords.total_keywords || 0}}",
+            "Keyword Valid": "={{$json.statistics.keywords.valid_keywords || 0}}",
+            "Title Total": "={{$json.statistics.titles.total_contacts || 0}}",
+            "Title Valid": "={{$json.statistics.titles.valid || 0}}"
+          },
+          "schema": []
+        }
+      },
+      "id": "create-dashboard-1",
+      "name": "Create Dashboard in Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        230,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SHEETS_API",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$env.EMAIL_TO}}",
+        "subject": "Weekly Analysis Dashboard - Week of {{$now.toFormat('yyyy-MM-dd')}}",
+        "emailType": "html",
+        "message": "<h2>Weekly Analysis Dashboard</h2><p>Week of: {{$now.toFormat('yyyy-MM-dd')}}</p><p>View the full dashboard in Google Sheets: <a href='{{$env.GOOGLE_SHEET_URL}}'>Open Dashboard</a></p>",
+        "options": {}
+      },
+      "id": "send-email-1",
+      "name": "Send Summary Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        410,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#reports",
+        "text": "📊 Weekly Analysis Dashboard Generated\n\nWeek of: {{$now.toFormat('yyyy-MM-dd')}}\n\nCompany Names:\n  Total: {{$('Check Analysis Status').item.json.statistics.company_names.total || 0}}\n  Valid: {{$('Check Analysis Status').item.json.statistics.company_names.valid || 0}}\n\nKeywords:\n  Total: {{$('Check Analysis Status').item.json.statistics.keywords.total_keywords || 0}}\n  Valid: {{$('Check Analysis Status').item.json.statistics.keywords.valid_keywords || 0}}\n\nContact Titles:\n  Total: {{$('Check Analysis Status').item.json.statistics.titles.total_contacts || 0}}\n  Valid: {{$('Check Analysis Status').item.json.statistics.titles.valid || 0}}\n\nView full dashboard: {{$env.GOOGLE_SHEET_URL}}",
+        "otherOptions": {}
+      },
+      "id": "slack-post-1",
+      "name": "Post to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        590,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Run Comprehensive Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Comprehensive Analysis": {
+      "main": [
+        [
+          {
+            "node": "Check Analysis Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Analysis Status": {
+      "main": [
+        [
+          {
+            "node": "Create Dashboard in Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Dashboard in Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Summary Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Summary Email": {
+      "main": [
+        [
+          {
+            "node": "Post to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "weekly_analysis_dashboard"
+}

@@ -1,0 +1,77 @@
+{
+  "_id": "activities_page-001",
+  "page_id": "activities_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/activities",
+    "file_path": "contact360/dashboard/app/(dashboard)/activities/page.tsx",
+    "purpose": "Activity tracking page displaying user activities with filtering, statistics, and detailed activity information.",
+    "s3_key": "data/pages/activities_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetActivities",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "activitiesService",
+        "via_hook": "useActivitiesPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get user activities with filtering and pagination. Batched with activity stats in useActivitiesPage hook."
+      },
+      {
+        "endpoint_path": "graphql/GetActivityStats",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "activitiesService",
+        "via_hook": "useActivitiesPage",
+        "usage_type": "primary",
+        "usage_context": "analytics",
+        "description": "Get activity statistics (total, by service type, by action type, by status). Batched with activities in useActivitiesPage hook."
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "DataPageLayout",
+        "file_path": "components/layouts/DataPageLayout.tsx"
+      },
+      {
+        "name": "DataToolbar",
+        "file_path": "components/patterns/DataToolbar.tsx"
+      },
+      {
+        "name": "ActivityStatsCards",
+        "file_path": "components/features/activities/ActivityStatsCards.tsx"
+      },
+      {
+        "name": "ActivityTable",
+        "file_path": "components/features/activities/ActivityTable.tsx"
+      },
+      {
+        "name": "ActivityDetailsModal",
+        "file_path": "components/features/activities/ActivityDetailsModal.tsx"
+      },
+      {
+        "name": "ActivitiesSidebar",
+        "file_path": "components/features/activities/ActivitiesSidebar.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 2,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

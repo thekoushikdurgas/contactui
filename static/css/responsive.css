@@ -1,0 +1,322 @@
+/**
+ * Responsive Styles - DocsAI
+ * 
+ * Mobile-first responsive utilities and component adjustments.
+ */
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+/* Hide/Show utilities */
+.hide-mobile {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .hide-mobile {
+        display: initial;
+    }
+    
+    .show-mobile-only {
+        display: none;
+    }
+}
+
+.hide-tablet {
+    display: initial;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .hide-tablet {
+        display: none;
+    }
+}
+
+.hide-desktop {
+    display: initial;
+}
+
+@media (min-width: 1024px) {
+    .hide-desktop {
+        display: none;
+    }
+}
+
+/* ============================================
+   RESPONSIVE GRID
+   ============================================ */
+
+.responsive-grid {
+    display: grid;
+    gap: var(--spacing-4);
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .responsive-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .responsive-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ============================================
+   RESPONSIVE TABLES
+   ============================================ */
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Card-style tables on mobile */
+@media (max-width: 768px) {
+    .table-card-mobile thead {
+        display: none;
+    }
+    
+    .table-card-mobile tbody tr {
+        display: block;
+        margin-bottom: var(--spacing-4);
+        padding: var(--spacing-4);
+        background: var(--color-bg-primary);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+    }
+    
+    .table-card-mobile tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--spacing-2) 0;
+        border: none;
+    }
+    
+    .table-card-mobile tbody td::before {
+        content: attr(data-label);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-secondary);
+    }
+}
+
+/* ============================================
+   RESPONSIVE SIDEBAR
+   ============================================ */
+
+/* Mobile sidebar as drawer */
+@media (max-width: 768px) {
+    #app-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    #app-sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* ============================================
+   RESPONSIVE HEADER
+   ============================================ */
+
+@media (max-width: 768px) {
+    .header-search {
+        display: none;
+    }
+    
+    .header-actions {
+        gap: var(--spacing-2);
+    }
+    
+    .header-title {
+        font-size: var(--font-size-base);
+    }
+}
+
+/* ============================================
+   RESPONSIVE CARDS
+   ============================================ */
+
+@media (max-width: 640px) {
+    .card {
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-4);
+    }
+    
+    .stat-card {
+        padding: var(--spacing-4);
+    }
+    
+    .stat-card h3 {
+        font-size: var(--font-size-xl);
+    }
+}
+
+/* ============================================
+   RESPONSIVE MODALS
+   ============================================ */
+
+@media (max-width: 640px) {
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        position: fixed;
+        bottom: 0;
+        max-height: 90vh;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: var(--spacing-4);
+    }
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+@media (max-width: 640px) {
+    h1, .h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    h2, .h2 {
+        font-size: var(--font-size-xl);
+    }
+    
+    h3, .h3 {
+        font-size: var(--font-size-lg);
+    }
+}
+
+/* ============================================
+   RESPONSIVE SPACING
+   ============================================ */
+
+@media (max-width: 640px) {
+    .page-container {
+        padding-left: var(--spacing-4);
+        padding-right: var(--spacing-4);
+    }
+    
+    .section-spacing {
+        padding-top: var(--spacing-6);
+        padding-bottom: var(--spacing-6);
+    }
+}
+
+/* ============================================
+   RESPONSIVE BUTTONS
+   ============================================ */
+
+@media (max-width: 640px) {
+    .btn-group-responsive {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .btn-group-responsive .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   TOUCH OPTIMIZATIONS
+   ============================================ */
+
+@media (pointer: coarse) {
+    /* Larger touch targets */
+    button,
+    a,
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Disable hover effects on touch devices */
+    .hover-effect {
+        transition: none;
+    }
+    
+    /* Active states instead of hover */
+    .btn:active {
+        transform: scale(0.97);
+    }
+}
+
+/* ============================================
+   SAFE AREA PADDING (for notched devices)
+   ============================================ */
+
+@supports (padding: max(0px)) {
+    .safe-area-bottom {
+        padding-bottom: max(var(--spacing-4), env(safe-area-inset-bottom));
+    }
+    
+    .safe-area-top {
+        padding-top: max(var(--spacing-4), env(safe-area-inset-top));
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    #app-sidebar,
+    .sidebar-overlay,
+    .header,
+    .floating-button,
+    .command-palette,
+    .toast {
+        display: none !important;
+    }
+    
+    main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--color-border);
+    }
+}

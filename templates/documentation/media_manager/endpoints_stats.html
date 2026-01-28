@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Endpoints Statistics{% if api_version %}: {{ api_version|upper }}{% elif method %}: {{ method }}{% endif %} - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">
+                {% if api_version %}Endpoints Statistics: {{ api_version|upper }}{% elif method %}Endpoints Statistics: {{ method }}{% else %}Endpoints Statistics{% endif %}
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Detailed statistics</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_endpoints' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Endpoints
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Statistics Cards -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Overview</h2>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total</dt>
+                <dd class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ total|default:"0" }}</dd>
+            </div>
+            {% if api_version %}
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">API Version</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ api_version|upper }}</dd>
+                </div>
+            {% elif method %}
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Method</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ method }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+    </div>
+    
+    <!-- Breakdown -->
+    {% if by_method %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">By Method</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for method_name, method_count in by_method.items %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ method_name }}</dt>
+                        <dd class="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ method_count }}</dd>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if by_api_version %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">By API Version</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for version_name, version_count in by_api_version.items %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ version_name|upper }}</dt>
+                        <dd class="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ version_count }}</dd>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

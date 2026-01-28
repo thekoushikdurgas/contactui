@@ -1,0 +1,38 @@
+{
+  "_id": "query_get_billing_graphql-001",
+  "endpoint_id": "query_get_billing_graphql",
+  "endpoint_path": "graphql/GetBilling",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get current user billing information. No input required. Returns BillingInfo with subscriptionPlan (String), subscriptionStatus (enum: active, cancelled, expired, trial), subscriptionPeriod (String: monthly, yearly), subscriptionStartedAt (DateTime), subscriptionEndsAt (DateTime), credits (Int), creditLimit (Int), usedCredits (Int), remainingCredits (Int), currentPlan (Plan object), features (array of enabled features). User isolation enforced.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/billing/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/billingService.ts",
+  "service_methods": [
+    "billing"
+  ],
+  "repository_methods": [
+    "get_user_profile"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/billing",
+      "page_title": "Billing Page",
+      "via_service": "billingService",
+      "via_hook": "useBillingPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetBilling { billing { billing { subscriptionPlan subscriptionStatus subscriptionPeriod credits creditLimit currentPlan { id name } } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

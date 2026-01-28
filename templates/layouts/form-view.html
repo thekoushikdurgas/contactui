@@ -1,0 +1,107 @@
+{% comment %}
+Form View Layout - Unified layout for form pages (create/edit).
+
+Usage:
+{% extends 'layouts/form-view.html' %}
+{% block form_header %}
+  <!-- Custom header content -->
+{% endblock %}
+{% block form_tabs %}
+  <!-- Tab navigation (optional) -->
+{% endblock %}
+{% block form_content %}
+  <!-- Form content -->
+{% endblock %}
+{% block form_actions %}
+  <!-- Form action buttons -->
+{% endblock %}
+
+Parameters (passed via context):
+- page_title: Page title
+- is_edit: Boolean indicating edit mode
+- breadcrumbs: List of breadcrumb items
+- resource_type: Resource type
+- tabs: List of form tabs (optional)
+- active_tab: Active tab ID
+{% endcomment %}
+
+{% load static %}
+
+<div class="w-full max-w-4xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    {% if breadcrumbs %}
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4" aria-label="Breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            {% if not forloop.last %}
+                <a href="{{ breadcrumb.url }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    {{ breadcrumb.text }}
+                </a>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            {% else %}
+                <span class="text-gray-700 dark:text-gray-300 font-medium">{{ breadcrumb.text }}</span>
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            {% block form_header %}
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                        {% if is_edit %}Edit{% else %}Create{% endif %} {{ page_title|default:'Item' }}
+                    </h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {% if is_edit %}Update the information below{% else %}Fill in the form to create a new item{% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+        
+        <!-- Tab Navigation (Optional) -->
+        {% if tabs %}
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                {% for tab in tabs %}
+                <a href="?tab={{ tab.id }}" 
+                   class="tab-button group {% if tab.active or active_tab == tab.id %}active{% endif %}" 
+                   data-tab="{{ tab.id }}" 
+                   role="tab">
+                    {% if tab.icon %}
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <use href="#icon-{{ tab.icon }}"></use>
+                    </svg>
+                    {% endif %}
+                    <span>{{ tab.label }}</span>
+                </a>
+                {% endfor %}
+            </nav>
+        </div>
+        {% endif %}
+        
+        <!-- Form Content -->
+        <form method="post" class="p-6">
+            {% csrf_token %}
+            {% block form_content %}{% endblock %}
+            
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                {% block form_actions %}
+                <a href="{% url 'documentation:dashboard' %}" 
+                   class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors font-medium text-sm">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm">
+                    {% if is_edit %}Update{% else %}Create{% endif %}
+                </button>
+                {% endblock %}
+            </div>
+        </form>
+    </div>
+</div>

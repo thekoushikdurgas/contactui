@@ -1,0 +1,283 @@
+{
+  "name": "Data Indexing",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Indexing Data to Vector DB After Ingestion\n\nThis workflow:\n1. Triggered after successful ingestion\n2. Extracts text from ingested records\n3. Generates embeddings\n4. Stores in vector DB\n5. Updates index metadata\n6. Sends confirmation notification",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "data-indexing",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT uuid, name, company_linkedin_url, keywords FROM companies WHERE created_at > NOW() - INTERVAL '1 hour' UNION ALL SELECT uuid, CONCAT(first_name, ' ', last_name) as name, contact_linkedin_url, title FROM contacts WHERE created_at > NOW() - INTERVAL '1 hour'",
+        "options": {}
+      },
+      "id": "fetch-new-records-1",
+      "name": "Fetch New Records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract text from records\nconst items = $input.all();\nconst documents = items.map(item => {\n  const data = item.json;\n  const text = [data.name, data.company_linkedin_url || data.contact_linkedin_url, data.keywords || data.title].filter(Boolean).join(' ');\n  return {\n    json: {\n      text,\n      metadata: {\n        uuid: data.uuid,\n        type: data.keywords ? 'company' : 'contact'\n      }\n    }\n  };\n});\n\nreturn documents;"
+      },
+      "id": "extract-text-1",
+      "name": "Extract Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 400,
+        "chunkOverlap": 40
+      },
+      "id": "text-splitter-1",
+      "name": "Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "embeddings-1",
+      "name": "Generate Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        410,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "company_contact_data",
+          "mode": "list"
+        }
+      },
+      "id": "vector-insert-1",
+      "name": "Store in Vector DB",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1,
+      "position": [
+        590,
+        0
+      ],
+      "credentials": {
+        "pineconeApi": {
+          "id": "PINECONE_API",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "index_metadata",
+          "mode": "list"
+        },
+        "updateKey": "index_name",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "index_name": "company_contact_data",
+            "last_updated": "={{$now}}",
+            "record_count": "={{$('Fetch New Records').all().length}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "update-metadata-1",
+      "name": "Update Index Metadata",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        770,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#data-pipeline",
+        "text": "✅ Data Indexing Completed\n\nRecords Indexed: {{$('Fetch New Records').all().length}}\nIndex: company_contact_data\nTimestamp: {{$now}}",
+        "otherOptions": {}
+      },
+      "id": "slack-confirmation-1",
+      "name": "Send Confirmation",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        950,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch New Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch New Records": {
+      "main": [
+        [
+          {
+            "node": "Extract Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text": {
+      "main": [
+        [
+          {
+            "node": "Text Splitter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Splitter": {
+      "main": [
+        [
+          {
+            "node": "Generate Embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Store in Vector DB",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Store in Vector DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Vector DB": {
+      "ai_document": [
+        [
+          {
+            "node": "Update Index Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Index Metadata": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "data_indexing"
+}

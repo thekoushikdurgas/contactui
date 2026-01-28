@@ -1,0 +1,2506 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Create{% endif %} File - DocsAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/tabs.css' %}?v=20260125">
+<link rel="stylesheet" href="{% static 'css/components/form-responsive.css' %}?v=20260124d">
+<!-- CodeMirror 5 via CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/theme/dracula.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/theme/monokai.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/dialog/dialog.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldgutter.min.css">
+<style>
+    /* Tab button styles for link-based tabs */
+    .tab-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6b7280;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-bottom: -2px;
+    }
+    .tab-button:hover {
+        color: #374151;
+        border-bottom-color: #d1d5db;
+    }
+    .tab-button.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+    }
+    /* Relationship-specific tab styling (green theme) */
+    {% if is_postman_file and collection %}
+    .tab-button.active {
+        color: #f59e0b;
+        border-bottom-color: #f59e0b;
+    }
+    .dark .tab-button.active {
+        color: #fbbf24;
+        border-bottom-color: #fbbf24;
+    }
+    {% elif is_relationship_file and relationship %}
+    .tab-button.active {
+        color: #10b981;
+        border-bottom-color: #10b981;
+    }
+    .dark .tab-button.active {
+        color: #34d399;
+        border-bottom-color: #34d399;
+    }
+    {% endif %}
+    .dark .tab-button {
+        color: #9ca3af;
+    }
+    .dark .tab-button:hover {
+        color: #e5e7eb;
+        border-bottom-color: #4b5563;
+    }
+    {% if not is_relationship_file or not relationship %}
+    .dark .tab-button.active {
+        color: #60a5fa;
+        border-bottom-color: #60a5fa;
+    }
+    {% endif %}
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.2s ease-in;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .CodeMirror {
+        height: 400px;
+        font-size: 14px;
+        font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    }
+    .CodeMirror-gutters {
+        border-right: 1px solid #e5e7eb;
+    }
+    .dark .CodeMirror-gutters {
+        border-right: 1px solid #374151;
+        background-color: #1f2937;
+    }
+    .CodeMirror-linenumber {
+        color: #9ca3af;
+        padding: 0 8px;
+    }
+    .dark .CodeMirror-linenumber {
+        color: #6b7280;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto space-y-6">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Media Manager</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">{% if is_edit %}Edit{% else %}Create{% endif %}</span>
+    </nav>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    {% if is_postman_file and collection %}
+                    <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {% if is_edit %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    {% elif is_relationship_file and relationship %}
+                    <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {% if is_edit %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    {% elif is_endpoint_file and endpoint %}
+                    <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {% if is_edit %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    {% else %}
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {% if is_edit %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                            {% if is_postman_file and collection %}
+                                {% if is_edit %}Edit Postman Collection{% else %}Create New Postman Collection{% endif %}
+                            {% elif is_relationship_file and relationship %}
+                                {% if is_edit %}Edit Relationship{% else %}Create New Relationship{% endif %}
+                            {% elif is_endpoint_file and endpoint %}
+                                {% if is_edit %}Edit Endpoint{% else %}Create New Endpoint{% endif %}
+                            {% elif is_page_file and page %}
+                                {% if is_edit %}Edit Page{% else %}Create New Page{% endif %}
+                            {% else %}
+                                {% if is_edit %}Edit File{% else %}Create New File{% endif %}
+                            {% endif %}
+                        </h1>
+                        {% if is_postman_file and collection and collection_info.name %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ collection_info.name }}</p>
+                        {% elif is_relationship_file and relationship and relationship.relationship_id %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-mono mt-0.5">{{ relationship.relationship_id }}</p>
+                        {% elif is_endpoint_file and endpoint and endpoint.endpoint_id %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ endpoint.endpoint_id }}</p>
+                        {% elif is_page_file and page and page.page_id %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ page.page_id }}</p>
+                        {% elif is_edit and relative_path %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-mono mt-0.5">{{ relative_path }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{% if is_postman_file and collection and is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% elif is_relationship_file and relationship and is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% elif is_endpoint_file and endpoint and is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% elif is_page_file and page and is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% elif is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% else %}{% url 'documentation:dashboard' %}{% endif %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Cancel
+                </a>
+            </div>
+        </div>
+        
+        {% if is_endpoint_file and endpoint %}
+        <!-- Tab Navigation for Endpoint Files -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=basic" class="tab-button group {% if active_tab == 'basic' %}active{% endif %}" data-tab="basic" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Basic</span>
+                </a>
+                <a href="?tab=request" class="tab-button group {% if active_tab == 'request' %}active{% endif %}" data-tab="request" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10m-7 4h7" />
+                    </svg>
+                    <span>Request</span>
+                </a>
+                <a href="?tab=response" class="tab-button group {% if active_tab == 'response' %}active{% endif %}" data-tab="response" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Response</span>
+                </a>
+                {% if endpoint.api_version == 'graphql' or not is_edit %}
+                <a href="?tab=graphql" class="tab-button group {% if active_tab == 'graphql' %}active{% endif %}" data-tab="graphql" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>GraphQL</span>
+                </a>
+                {% endif %}
+                <a href="?tab=lambda-services" class="tab-button group {% if active_tab == 'lambda-services' %}active{% endif %}" data-tab="lambda-services" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                    </svg>
+                    <span>Lambda</span>
+                </a>
+                <a href="?tab=files" class="tab-button group {% if active_tab == 'files' %}active{% endif %}" data-tab="files" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+                    </svg>
+                    <span>Files</span>
+                </a>
+                <a href="?tab=methods" class="tab-button group {% if active_tab == 'methods' %}active{% endif %}" data-tab="methods" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Methods</span>
+                </a>
+                <a href="?tab=access-control" class="tab-button group {% if active_tab == 'access-control' %}active{% endif %}" data-tab="access-control" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Access</span>
+                </a>
+                <a href="?tab=advanced" class="tab-button group {% if active_tab == 'advanced' %}active{% endif %}" data-tab="advanced" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Advanced</span>
+                </a>
+            </nav>
+        </div>
+        {% elif is_postman_file and collection %}
+        <!-- Tab Navigation for Postman Collection Files -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=basic" class="tab-button group {% if active_tab == 'basic' %}active{% endif %}" data-tab="basic" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Basic Info</span>
+                </a>
+                <a href="?tab=settings" class="tab-button group {% if active_tab == 'settings' %}active{% endif %}" data-tab="settings" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Collection Settings</span>
+                </a>
+                <a href="?tab=variables" class="tab-button group {% if active_tab == 'variables' %}active{% endif %}" data-tab="variables" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span>Variables</span>
+                </a>
+                <a href="?tab=advanced" class="tab-button group {% if active_tab == 'advanced' %}active{% endif %}" data-tab="advanced" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Advanced</span>
+                </a>
+            </nav>
+        </div>
+        {% elif is_relationship_file and relationship %}
+        <!-- Tab Navigation for Relationship Files -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=basic" class="tab-button group {% if active_tab == 'basic' %}active{% endif %}" data-tab="basic" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Basic Info</span>
+                </a>
+                <a href="?tab=connection" class="tab-button group {% if active_tab == 'connection' %}active{% endif %}" data-tab="connection" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Connection</span>
+                </a>
+                <a href="?tab=usage" class="tab-button group {% if active_tab == 'usage' %}active{% endif %}" data-tab="usage" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Usage Context</span>
+                </a>
+                <a href="?tab=advanced" class="tab-button group {% if active_tab == 'advanced' %}active{% endif %}" data-tab="advanced" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Advanced</span>
+                </a>
+            </nav>
+        </div>
+        {% elif is_page_file and page %}
+        <!-- Tab Navigation for Page Files -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=basic" class="tab-button group {% if active_tab == 'basic' %}active{% endif %}" data-tab="basic" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Basic</span>
+                </a>
+                <a href="?tab=metadata" class="tab-button group {% if active_tab == 'metadata' %}active{% endif %}" data-tab="metadata" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span>Metadata</span>
+                </a>
+                <a href="?tab=content" class="tab-button group {% if active_tab == 'content' %}active{% endif %}" data-tab="content" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                    <span>Content</span>
+                </a>
+                <a href="?tab=endpoints" class="tab-button group {% if active_tab == 'endpoints' %}active{% endif %}" data-tab="endpoints" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Endpoints</span>
+                    {% if page.metadata.uses_endpoints %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full">{{ page.metadata.uses_endpoints|length }}</span>
+                    {% endif %}
+                </a>
+                <a href="?tab=components" class="tab-button group {% if active_tab == 'components' %}active{% endif %}" data-tab="components" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                    </svg>
+                    <span>Components</span>
+                    {% if page.metadata.ui_components %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full">{{ page.metadata.ui_components|length }}</span>
+                    {% endif %}
+                </a>
+                <a href="?tab=access-control" class="tab-button group {% if active_tab == 'access-control' %}active{% endif %}" data-tab="access-control" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Access</span>
+                </a>
+                <a href="?tab=sections" class="tab-button group {% if active_tab == 'sections' %}active{% endif %}" data-tab="sections" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span>Sections</span>
+                </a>
+                <a href="?tab=advanced" class="tab-button group {% if active_tab == 'advanced' %}active{% endif %}" data-tab="advanced" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Advanced</span>
+                </a>
+            </nav>
+        </div>
+        {% endif %}
+        
+        <div class="p-6">
+            {% if error_message %}
+            <div class="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 text-red-700 dark:text-red-300 text-sm">
+                {{ error_message }}
+            </div>
+            {% endif %}
+
+            {% if is_relationship_file and relationship %}
+            <!-- Relationship Form with Tabs -->
+            <form method="post" id="relationship-form" class="space-y-6" novalidate>
+                {% csrf_token %}
+                
+                <!-- Hidden field for enhanced form data -->
+                <input type="hidden" id="relationship_data" name="relationship_data" value="">
+                <input type="hidden" name="resource_type" value="relationships">
+                
+                <!-- Basic Info Tab -->
+                <div class="tab-content {% if active_tab == 'basic' %}active{% endif %}" id="tab-basic" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Basic Information</p>
+                                    <p class="text-xs text-blue-700 dark:text-blue-300">Enter the core details for this relationship. The Relationship ID is required and cannot be changed after creation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="relationship_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Relationship ID <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="relationship_id" 
+                                    name="relationship_id" 
+                                    value="{{ relationship.relationship_id|default:'' }}"
+                                    required
+                                    {% if is_edit %}readonly{% endif %}
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 {% if is_edit %}bg-gray-50 dark:bg-gray-800{% endif %} focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="page-endpoint-001"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Unique identifier for this relationship (e.g., about_page-get_company)</p>
+                            </div>
+                            
+                            <div>
+                                <label for="relationship_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Relationship Type
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="relationship_type" 
+                                    name="relationship_type" 
+                                    value="{{ relationship.relationship_type|default:'' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="page-endpoint"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Type of relationship (optional)</p>
+                            </div>
+                            
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    State
+                                </label>
+                                <select 
+                                    id="state" 
+                                    name="state"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    <option value="draft" {% if relationship.state == 'draft' or not relationship.state %}selected{% endif %}>Draft</option>
+                                    <option value="development" {% if relationship.state == 'development' %}selected{% endif %}>Development</option>
+                                    <option value="test" {% if relationship.state == 'test' %}selected{% endif %}>Test</option>
+                                    <option value="published" {% if relationship.state == 'published' %}selected{% endif %}>Published</option>
+                                    <option value="coming_soon" {% if relationship.state == 'coming_soon' %}selected{% endif %}>Coming Soon</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Current state of the relationship</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Description
+                            </label>
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                rows="4"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="Describe the purpose and context of this relationship..."
+                            >{{ relationship.description|default:'' }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Optional description explaining this relationship</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Connection Tab -->
+                <div class="tab-content {% if active_tab == 'connection' %}active{% endif %}" id="tab-connection" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-1">Connection Details</p>
+                                    <p class="text-xs text-purple-700 dark:text-purple-300">Specify the page and endpoint that this relationship connects. Both are required.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="page_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Page ID <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="page_id" 
+                                    name="page_id" 
+                                    value="{{ relationship.page_id|default:relationship.page_path|default:'' }}"
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="about_page"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The page this relationship connects to</p>
+                            </div>
+                            
+                            <div>
+                                <label for="page_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Page Path (Legacy)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="page_path" 
+                                    name="page_path" 
+                                    value="{{ relationship.page_path|default:'' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="/about"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Legacy field for backward compatibility</p>
+                            </div>
+                            
+                            <div>
+                                <label for="endpoint_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Endpoint ID <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="endpoint_id" 
+                                    name="endpoint_id" 
+                                    value="{{ relationship.endpoint_id|default:relationship.endpoint_path|default:'' }}"
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="get_company"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The endpoint this relationship connects to</p>
+                            </div>
+                            
+                            <div>
+                                <label for="endpoint_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Endpoint Path (Legacy)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="endpoint_path" 
+                                    name="endpoint_path" 
+                                    value="{{ relationship.endpoint_path|default:'' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="graphql/GetCompany"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Legacy field for backward compatibility</p>
+                            </div>
+                            
+                            <div>
+                                <label for="method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Method
+                                </label>
+                                <select 
+                                    id="method" 
+                                    name="method"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    <option value="QUERY" {% if relationship.method == 'QUERY' or not relationship.method %}selected{% endif %}>QUERY</option>
+                                    <option value="MUTATION" {% if relationship.method == 'MUTATION' %}selected{% endif %}>MUTATION</option>
+                                    <option value="GET" {% if relationship.method == 'GET' %}selected{% endif %}>GET</option>
+                                    <option value="POST" {% if relationship.method == 'POST' %}selected{% endif %}>POST</option>
+                                    <option value="PUT" {% if relationship.method == 'PUT' %}selected{% endif %}>PUT</option>
+                                    <option value="PATCH" {% if relationship.method == 'PATCH' %}selected{% endif %}>PATCH</option>
+                                    <option value="DELETE" {% if relationship.method == 'DELETE' %}selected{% endif %}>DELETE</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">HTTP method or GraphQL operation type</p>
+                            </div>
+                            
+                            <div>
+                                <label for="api_version" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    API Version
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="api_version" 
+                                    name="api_version" 
+                                    value="{{ relationship.api_version|default:'v1' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="v1"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">API version (e.g., v1, v4, graphql)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Usage Context Tab -->
+                <div class="tab-content {% if active_tab == 'usage' %}active{% endif %}" id="tab-usage" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-amber-800 dark:text-amber-200 font-medium mb-1">Usage Context</p>
+                                    <p class="text-xs text-amber-700 dark:text-amber-300">Define how and where this relationship is used within the application.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="usage_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Usage Type
+                                </label>
+                                <select 
+                                    id="usage_type" 
+                                    name="usage_type"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    <option value="primary" {% if relationship.usage_type == 'primary' or not relationship.usage_type %}selected{% endif %}>Primary</option>
+                                    <option value="secondary" {% if relationship.usage_type == 'secondary' %}selected{% endif %}>Secondary</option>
+                                    <option value="conditional" {% if relationship.usage_type == 'conditional' %}selected{% endif %}>Conditional</option>
+                                    <option value="lazy" {% if relationship.usage_type == 'lazy' %}selected{% endif %}>Lazy</option>
+                                    <option value="prefetch" {% if relationship.usage_type == 'prefetch' %}selected{% endif %}>Prefetch</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">How this relationship is used (primary, secondary, conditional, etc.)</p>
+                            </div>
+                            
+                            <div>
+                                <label for="usage_context" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Usage Context
+                                </label>
+                                <select 
+                                    id="usage_context" 
+                                    name="usage_context"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    <option value="">Select context...</option>
+                                    <option value="data_fetching" {% if relationship.usage_context == 'data_fetching' %}selected{% endif %}>Data Fetching</option>
+                                    <option value="data_mutation" {% if relationship.usage_context == 'data_mutation' %}selected{% endif %}>Data Mutation</option>
+                                    <option value="authentication" {% if relationship.usage_context == 'authentication' %}selected{% endif %}>Authentication</option>
+                                    <option value="analytics" {% if relationship.usage_context == 'analytics' %}selected{% endif %}>Analytics</option>
+                                    <option value="realtime" {% if relationship.usage_context == 'realtime' %}selected{% endif %}>Realtime</option>
+                                    <option value="background" {% if relationship.usage_context == 'background' %}selected{% endif %}>Background</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Context in which this relationship is used</p>
+                            </div>
+                            
+                            <div>
+                                <label for="via_service" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Via Service
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="via_service" 
+                                    name="via_service" 
+                                    value="{{ relationship.via_service|default:'' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="CompanyService"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Service layer through which this relationship is accessed</p>
+                            </div>
+                            
+                            <div>
+                                <label for="via_hook" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Via Hook
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="via_hook" 
+                                    name="via_hook" 
+                                    value="{{ relationship.via_hook|default:'' }}"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    placeholder="useCompanyData"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">React hook or function through which this relationship is accessed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Tab -->
+                <div class="tab-content {% if active_tab == 'advanced' %}active{% endif %}" id="tab-advanced" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-800 dark:text-gray-200 font-medium mb-1">Advanced Options</p>
+                                    <p class="text-xs text-gray-700 dark:text-gray-300">Additional configuration and metadata for this relationship.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            {% if relationship.created_at %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Created At</label>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ relationship.created_at }}</p>
+                            </div>
+                            {% endif %}
+                            {% if relationship.updated_at %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Updated At</label>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ relationship.updated_at }}</p>
+                            </div>
+                            {% endif %}
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Advanced fields can be added here as needed. Currently, the basic relationship structure is sufficient for most use cases.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <button 
+                            type="submit"
+                            class="inline-flex items-center px-6 py-2.5 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm"
+                        >
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {% if is_edit %}Save Changes{% else %}Create Relationship{% endif %}
+                        </button>
+                        <button 
+                            type="button"
+                            onclick="previewRelationshipJSON()"
+                            class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                        >
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Preview JSON
+                        </button>
+                        {% if is_edit and relationship.relationship_id %}
+                        <a href="{% url 'documentation:media_file_viewer' file_path=relative_path %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View Relationship
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div id="form-status" class="text-xs text-gray-500 dark:text-gray-400"></div>
+                </div>
+            </form>
+            
+            {% elif is_page_file and page %}
+            <!-- Page Form with Tabs -->
+            <form method="post" id="page-form" class="space-y-6" novalidate>
+                {% csrf_token %}
+                
+                <!-- Hidden field for enhanced form data -->
+                <input type="hidden" id="page_data" name="page_data" value="">
+                <input type="hidden" name="resource_type" value="pages">
+                
+                <!-- Basic Tab -->
+                <div class="tab-content {% if active_tab == 'basic' %}active{% endif %}" id="tab-basic" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="page_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Page ID <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="page_id" 
+                                    name="page_id" 
+                                    value="{{ page.page_id|default:'' }}"
+                                    required
+                                    {% if is_edit %}readonly{% endif %}
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="dashboard_page"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Unique identifier for this page{% if is_edit %} (cannot be changed){% endif %}</p>
+                            </div>
+                            
+                            <div>
+                                <label for="page_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Page Type <span class="text-red-500">*</span>
+                                </label>
+                                <select 
+                                    id="page_type" 
+                                    name="page_type"
+                                    required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="docs" {% if page.page_type == 'docs' %}selected{% endif %}>Documentation</option>
+                                    <option value="dashboard" {% if page.page_type == 'dashboard' %}selected{% endif %}>Dashboard</option>
+                                    <option value="marketing" {% if page.page_type == 'marketing' %}selected{% endif %}>Marketing</option>
+                                    <option value="landing" {% if page.page_type == 'landing' %}selected{% endif %}>Landing Page</option>
+                                    <option value="api" {% if page.page_type == 'api' %}selected{% endif %}>API Documentation</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Category/type of this page</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Basic Information</p>
+                                    <p class="text-xs text-blue-700 dark:text-blue-300">Fill in the basic details. You can add more information in other tabs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Metadata Tab -->
+                <div class="tab-content {% if active_tab == 'metadata' %}active{% endif %}" id="tab-metadata" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="metadata_route" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Route <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="metadata_route" 
+                                    name="metadata_route" 
+                                    value="{{ page.metadata.route|default:'/' }}"
+                                    required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="/dashboard"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">URL path for this page (e.g., /dashboard, /about)</p>
+                            </div>
+                            
+                            <div>
+                                <label for="metadata_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Status
+                                </label>
+                                <select 
+                                    id="metadata_status" 
+                                    name="metadata_status"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="draft" {% if page.metadata.status == 'draft' %}selected{% endif %}>Draft</option>
+                                    <option value="published" {% if page.metadata.status == 'published' %}selected{% endif %}>Published</option>
+                                    <option value="archived" {% if page.metadata.status == 'archived' %}selected{% endif %}>Archived</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Current status of this page</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="metadata_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Description
+                            </label>
+                            <textarea 
+                                id="metadata_description" 
+                                name="metadata_description" 
+                                rows="3"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Brief description of this page..."
+                            >{{ page.metadata.description|default:'' }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">A brief description of what this page is about</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="metadata_purpose" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Purpose
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="metadata_purpose" 
+                                    name="metadata_purpose" 
+                                    value="{{ page.metadata.purpose|default:'' }}"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="User dashboard for managing account"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Primary purpose or goal of this page</p>
+                            </div>
+                            
+                            <div>
+                                <label for="metadata_version" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Version
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="metadata_version" 
+                                    name="metadata_version" 
+                                    value="{{ page.metadata.version|default:'1.0.0' }}"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="1.0.0"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Page version (semantic versioning)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Tab -->
+                <div class="tab-content {% if active_tab == 'content' %}active{% endif %}" id="tab-content" role="tabpanel">
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Content (Markdown)
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" id="format-markdown-btn" class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-200 dark:hover:bg-gray-600">
+                                        Format
+                                    </button>
+                                    <button type="button" id="clear-content-btn" class="text-xs px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/50">
+                                        Clear
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea 
+                                id="content" 
+                                name="content" 
+                                rows="20"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="# Page Content&#10;&#10;Write your page content in Markdown format..."
+                            >{{ page.content|default:'' }}</textarea>
+                            <div class="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                                <span>Markdown preview will be shown below</span>
+                                <span id="content-char-count" class="font-mono">0 characters</span>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Preview
+                                </label>
+                                <button type="button" id="toggle-preview-btn" class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-200 dark:hover:bg-gray-600">
+                                    Toggle Preview
+                                </button>
+                            </div>
+                            <div id="content-preview" class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg prose prose-sm dark:prose-invert max-w-none min-h-[200px] border border-gray-200 dark:border-gray-700"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Endpoints Tab -->
+                <div class="tab-content {% if active_tab == 'endpoints' %}active{% endif %}" id="tab-endpoints" role="tabpanel">
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Endpoints Usage</p>
+                                    <p class="text-xs text-blue-700 dark:text-blue-300">Add endpoints that this page uses. Each endpoint can have usage context, service, and hook information.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="uses-endpoints-editor" class="space-y-4">
+                            <!-- Endpoints editor will be dynamically generated -->
+                            {% if page.metadata.uses_endpoints %}
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                <p>Current endpoints: {{ page.metadata.uses_endpoints|length }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                            <button type="button" id="add-endpoint-btn" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                Add Endpoint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Components Tab -->
+                <div class="tab-content {% if active_tab == 'components' %}active{% endif %}" id="tab-components" role="tabpanel">
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-1">UI Components</p>
+                                    <p class="text-xs text-purple-700 dark:text-purple-300">Define UI components used on this page with their access control settings.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="ui-components-editor" class="space-y-4">
+                            <!-- Components editor will be dynamically generated -->
+                            {% if page.metadata.ui_components %}
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                <p>Current components: {{ page.metadata.ui_components|length }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                            <button type="button" id="add-component-btn" class="inline-flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                Add Component
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Access Control Tab -->
+                <div class="tab-content {% if active_tab == 'access-control' %}active{% endif %}" id="tab-access-control" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-amber-800 dark:text-amber-200 font-medium mb-1">Access Control</p>
+                                    <p class="text-xs text-amber-700 dark:text-amber-300">Configure authentication and authorization settings for this page.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="metadata_authentication" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Authentication
+                                </label>
+                                <select 
+                                    id="metadata_authentication" 
+                                    name="metadata_authentication"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="">Select authentication...</option>
+                                    <option value="required" {% if page.metadata.authentication == 'required' %}selected{% endif %}>Required</option>
+                                    <option value="optional" {% if page.metadata.authentication == 'optional' %}selected{% endif %}>Optional</option>
+                                    <option value="none" {% if page.metadata.authentication == 'none' %}selected{% endif %}>None</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Authentication requirement for accessing this page</p>
+                            </div>
+                            
+                            <div>
+                                <label for="metadata_authorization" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Authorization
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="metadata_authorization" 
+                                    name="metadata_authorization" 
+                                    value="{{ page.metadata.authorization|default:'' }}"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="admin, pro_user"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Required roles/permissions (comma-separated)</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                User Type Access
+                            </label>
+                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                <label class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                    <input type="checkbox" name="access_public" {% if page.metadata.access_control.public %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Public</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                    <input type="checkbox" name="access_free_user" {% if page.metadata.access_control.freeUser %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Free User</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                    <input type="checkbox" name="access_pro_user" {% if page.metadata.access_control.proUser %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Pro User</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                    <input type="checkbox" name="access_admin" {% if page.metadata.access_control.admin %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Admin</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                    <input type="checkbox" name="access_super_admin" {% if page.metadata.access_control.superAdmin %}checked{% endif %} class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Super Admin</span>
+                                </label>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Select which user types can access this page</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sections Tab -->
+                <div class="tab-content {% if active_tab == 'sections' %}active{% endif %}" id="tab-sections" role="tabpanel">
+                    <div class="space-y-4">
+                        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-green-800 dark:text-green-200 font-medium mb-1">Content Sections</p>
+                                    <p class="text-xs text-green-700 dark:text-green-300">Define content sections like title, subtitle, value propositions, and story sections.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="sections-editor" class="space-y-4">
+                            <!-- Sections editor will be dynamically generated -->
+                            {% if page.metadata.content_sections %}
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                <p>Current sections: Title, Subtitle, Value Propositions, Story</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Tab -->
+                <div class="tab-content {% if active_tab == 'advanced' %}active{% endif %}" id="tab-advanced" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-800 dark:text-gray-200 font-medium mb-1">Advanced Settings</p>
+                                    <p class="text-xs text-gray-700 dark:text-gray-300">Configure fallback data, mock data, and demo data for testing and development.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Fallback Data
+                                </label>
+                                <div id="fallback-data-editor" class="border border-gray-300 dark:border-gray-600 rounded-lg min-h-[200px]"></div>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Data to use when primary data source is unavailable</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Mock Data
+                                </label>
+                                <div id="mock-data-editor" class="border border-gray-300 dark:border-gray-600 rounded-lg min-h-[200px]"></div>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Mock data for testing and development</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Demo Data
+                                </label>
+                                <div id="demo-data-editor" class="border border-gray-300 dark:border-gray-600 rounded-lg min-h-[200px]"></div>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Demo data for showcasing features</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <button 
+                            type="submit"
+                            id="submit-btn"
+                            class="inline-flex items-center px-6 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {% if is_edit %}Save Changes{% else %}Create Page{% endif %}
+                        </button>
+                        <button 
+                            type="button"
+                            id="preview-json-btn"
+                            class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                            Preview JSON
+                        </button>
+                        {% if is_edit %}
+                        <a href="{% url 'documentation:media_file_viewer' file_path=relative_path %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View Page
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="form-status" class="text-sm text-gray-500 dark:text-gray-400 hidden">
+                            <span id="auto-save-status"></span>
+                        </div>
+                        <a href="{% if is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% else %}{% url 'documentation:dashboard' %}{% endif %}" class="inline-flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+            
+            {% elif is_endpoint_file and endpoint %}
+            <!-- Endpoint Form with Tabs -->
+            <form method="post" id="endpoint-form" class="space-y-6" novalidate>
+                {% csrf_token %}
+                
+                <!-- Hidden field for enhanced form data -->
+                <input type="hidden" id="endpoint_data" name="endpoint_data" value="">
+                <input type="hidden" name="resource_type" value="endpoints">
+                
+                <!-- Basic Tab -->
+                <div class="tab-content {% if active_tab == 'basic' %}active{% endif %}" id="tab-basic" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="endpoint_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Endpoint ID <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="endpoint_id" 
+                                    name="endpoint_id" 
+                                    value="{{ endpoint.endpoint_id|default:'' }}"
+                                    required
+                                    {% if is_edit %}readonly{% endif %}
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="get_company_graphql"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Unique identifier for this endpoint{% if is_edit %} (cannot be changed){% endif %}</p>
+                            </div>
+                            
+                            <div>
+                                <label for="endpoint_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Endpoint Path <span class="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="endpoint_path" 
+                                    name="endpoint_path" 
+                                    value="{{ endpoint.endpoint_path|default:'' }}"
+                                    required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="graphql/GetCompany"
+                                />
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">URL path or GraphQL operation path</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="api_version" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    API Version <span class="text-red-500">*</span>
+                                </label>
+                                <select 
+                                    id="api_version" 
+                                    name="api_version"
+                                    required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                >
+                                    <option value="">Select API version...</option>
+                                    <option value="v1" {% if endpoint.api_version == 'v1' %}selected{% endif %}>v1</option>
+                                    <option value="v2" {% if endpoint.api_version == 'v2' %}selected{% endif %}>v2</option>
+                                    <option value="graphql" {% if endpoint.api_version == 'graphql' %}selected{% endif %}>GraphQL</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">API version or protocol type</p>
+                            </div>
+                            
+                            <div>
+                                <label for="method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Method <span class="text-red-500">*</span>
+                                </label>
+                                <select 
+                                    id="method" 
+                                    name="method"
+                                    required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                >
+                                    <option value="">Select method</option>
+                                    <option value="QUERY" {% if endpoint.method == 'QUERY' %}selected{% endif %}>QUERY (GraphQL)</option>
+                                    <option value="MUTATION" {% if endpoint.method == 'MUTATION' %}selected{% endif %}>MUTATION (GraphQL)</option>
+                                    <option value="GET" {% if endpoint.method == 'GET' %}selected{% endif %}>GET (REST)</option>
+                                    <option value="POST" {% if endpoint.method == 'POST' %}selected{% endif %}>POST (REST)</option>
+                                    <option value="PUT" {% if endpoint.method == 'PUT' %}selected{% endif %}>PUT (REST)</option>
+                                    <option value="DELETE" {% if endpoint.method == 'DELETE' %}selected{% endif %}>DELETE (REST)</option>
+                                    <option value="PATCH" {% if endpoint.method == 'PATCH' %}selected{% endif %}>PATCH (REST)</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">HTTP method or GraphQL operation type</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Description <span class="text-red-500">*</span>
+                            </label>
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                rows="5"
+                                required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder="Describe what this endpoint does, its purpose, and any important details..."
+                            >{{ endpoint.description|default:'' }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">A clear description of what this endpoint does</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Request Tab -->
+                <div class="tab-content {% if active_tab == 'request' %}active{% endif %}" id="tab-request" role="tabpanel">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="request_body" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Request Body (JSON Schema)
+                            </label>
+                            <textarea 
+                                id="request_body" 
+                                name="request_body" 
+                                rows="12"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder='{"type": "object", "properties": {...}}'
+                            >{{ endpoint.request_body|default:''|safe }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">JSON Schema for the request body</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Response Tab -->
+                <div class="tab-content {% if active_tab == 'response' %}active{% endif %}" id="tab-response" role="tabpanel">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="response_schema" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Response Schema (JSON Schema)
+                            </label>
+                            <textarea 
+                                id="response_schema" 
+                                name="response_schema" 
+                                rows="12"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder='{"type": "object", "properties": {...}}'
+                            >{{ endpoint.response_schema|default:''|safe }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">JSON Schema defining the response structure</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GraphQL Tab -->
+                {% if endpoint.api_version == 'graphql' or not is_edit %}
+                <div class="tab-content {% if active_tab == 'graphql' %}active{% endif %}" id="tab-graphql" role="tabpanel">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="graphql_operation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                GraphQL Operation (JSON)
+                            </label>
+                            <textarea 
+                                id="graphql_operation" 
+                                name="graphql_operation" 
+                                rows="15"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder='{"operation": "query", "name": "GetCompany", "variables": {...}, "fields": [...]}'
+                            >{{ endpoint.graphql_operation|default:''|safe }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">JSON object defining the GraphQL operation structure</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Lambda Services Tab -->
+                <div class="tab-content {% if active_tab == 'lambda-services' %}active{% endif %}" id="tab-lambda-services" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                            <p class="text-sm text-purple-800 dark:text-purple-200">Lambda Services configuration will be added here.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Files Tab -->
+                <div class="tab-content {% if active_tab == 'files' %}active{% endif %}" id="tab-files" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                            <p class="text-sm text-purple-800 dark:text-purple-200">Files configuration will be added here.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Methods Tab -->
+                <div class="tab-content {% if active_tab == 'methods' %}active{% endif %}" id="tab-methods" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                            <p class="text-sm text-purple-800 dark:text-purple-200">Methods configuration will be added here.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Access Control Tab -->
+                <div class="tab-content {% if active_tab == 'access-control' %}active{% endif %}" id="tab-access-control" role="tabpanel">
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="authentication" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Authentication
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="authentication" 
+                                    name="authentication" 
+                                    value="{{ endpoint.authentication|default:'' }}"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="Bearer token (JWT)"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label for="authorization" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Authorization
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="authorization" 
+                                    name="authorization" 
+                                    value="{{ endpoint.authorization|default:'' }}"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="User role required"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Tab -->
+                <div class="tab-content {% if active_tab == 'advanced' %}active{% endif %}" id="tab-advanced" role="tabpanel">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="rate_limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Rate Limit
+                            </label>
+                            <input 
+                                type="text" 
+                                id="rate_limit" 
+                                name="rate_limit" 
+                                value="{{ endpoint.rate_limit|default:'' }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder="100 requests/minute"
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <button 
+                            type="submit"
+                            id="submit-btn"
+                            class="inline-flex items-center px-6 py-2.5 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-all font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {% if is_edit %}Save Changes{% else %}Create Endpoint{% endif %}
+                        </button>
+                        <button 
+                            type="button"
+                            id="preview-json-btn"
+                            class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                            Preview JSON
+                        </button>
+                        {% if is_edit %}
+                        <a href="{% url 'documentation:media_file_viewer' file_path=relative_path %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View Endpoint
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="form-status" class="text-sm text-gray-500 dark:text-gray-400 hidden">
+                            <span id="auto-save-status"></span>
+                        </div>
+                        <a href="{% if is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% else %}{% url 'documentation:dashboard' %}{% endif %}" class="inline-flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+            
+            {% else %}
+            <!-- Original JSON Editor Form for Non-Page/Non-Endpoint Files -->
+            <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <div>
+            <label for="resource_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Resource type <span class="text-red-500">*</span></label>
+            <select id="resource_type" name="resource_type" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required {% if is_edit %}disabled{% endif %}>
+                <option value="">Select…</option>
+                <option value="pages" {% if file_data.resource_type == 'pages' %}selected{% endif %}>Pages</option>
+                <option value="endpoints" {% if file_data.resource_type == 'endpoints' %}selected{% endif %}>Endpoints</option>
+                <option value="relationships" {% if file_data.resource_type == 'relationships' %}selected{% endif %}>Relationships</option>
+                <option value="postman" {% if file_data.resource_type == 'postman' %}selected{% endif %}>Postman</option>
+            </select>
+            {% if is_edit %}<input type="hidden" name="resource_type" value="{{ file_data.resource_type }}">{% endif %}
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Category/type of this file</p>
+        </div>
+
+        {% if not is_edit %}
+        <div>
+            <label for="file_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">File ID <span class="text-red-500">*</span></label>
+            <input type="text" id="file_id" name="file_id" value="{{ file_data.file_id|default:'' }}" placeholder="e.g. dashboard_page" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Used as filename (without .json)</p>
+        </div>
+        {% endif %}
+
+        <div>
+            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">JSON content <span class="text-red-500">*</span></label>
+            
+            <!-- Editor Toolbar -->
+            <div class="flex items-center justify-between mb-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-2">
+                    <button type="button" 
+                            id="format-json" 
+                            class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Format JSON
+                    </button>
+                    <button type="button" 
+                            id="validate-json" 
+                            class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Validate
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Validation Feedback -->
+            <div id="json-feedback" class="mb-2 hidden">
+                <div id="json-feedback-content" class="px-3 py-2 rounded-lg text-sm"></div>
+            </div>
+            
+            <!-- Code Editor Container -->
+            <div id="code-editor-container" class="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-white dark:bg-gray-900 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500" style="min-height: 400px;">
+                <textarea id="content" name="content" class="hidden" required>{{ file_data.content|default:'{}' }}</textarea>
+                <div id="code-editor" class="h-full" data-content="{{ file_data.content|default:'{}'|escape }}"></div>
+            </div>
+            
+            <!-- Help Text -->
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Enter valid JSON content. Use Format JSON to auto-format and Validate to check syntax.
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+            <input type="checkbox" id="auto_sync" name="auto_sync" {% if not is_edit %}checked{% endif %} class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+            <label for="auto_sync" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">Auto-sync to S3 after save</label>
+        </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-3">
+                    <button 
+                        type="submit"
+                        class="inline-flex items-center px-6 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {% if is_edit %}Update File{% else %}Create File{% endif %}
+                    </button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="{% if is_edit %}{% url 'documentation:media_file_viewer' file_path=relative_path %}{% else %}{% url 'documentation:dashboard' %}{% endif %}" class="inline-flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+            {% endif %}
+
+<!-- CodeMirror Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/json/json.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/foldgutter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/brace-fold.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/fold/indent-fold.min.js"></script>
+
+{% if is_postman_file and collection %}
+<!-- Postman Collection Form with Tabs -->
+<form method="post" id="postman-form" class="space-y-6" novalidate>
+    {% csrf_token %}
+    
+    <!-- Hidden field for enhanced form data -->
+    <input type="hidden" id="postman_data" name="postman_data" value="">
+    <input type="hidden" name="resource_type" value="postman">
+    
+    <!-- Basic Info Tab -->
+    <div class="tab-content {% if active_tab == 'basic' %}active{% endif %}" id="tab-basic" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-amber-800 dark:text-amber-200 font-medium mb-1">Basic Information</p>
+                        <p class="text-xs text-amber-700 dark:text-amber-300">Enter the core details for this Postman collection.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="collection_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Collection ID <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="collection_id" 
+                        name="collection_id" 
+                        value="{{ collection_info.postman_id|default:collection_info.name|default:'' }}"
+                        required
+                        {% if is_edit %}readonly{% endif %}
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 {% if is_edit %}bg-gray-50 dark:bg-gray-800{% endif %} focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        placeholder="contact360-graphql-api"
+                    />
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Unique identifier for this collection</p>
+                </div>
+                
+                <div>
+                    <label for="collection_schema" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Schema Version
+                    </label>
+                    <select 
+                        id="collection_schema" 
+                        name="collection_schema"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    >
+                        <option value="https://schema.getpostman.com/json/collection/v2.1.0/collection.json" {% if collection_info.schema == 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json' or not collection_info.schema %}selected{% endif %}>v2.1.0</option>
+                        <option value="https://schema.getpostman.com/json/collection/v2.0.0/collection.json" {% if collection_info.schema == 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json' %}selected{% endif %}>v2.0.0</option>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Postman collection schema version</p>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label for="collection_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Collection Name <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="collection_name" 
+                        name="collection_name" 
+                        value="{{ collection_info.name|default:'' }}"
+                        required
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        placeholder="Contact360 GraphQL API"
+                    />
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Display name for this collection</p>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label for="collection_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Description
+                    </label>
+                    <textarea 
+                        id="collection_description" 
+                        name="collection_description" 
+                        rows="4"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        placeholder="Describe this Postman collection..."
+                    >{{ collection_info.description|default:'' }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Optional description explaining this collection's purpose</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Collection Settings Tab -->
+    <div class="tab-content {% if active_tab == 'settings' %}active{% endif %}" id="tab-settings" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Collection Settings</p>
+                        <p class="text-xs text-blue-700 dark:text-blue-300">Configure additional collection metadata and settings.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="text-sm text-gray-600 dark:text-gray-400">Collection settings can be configured here. Advanced collection features like authentication, pre-request scripts, and test scripts are typically managed through the Postman application or via JSON import.</p>
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">For full collection editing including requests, folders, and scripts, use the Postman application or import/export JSON files through the media manager.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Variables Tab -->
+    <div class="tab-content {% if active_tab == 'variables' %}active{% endif %}" id="tab-variables" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-1">Collection Variables</p>
+                        <p class="text-xs text-purple-700 dark:text-purple-300">Define variables that can be used across all requests in this collection using {{variableName}} syntax.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div id="variables-container">
+                    {% if variables %}
+                        {% for variable in variables %}
+                        <div class="variable-item p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg mb-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Key</label>
+                                    <input type="text" value="{{ variable.key|default:'' }}" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm" readonly>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Value</label>
+                                    <input type="text" value="{{ variable.value }}" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm" readonly>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Status</label>
+                                    <span class="inline-block px-2 py-2 rounded text-xs {% if variable.enabled == False %}bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300{% else %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400{% endif %}">
+                                        {% if variable.enabled == False %}Disabled{% else %}Enabled{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                            <p>No variables defined. Variables can be added by editing the collection JSON directly or importing from Postman.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">To add or modify variables, edit the collection JSON file directly or use the Postman application. Variables are stored in the collection's <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded">variable</code> array.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Advanced Tab -->
+    <div class="tab-content {% if active_tab == 'advanced' %}active{% endif %}" id="tab-advanced" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-800 dark:text-gray-200 font-medium mb-1">Advanced Options</p>
+                        <p class="text-xs text-gray-700 dark:text-gray-300">Additional configuration and metadata for this collection.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="text-sm text-gray-600 dark:text-gray-400">Advanced collection features like authentication, pre-request scripts, test scripts, and event handlers are typically managed through the Postman application or by editing the collection JSON directly.</p>
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">For full collection editing:</p>
+                    <ul class="list-disc list-inside text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                        <li>Use the Postman application for visual editing</li>
+                        <li>Import/export JSON files through the media manager</li>
+                        <li>Edit the raw JSON directly in the collection file</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form Actions Footer -->
+    <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-4">
+            <button 
+                type="submit"
+                class="inline-flex items-center px-6 py-2.5 bg-amber-600 dark:bg-amber-500 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors font-medium shadow-sm"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                {% if is_edit %}Update Collection{% else %}Create Collection{% endif %}
+            </button>
+            <button 
+                type="button"
+                id="preview-postman-json-btn"
+                class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Preview JSON
+            </button>
+            {% if is_edit and relative_path %}
+            <a href="{% url 'documentation:media_file_viewer' file_path=relative_path %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View Collection
+            </a>
+            {% endif %}
+        </div>
+        <div id="form-status" class="text-xs text-gray-500 dark:text-gray-400"></div>
+    </div>
+</form>
+
+<!-- Postman Form JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var isPostmanFile = {% if is_postman_file and collection %}true{% else %}false{% endif %};
+    
+    if (isPostmanFile) {
+        // Tab switching functionality with URL state management
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Get active tab from URL or default to basic
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTabFromUrl = urlParams.get('tab') || 'basic';
+        
+        // Set initial active state based on URL
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            if (tabId === activeTabFromUrl) {
+                button.classList.add('active');
+            }
+        });
+        
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            if (contentId === activeTabFromUrl) {
+                content.classList.add('active');
+            }
+        });
+        
+        // Collect Postman form data
+        function collectPostmanData() {
+            const collectionId = document.getElementById('collection_id')?.value || '';
+            const collectionName = document.getElementById('collection_name')?.value || '';
+            const collectionSchema = document.getElementById('collection_schema')?.value || 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json';
+            const collectionDescription = document.getElementById('collection_description')?.value || '';
+            
+            // Parse existing collection JSON if available
+            let existingCollection = {};
+            try {
+                const collectionJsonStr = '{{ collection_json|escapejs }}';
+                if (collectionJsonStr && collectionJsonStr !== '{}') {
+                    existingCollection = JSON.parse(collectionJsonStr);
+                }
+            } catch(e) {
+                console.warn('Could not parse existing collection JSON:', e);
+            }
+            
+            // Build collection data structure
+            const data = {
+                info: {
+                    name: collectionName,
+                    description: collectionDescription,
+                    schema: collectionSchema,
+                },
+                item: existingCollection.item || [],  // Preserve existing items
+                variable: existingCollection.variable || [],  // Preserve existing variables
+            };
+            
+            // Add _postman_id if collection ID exists
+            if (collectionId) {
+                data.info._postman_id = collectionId;
+            }
+            
+            // Preserve existing auth, event if editing
+            if (existingCollection.auth) {
+                data.auth = existingCollection.auth;
+            }
+            if (existingCollection.event) {
+                data.event = existingCollection.event;
+            }
+            
+            return data;
+        }
+        
+        // Update hidden postman_data field before submit
+        const postmanForm = document.getElementById('postman-form');
+        if (postmanForm) {
+            postmanForm.addEventListener('submit', function(e) {
+                const postmanDataInput = document.getElementById('postman_data');
+                if (postmanDataInput) {
+                    const data = collectPostmanData();
+                    postmanDataInput.value = JSON.stringify(data);
+                }
+            });
+        }
+        
+        // Preview JSON button
+        const previewBtn = document.getElementById('preview-postman-json-btn');
+        if (previewBtn) {
+            previewBtn.addEventListener('click', function() {
+                const data = collectPostmanData();
+                const jsonStr = JSON.stringify(data, null, 2);
+                alert('Postman Collection JSON Preview:\n\n' + jsonStr);
+            });
+        }
+        
+        // Global function for preview
+        window.previewPostmanJSON = function() {
+            const data = collectPostmanData();
+            const jsonStr = JSON.stringify(data, null, 2);
+            alert('Postman Collection JSON Preview:\n\n' + jsonStr);
+        };
+    }
+});
+</script>
+{% endif %}
+
+{% if is_relationship_file and relationship %}
+<!-- Relationship Form JavaScript -->
+<script>
+// Tab switching functionality with URL state management for relationship form
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Get active tab from URL or default to basic
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'basic';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (this.tagName === 'A') {
+                return; // Let link navigate naturally
+            }
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'basic';
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+    
+    // Collect relationship form data
+    function collectRelationshipData() {
+        const pageId = document.getElementById('page_id')?.value || '';
+        const pagePath = document.getElementById('page_path')?.value || '';
+        const endpointId = document.getElementById('endpoint_id')?.value || '';
+        const endpointPath = document.getElementById('endpoint_path')?.value || '';
+        const method = document.getElementById('method')?.value || 'QUERY';
+        
+        // Generate relationship_id if not provided
+        let relationshipId = document.getElementById('relationship_id')?.value || '';
+        if (!relationshipId && pageId && endpointId) {
+            // Simple ID generation (backend will use proper utility)
+            relationshipId = pageId + '_' + endpointId + '_' + method;
+        }
+        
+        return {
+            relationship_id: relationshipId,
+            page_id: pageId || pagePath,
+            page_path: pagePath || pageId,
+            endpoint_id: endpointId || endpointPath,
+            endpoint_path: endpointPath || endpointId,
+            method: method,
+            api_version: document.getElementById('api_version')?.value || 'v1',
+            usage_type: document.getElementById('usage_type')?.value || 'primary',
+            usage_context: document.getElementById('usage_context')?.value || '',
+            via_service: document.getElementById('via_service')?.value || '',
+            via_hook: document.getElementById('via_hook')?.value || '',
+            description: document.getElementById('description')?.value || '',
+            state: document.getElementById('state')?.value || 'draft',
+            relationship_type: document.getElementById('relationship_type')?.value || '',
+        };
+    }
+    
+    // Preview JSON function
+    window.previewRelationshipJSON = function() {
+        const data = collectRelationshipData();
+        const jsonStr = JSON.stringify(data, null, 2);
+        alert('Relationship JSON:\n\n' + jsonStr);
+    };
+    
+    // Form submission handler
+    const relationshipForm = document.getElementById('relationship-form');
+    if (relationshipForm) {
+        relationshipForm.addEventListener('submit', function(e) {
+            const data = collectRelationshipData();
+            const relationshipDataInput = document.getElementById('relationship_data');
+            if (relationshipDataInput) {
+                relationshipDataInput.value = JSON.stringify(data);
+            }
+        });
+    }
+});
+</script>
+{% elif is_endpoint_file and endpoint %}
+<!-- Endpoint Form JavaScript -->
+<script>
+// Tab switching functionality with URL state management for endpoint form
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Get active tab from URL or default to basic
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'basic';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (this.tagName === 'A') {
+                return;
+            }
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'basic';
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+    
+    // Collect endpoint form data
+    function collectEndpointData() {
+        const data = {
+            endpoint_id: document.getElementById('endpoint_id')?.value || '',
+            endpoint_path: document.getElementById('endpoint_path')?.value || '',
+            method: document.getElementById('method')?.value || 'QUERY',
+            api_version: document.getElementById('api_version')?.value || 'v1',
+            description: document.getElementById('description')?.value || '',
+        };
+        
+        // Optional fields
+        const requestBody = document.getElementById('request_body')?.value;
+        if (requestBody) data.request_body = requestBody;
+        
+        const responseSchema = document.getElementById('response_schema')?.value;
+        if (responseSchema) data.response_schema = responseSchema;
+        
+        const graphqlOp = document.getElementById('graphql_operation')?.value;
+        if (graphqlOp) data.graphql_operation = graphqlOp;
+        
+        const auth = document.getElementById('authentication')?.value;
+        if (auth) data.authentication = auth;
+        
+        const authz = document.getElementById('authorization')?.value;
+        if (authz) data.authorization = authz;
+        
+        const rateLimit = document.getElementById('rate_limit')?.value;
+        if (rateLimit) data.rate_limit = rateLimit;
+        
+        return data;
+    }
+    
+    // Update hidden endpoint_data field before submit
+    const endpointForm = document.getElementById('endpoint-form');
+    if (endpointForm) {
+        endpointForm.addEventListener('submit', function(e) {
+            const endpointDataInput = document.getElementById('endpoint_data');
+            if (endpointDataInput) {
+                const data = collectEndpointData();
+                endpointDataInput.value = JSON.stringify(data);
+            }
+        });
+    }
+    
+    // Preview JSON button
+    const previewBtn = document.getElementById('preview-json-btn');
+    if (previewBtn) {
+        previewBtn.addEventListener('click', function() {
+            const data = collectEndpointData();
+            const jsonStr = JSON.stringify(data, null, 2);
+            alert('Endpoint JSON Preview:\n\n' + jsonStr);
+        });
+    }
+});
+
+{% elif is_page_file and page %}
+<!-- Page Form JavaScript -->
+<link rel="stylesheet" href="{% static 'css/components/json-syntax-highlighter.css' %}">
+<script src="{% static 'js/pages-form-enhanced.js' %}?v=20260124"></script>
+<script>
+// Tab switching functionality with URL state management
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Get active tab from URL or default to basic
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'basic';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks - links will handle navigation
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // If it's a link, let it navigate naturally
+            if (this.tagName === 'A') {
+                return;
+            }
+            
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update URL without page reload
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'basic';
+        
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+    
+    // Initialize enhanced form if available
+    try {
+        const pageData = {{ page_json|safe }};
+        if (typeof PagesFormEnhanced !== 'undefined') {
+            const form = new PagesFormEnhanced('page-form', {
+                isEdit: {{ is_edit|yesno:"true,false" }},
+                initialData: pageData,
+                activeTab: '{{ active_tab }}'
+            });
+        }
+        
+        // Preview JSON button
+        const previewBtn = document.getElementById('preview-json-btn');
+        if (previewBtn) {
+            previewBtn.addEventListener('click', function() {
+                // Collect form data and generate JSON
+                const form = document.getElementById('page-form');
+                if (form && typeof PagesFormEnhanced !== 'undefined') {
+                    const formInstance = window.pageFormInstance;
+                    if (formInstance) {
+                        const jsonData = formInstance.collectFormData();
+                        const jsonStr = JSON.stringify(jsonData, null, 2);
+                        
+                        // Show modal
+                        const modal = document.getElementById('json-preview-modal');
+                        const content = document.getElementById('json-preview-content');
+                        if (modal && content) {
+                            content.textContent = jsonStr;
+                            modal.classList.remove('hidden');
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Close preview modal
+        const closePreview = document.getElementById('close-preview');
+        if (closePreview) {
+            closePreview.addEventListener('click', function() {
+                const modal = document.getElementById('json-preview-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Form submission - collect data into page_data hidden field
+        const form = document.getElementById('page-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (typeof PagesFormEnhanced !== 'undefined') {
+                    const formInstance = window.pageFormInstance;
+                    if (formInstance) {
+                        const jsonData = formInstance.collectFormData();
+                        const pageDataInput = document.getElementById('page_data');
+                        if (pageDataInput) {
+                            pageDataInput.value = JSON.stringify(jsonData);
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Form initialization error:', error);
+    }
+});
+</script>
+
+<!-- JSON Preview Modal -->
+<div id="json-preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">JSON Preview</h3>
+            <button id="close-preview" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">×</button>
+        </div>
+        <pre id="json-preview-content" class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-auto text-sm"></pre>
+    </div>
+</div>
+{% endif %}
+
+<script>
+(function () {
+    var editor = null;
+    var hiddenTextarea = document.getElementById('content');
+    var editorContainer = document.getElementById('code-editor');
+    var feedbackDiv = document.getElementById('json-feedback');
+    var feedbackContent = document.getElementById('json-feedback-content');
+    var originalContent = editorContainer ? (editorContainer.getAttribute('data-content') || '{}') : '{}';
+    
+    // Initialize CodeMirror editor
+    function initEditor() {
+        if (!editorContainer || typeof CodeMirror === 'undefined') {
+            console.warn('CodeMirror not loaded, using textarea fallback');
+            return;
+        }
+        
+        try {
+            // Detect theme
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                        window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = isDark ? 'dracula' : 'default';
+            
+            // Create editor
+            editor = CodeMirror(editorContainer, {
+                value: originalContent,
+                mode: 'application/json',
+                theme: theme,
+                lineNumbers: true,
+                lineWrapping: true,
+                foldGutter: true,
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                indentUnit: 2,
+                tabSize: 2,
+                readOnly: false
+            });
+            
+            // Sync editor content to hidden textarea on change
+            editor.on('change', function() {
+                if (hiddenTextarea) {
+                    hiddenTextarea.value = editor.getValue();
+                }
+            });
+            
+            // Update theme on change
+            var observer = new MutationObserver(function(mutations) {
+                var isDarkNow = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (editor) {
+                    editor.setOption('theme', isDarkNow ? 'dracula' : 'default');
+                }
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            
+        } catch (error) {
+            console.error('Error initializing editor:', error);
+        }
+    }
+    
+    function showFeedback(msg, ok) {
+        if (!feedbackDiv || !feedbackContent) return;
+        
+        feedbackContent.textContent = msg;
+        feedbackDiv.classList.remove('hidden');
+        feedbackContent.className = 'px-3 py-2 rounded-lg text-sm';
+        
+        if (ok) {
+            feedbackContent.classList.add('bg-green-50', 'dark:bg-green-900/20', 'text-green-700', 'dark:text-green-400', 'border', 'border-green-200', 'dark:border-green-800');
+        } else {
+            feedbackContent.classList.add('bg-red-50', 'dark:bg-red-900/20', 'text-red-700', 'dark:text-red-400', 'border', 'border-red-200', 'dark:border-red-800');
+        }
+        
+        // Auto-hide after 5 seconds
+        setTimeout(function() {
+            feedbackDiv.classList.add('hidden');
+        }, 5000);
+    }
+    
+    function getEditorValue() {
+        return editor ? editor.getValue() : (hiddenTextarea ? hiddenTextarea.value : '');
+    }
+    
+    function setEditorValue(value) {
+        if (editor) {
+            editor.setValue(value);
+            if (hiddenTextarea) {
+                hiddenTextarea.value = value;
+            }
+        } else if (hiddenTextarea) {
+            hiddenTextarea.value = value;
+        }
+    }
+    
+    // Format JSON button
+    document.getElementById('format-json')?.addEventListener('click', function () {
+        try {
+            var content = getEditorValue();
+            var parsed = JSON.parse(content);
+            var formatted = JSON.stringify(parsed, null, 2);
+            setEditorValue(formatted);
+            showFeedback('JSON formatted successfully.', true);
+        } catch (e) {
+            showFeedback('Invalid JSON: ' + e.message, false);
+        }
+    });
+    
+    // Validate JSON button
+    document.getElementById('validate-json')?.addEventListener('click', function () {
+        try {
+            var content = getEditorValue();
+            JSON.parse(content);
+            showFeedback('Valid JSON.', true);
+        } catch (e) {
+            showFeedback('Invalid JSON: ' + e.message, false);
+        }
+    });
+    
+    // Form submission validation
+    var form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            try {
+                var content = getEditorValue();
+                JSON.parse(content); // Validate JSON
+                
+                // Ensure hidden textarea has the latest value
+                if (hiddenTextarea && editor) {
+                    hiddenTextarea.value = editor.getValue();
+                }
+            } catch (error) {
+                e.preventDefault();
+                showFeedback('Cannot save: Invalid JSON. ' + error.message, false);
+                return false;
+            }
+        });
+    }
+    
+    // Initialize editor when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEditor);
+    } else {
+        initEditor();
+    }
+})();
+</script>
+{% endblock %}

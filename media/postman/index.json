@@ -1,0 +1,54 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-01-22T21:46:29.947292+00:00",
+  "total": 1,
+  "collections": [
+    {
+      "collection_id": "Contact360 API",
+      "file_name": "Contact360 API.postman_collection.json",
+      "type": "collection"
+    },
+    {
+      "collection_id": "Contact360 GraphQL API - Complete",
+      "file_name": "Contact360_GraphQL_API.postman_collection.json",
+      "type": "collection"
+    }
+  ],
+  "environments": [
+    {
+      "environment_id": "Contact360 - Local",
+      "file_name": "Contact360_Local.postman_environment.json",
+      "type": "environment"
+    },
+    {
+      "environment_id": "Contact360 - Production",
+      "file_name": "Contact360_Production.postman_environment.json",
+      "type": "environment"
+    }
+  ],
+  "configurations": [
+    {
+      "config_id": "contact360",
+      "name": "Contact360",
+      "state": "development",
+      "file_name": "contact360.json"
+    }
+  ],
+  "indexes": {
+    "by_state": {
+      "coming_soon": [],
+      "development": [
+        "contact360"
+      ],
+      "draft": [],
+      "test": [],
+      "published": []
+    }
+  },
+  "statistics": {
+    "total": 1,
+    "collections": 2,
+    "environments": 2,
+    "configurations": 1
+  }
+}

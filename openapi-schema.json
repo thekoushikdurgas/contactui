@@ -1,0 +1,31 @@
+openapi: 3.0.3
+info:
+  title: DocsAI API
+  version: 1.0.0
+  description: 'REST API v1 for DocsAI: 110 GET endpoints (pages, endpoints, relationships,
+    postman, index) plus health and dashboard. Backed by UnifiedStorage (Local → S3
+    → GraphQL). See /api/v1/ for all routes.'
+paths: {}
+components: {}
+servers:
+- url: http://127.0.0.1:8000
+  description: Local development
+tags:
+- name: Health
+  description: Service info and health checks
+- name: Pages
+  description: Documentation pages (20 GETs)
+- name: Endpoints
+  description: API endpoints (28 GETs)
+- name: Relationships
+  description: Page–endpoint relationships (38 GETs)
+- name: Postman
+  description: Postman configurations (14 GETs)
+- name: Index
+  description: Index read and validate (8 GETs)
+- name: Dashboard
+  description: Dashboard pagination (4 GETs)
+- name: Media
+  description: Media file management
+- name: Operations
+  description: System operations

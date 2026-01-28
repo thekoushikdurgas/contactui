@@ -1,0 +1,3105 @@
+{
+  "info": {
+    "_postman_id": "c217cefc-7e9b-4dce-8466-9be874adfdbb",
+    "name": "DocsAI API v1",
+    "description": "Postman collection for DocsAI (contact360/docsai).\n\n**Base URL**: {{base_url}}\n**Local**: http://127.0.0.1:8000\n\n**Routing note**: This project currently mounts the REST API directly at `/api/v1/` (it does NOT mount the `apps.api` gateway at `/api/*`).\n\n**Authentication**: Most `/api/v1/` endpoints are public; many `/docs/api/*` endpoints may require session login.\n\n## REST API v1 (mounted)\n- **Health**: root, health, database, cache, storage.\n- **Docs/meta**: `/api/v1/docs/endpoint-stats/`.\n- **Pages, Endpoints, Relationships, Postman**: list, filters, detail, sub-resources.\n- **Dashboard**: paginated lists.\n\n## Documentation internal JSON APIs (mounted)\n- **Statistics** (`/docs/api/statistics/`)\n- **Dashboard** (`/docs/api/dashboard/`) including graph\n\n**Counts**: 98 GET endpoints under `/api/v1/` plus additional JSON endpoints under `/docs/api/*`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "id": "2a2589cc-937c-4d1d-9b6c-da5eb9a2c037",
+      "name": "Dashboard",
+      "description": "Dashboard API: paginated list endpoints for pages, endpoints, relationships, postman with filters and search.\n\nNote: list endpoints return summary items by default. Use `?expand=full` to return full documents per item.",
+      "item": [
+        {
+          "id": "11792945-f094-4f70-becc-6b1b8a8e77ae",
+          "name": "Dashboard - Endpoints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/endpoints/?page=1&page_size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "endpoints"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_size",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "api_version",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "method",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "c92d7edc-0ef8-45b3-9ae5-190658424883",
+          "name": "Dashboard - Pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/pages/?page=1&page_size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "pages"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_size",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_type",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "527fc455-9c47-4387-850f-341f64a1d39f",
+          "name": "Dashboard - Postman",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/postman/?page=1&page_size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "postman"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_size",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "state",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "d9c6c7d2-d89a-4c68-9a3d-fe40c31c7768",
+          "name": "Dashboard - Relationships",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/relationships/?page=1&page_size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "relationships"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_size",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_id",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "endpoint_id",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "usage_type",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": []
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+      "name": "Documentation internal APIs",
+      "description": "Statistics and dashboard graph (login required). Replaces removed /api/v1/ format, statistics, types, graph endpoints. Base path: /docs/api/.",
+      "item": [
+        {
+          "id": "b2c3d4e5-f6a7-4b6c-9d0e-1f2a3b4c5d6e",
+          "name": "Statistics - Pages statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/pages/statistics/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "pages",
+                "statistics"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "c3d4e5f6-a7b8-4c7d-0e1f-2a3b4c5d6e7f",
+          "name": "Statistics - Pages types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/pages/types/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "pages",
+                "types"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "d4e5f6a7-b8c9-4d8e-1f2a-3b4c5d6e7f8a",
+          "name": "Statistics - Endpoints api-versions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/endpoints/api-versions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "endpoints",
+                "api-versions"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e5f6a7b8-c9d0-4e9f-2a3b-4c5d6e7f8a9b",
+          "name": "Statistics - Endpoints methods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/endpoints/methods/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "endpoints",
+                "methods"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "f6a7b8c9-d0e1-4f0a-3b4c-5d6e7f8a9b0c",
+          "name": "Statistics - Relationships statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/relationships/statistics/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "relationships",
+                "statistics"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "a7b8c9d0-e1f2-4a1b-4c5d-6e7f8a9b0c1d",
+          "name": "Statistics - Postman statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/statistics/postman/statistics/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "statistics",
+                "postman",
+                "statistics"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b8c9d0e1-f2a3-4b2c-5d6e-7f8a9b0c1d2e",
+          "name": "Dashboard - Graph",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs/api/dashboard/graph/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs",
+                "api",
+                "dashboard",
+                "graph"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": []
+    },
+    {
+      "id": "05f75d03-5b3f-4ff9-8544-2a67769da90d",
+      "name": "Health Check",
+      "description": "Health check and service info endpoints (no authentication required).",
+      "item": [
+        {
+          "id": "bbcf6c5a-6585-4090-adfe-83790bd3aa62",
+          "name": "Health - Cache",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health/cache/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health",
+                "cache"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e00550d9-fa81-4c90-843f-52bd6ab92078",
+          "name": "Health - Database",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health/database/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health",
+                "database"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "958de86c-41d2-4561-b5c3-519d8cf0a75b",
+          "name": "Health - Storage",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health/storage/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health",
+                "storage"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b258a7dd-10bd-4750-8ec2-3ed9ac16f86d",
+          "name": "Health Check (full)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/health/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "99d52998-c9c7-49f1-b0e6-4846c075cc04",
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": []
+    },
+    {
+      "id": "c960d14f-5753-4924-a0b2-8d04cad9733a",
+      "name": "REST API v1 - Endpoints",
+      "description": "REST API v1 - Endpoints API: list, by-api-version, by-method, by-state, by-lambda, and endpoint detail with sub-resources.",
+      "item": [
+        {
+          "id": "72e97a37-8251-4cc9-a8f5-d2e22c90c8af",
+          "name": "By-api-version by-method",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/{{api_version}}/by-method/{{method}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "{{api_version}}",
+                "by-method",
+                "{{method}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b92728b1-a956-44f8-b968-a0dcba5aa939",
+          "name": "By-api-version count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/{{api_version}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "{{api_version}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "f8929037-c5a7-4c45-97db-1814c66831c1",
+          "name": "By-api-version graphql",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/graphql/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "graphql"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e627c23a-fd60-46f6-83e7-023e15328529",
+          "name": "By-api-version stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/{{api_version}}/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "{{api_version}}",
+                "stats"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e31346e1-f480-42b3-97da-6d76282a77e8",
+          "name": "By-api-version v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/v1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "v1"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "c303cf13-ef79-4ea4-90c5-37c9861144b8",
+          "name": "By-api-version v4",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-api-version/v4/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-api-version",
+                "v4"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "247cc2c2-0d4d-431e-8d04-ccdbd862fac6",
+          "name": "By-lambda count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-lambda/{{service_name}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-lambda",
+                "{{service_name}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "68e1c820-e1f5-4196-bff3-ebe038c2312a",
+          "name": "By-lambda list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-lambda/{{service_name}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-lambda",
+                "{{service_name}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "6d704be7-c193-47f1-8211-e09480ebb508",
+          "name": "By-method count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/{{method}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "{{method}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "010cf248-9500-4cef-b598-6035f499a1aa",
+          "name": "By-method GET",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/GET/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "GET"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "263e5a3a-605a-4bce-8b36-4c742e57c889",
+          "name": "By-method MUTATION",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/MUTATION/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "MUTATION"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "8bb377c1-d0ef-4a7c-a4dc-738c172500bd",
+          "name": "By-method POST",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/POST/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "POST"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "cc086a5f-e3e0-4ef2-87c4-c807709162a4",
+          "name": "By-method QUERY",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/QUERY/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "QUERY"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "5628d510-f137-44e8-bad0-821f079aa29d",
+          "name": "By-method stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-method/{{method}}/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-method",
+                "{{method}}",
+                "stats"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "91dff8b2-f4fb-40f3-ab84-bcafdb471724",
+          "name": "By-state count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-state/{{state}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-state",
+                "{{state}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "d8fbce7c-78d2-4622-8a2c-4f6aef70ed9f",
+          "name": "By-state list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/by-state/{{state}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "by-state",
+                "{{state}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "18d67049-ec74-4a02-866a-469ae99f5b7c",
+          "name": "Endpoint access-control",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/access-control/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "access-control"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e8a0a9b2-906c-4221-baf7-61e1820ed301",
+          "name": "Endpoint dependencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/dependencies/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "dependencies"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e108a359-cfad-4a7f-89b3-2374776f18d6",
+          "name": "Endpoint detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "dfe1fbba-c293-459c-bc8f-9627169c8ae1",
+          "name": "Endpoint files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/files/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "files"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "0d3bc6b8-1f3c-4b47-86e3-127f58c74654",
+          "name": "Endpoint lambda-services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/lambda-services/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "lambda-services"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "27736cf1-0341-499d-b506-36242ee97674",
+          "name": "Endpoint methods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/methods/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "methods"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "18c30a63-fb64-4235-85dd-806900e9c166",
+          "name": "Endpoint pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/pages/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "pages"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "a2fee45e-28c9-4591-839e-1551f4a58c20",
+          "name": "Endpoint used-by-pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/{{endpoint_id}}/used-by-pages/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints",
+                "{{endpoint_id}}",
+                "used-by-pages"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e12419f7-480b-4057-889d-a7c65278bca4",
+          "name": "List endpoints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/endpoints/?limit=20&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "endpoints"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "api_version",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "method",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": [
+        {
+          "id": "35faa7de-a60d-49c4-936f-005d2ce354e3",
+          "key": "service_name",
+          "value": "v1",
+          "type": "default"
+        }
+      ]
+    },
+    {
+      "id": "46eed6f0-43aa-493c-922c-658721f04143",
+      "name": "REST API v1 - Pages",
+      "description": "REST API v1 - Pages API: list, by-type, by-state, by user type, and page detail with sub-resources.",
+      "item": [
+        {
+          "id": "c9b29cc9-2108-4ae0-9861-bd313bfd635c",
+          "name": "Base CRUD",
+          "description": "Base list and get operations for pages.",
+          "item": [
+            {
+              "id": "e6a190b1-6b56-4866-8fd6-0cf7d6302df1",
+              "name": "Get Page",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "ab2fa838-1312-4249-a472-5b56a1a305b1",
+              "name": "List Pages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/?page_type=docs&limit=20&offset=0",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages"
+                  ],
+                  "protocol": "https",
+                  "query": [
+                    {
+                      "key": "page_type",
+                      "value": "docs",
+                      "disabled": true,
+                      "description": "Filter by page type"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20",
+                      "disabled": false,
+                      "description": "Maximum number of results"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0",
+                      "disabled": false,
+                      "description": "Number of results to skip"
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true,
+                      "description": "Filter by status"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "{{expand}}",
+                      "disabled": true,
+                      "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            }
+          ],
+          "variable": []
+        },
+        {
+          "id": "09af2a99-32ba-4713-9a7d-ef7b576fcff0",
+          "name": "Category - By State",
+          "description": "Category endpoints filtered by state.",
+          "item": [
+            {
+              "id": "d67299ae-49c3-4c95-80c5-a948ec1e20a0",
+              "name": "Count by State",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-state/:state/count/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-state",
+                    ":state",
+                    "count"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "state",
+                      "value": "",
+                      "description": "(Required) state"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "3aec0730-31ca-4987-ae40-3096d446eaa0",
+              "name": "List by State",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-state/:state/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-state",
+                    ":state"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "state",
+                      "value": "",
+                      "description": "(Required) state"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            }
+          ],
+          "variable": []
+        },
+        {
+          "id": "04cb5648-2454-4eab-a3b3-6078f1411bb6",
+          "name": "Category - By Type",
+          "description": "Category endpoints filtered by page type.",
+          "item": [
+            {
+              "id": "e9dd7377-a019-4a5b-a8f2-17e848f209ca",
+              "name": "Count Pages by Type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/:page_type/count/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    ":page_type",
+                    "count"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_type",
+                      "value": "",
+                      "description": "(Required) page_type"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "b37b7524-d3d7-4bba-b3e4-fed31e75df52",
+              "name": "Get Type Statistics",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/:page_type/stats/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    ":page_type",
+                    "stats"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_type",
+                      "value": "",
+                      "description": "(Required) page_type"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "3e536308-e96d-474a-90df-95ac8d7eb71f",
+              "name": "List Dashboard Pages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/dashboard/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    "dashboard"
+                  ],
+                  "protocol": "https"
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "69156d90-d098-42ac-9fd0-fecfe2b61df0",
+              "name": "List Docs Pages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/docs/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    "docs"
+                  ],
+                  "protocol": "https"
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "725fe743-fdd0-4cfb-850f-7efac30f7d1d",
+              "name": "List Drafts by Type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/:page_type/draft/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    ":page_type",
+                    "draft"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_type",
+                      "value": "",
+                      "description": "(Required) page_type"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "ccfeab3a-ead4-4449-8886-3c333d742bae",
+              "name": "List Marketing Pages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/marketing/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    "marketing"
+                  ],
+                  "protocol": "https"
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "78ba2141-4c23-4407-86a3-c0f6b7d851e5",
+              "name": "List Published by Type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/by-type/:page_type/published/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    "by-type",
+                    ":page_type",
+                    "published"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_type",
+                      "value": "",
+                      "description": "(Required) page_type"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            }
+          ],
+          "variable": []
+        },
+        {
+          "id": "140e8602-cae7-4b5d-992e-9aa96d3baa94",
+          "name": "Category - By User Type",
+          "description": "Category endpoints filtered by user type (access control).",
+          "item": [
+            {
+              "id": "8c29a020-b0b0-431c-be8e-e66e9cca221d",
+              "name": "List Pages by User Type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:user_type/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":user_type"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "user_type",
+                      "value": "",
+                      "description": "(Required) user_type"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            }
+          ],
+          "variable": []
+        },
+        {
+          "id": "2cdd4f50-a9f9-4adc-9844-26ed21ed6fbc",
+          "name": "Page Detail (sub-resources)",
+          "description": "Page sub-resources (access-control, sections, components, endpoints, versions).",
+          "item": [
+            {
+              "id": "f3ca46fc-13e4-456e-9cfe-9787f713da9e",
+              "name": "Page Access-Control",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/access-control/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id",
+                    "access-control"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "8b5e0222-3ddd-4646-9a16-dbf5a4684fa5",
+              "name": "Page Components",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/components/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id",
+                    "components"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "09713f41-4cf9-4293-a75c-9115a19c4aa4",
+              "name": "Page Endpoints",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/endpoints/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id",
+                    "endpoints"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "37e47dcf-a549-43ed-8939-71b448319c23",
+              "name": "Page Sections",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/sections/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id",
+                    "sections"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "id": "c00e096e-0a01-46b1-8873-341a4c9cd942",
+              "name": "Page Versions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/pages/:page_id/versions/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "pages",
+                    ":page_id",
+                    "versions"
+                  ],
+                  "protocol": "https",
+                  "variable": [
+                    {
+                      "key": "page_id",
+                      "value": "",
+                      "description": "(Required) page_id"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": []
+            }
+          ],
+          "variable": []
+        }
+      ],
+      "variable": []
+    },
+    {
+      "id": "2225b1d9-863b-4aa6-9596-c35f4d2dc0c6",
+      "name": "REST API v1 - Postman",
+      "description": "REST API v1 - Postman API: list, by-state, detail, collection, environments, mappings, test-suites, access-control.",
+      "item": [
+        {
+          "id": "64fda699-3a46-43aa-be99-512908823725",
+          "name": "List Postman configs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/?limit=20&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "state",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "a0a0ca36-f63a-42bd-8f3d-277ff4544526",
+          "name": "Postman - Access control",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/access-control/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "access-control"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "de857f83-d4e3-4977-b781-8224794e0d26",
+          "name": "Postman - Collection",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/collection/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "collection"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "96f6a01e-938f-4fd9-8be4-758421175512",
+          "name": "Postman - Environment by name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/environments/{{env_name}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "environments",
+                "{{env_name}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "728c6d05-6896-489e-b91e-58d6186ad0cc",
+          "name": "Postman - Environments list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/environments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "environments"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "24e65032-a227-4bb5-83e6-2b08f79fc628",
+          "name": "Postman - Mapping by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/mappings/{{mapping_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "mappings",
+                "{{mapping_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "350b3006-6819-47e0-92b1-3026edc5c2ab",
+          "name": "Postman - Mappings list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/mappings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "mappings"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "9e74267c-00ba-45f4-a320-404c061207a5",
+          "name": "Postman - Test suite by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/test-suites/{{suite_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "test-suites",
+                "{{suite_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "8b356199-7962-41ae-b7dc-665a41bfd547",
+          "name": "Postman - Test suites list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/test-suites/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}",
+                "test-suites"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "f2c8bd67-0efa-42ae-b009-35042ed2e370",
+          "name": "Postman by-state count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/by-state/{{state}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "by-state",
+                "{{state}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "6c60a4ed-293e-4926-a1d5-a9e7d542679d",
+          "name": "Postman by-state list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/by-state/{{state}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "by-state",
+                "{{state}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "ce0080dd-bd83-4415-95e1-df4760ae83fa",
+          "name": "Postman detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/postman/{{config_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "postman",
+                "{{config_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": []
+    },
+    {
+      "id": "0d7667ba-af32-4551-b49c-378b7d22f4c5",
+      "name": "REST API v1 - Relationships",
+      "description": "REST API v1 - Relationships API: list, usage-types, usage-contexts, by-page, by-endpoint, by-usage-type, by-usage-context, by-state, by-lambda, performance, detail and sub-resources.",
+      "item": [
+        {
+          "id": "a86804c1-4523-4e65-bd4b-d0e127877bed",
+          "name": "By-endpoint by-usage-context",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-endpoint/{{endpoint_id}}/by-usage-context/{{usage_context}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-endpoint",
+                "{{endpoint_id}}",
+                "by-usage-context",
+                "{{usage_context}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "0cbab350-6fdf-4529-a2c8-118387c50844",
+          "name": "By-endpoint count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-endpoint/{{endpoint_id}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-endpoint",
+                "{{endpoint_id}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "833761f7-b23a-42a5-8756-7da9fd4c6a05",
+          "name": "By-endpoint list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-endpoint/{{endpoint_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-endpoint",
+                "{{endpoint_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b44c4e69-fd5f-49ce-832a-2ab7cf3f4948",
+          "name": "By-endpoint pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-endpoint/{{endpoint_id}}/pages/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-endpoint",
+                "{{endpoint_id}}",
+                "pages"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "1a0087c2-fef0-42a8-92a4-be4213098a99",
+          "name": "By-invocation-pattern",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-invocation-pattern/{{pattern}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-invocation-pattern",
+                "{{pattern}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "81f7c32b-e66c-4720-9dfe-2ebd2764c8d2",
+          "name": "By-lambda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-lambda/{{service_name}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-lambda",
+                "{{service_name}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "ab790f29-50a5-41a3-a7ea-2fa610e08b2a",
+          "name": "By-page by-usage-type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-page/{{page_id}}/by-usage-type/{{usage_type}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-page",
+                "{{page_id}}",
+                "by-usage-type",
+                "{{usage_type}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "df275724-1578-4bca-9a02-56bbeb3f3b2a",
+          "name": "By-page count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-page/{{page_id}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-page",
+                "{{page_id}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "2f6b2f36-f546-41c0-9220-6f53b5de8630",
+          "name": "By-page list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-page/{{page_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-page",
+                "{{page_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "00d9ffbb-674c-4e0a-adb8-470f1170343b",
+          "name": "By-page primary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-page/{{page_id}}/primary/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-page",
+                "{{page_id}}",
+                "primary"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "a9d2809f-fcc1-4015-9381-888b54dd49d4",
+          "name": "By-page secondary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-page/{{page_id}}/secondary/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-page",
+                "{{page_id}}",
+                "secondary"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "c14617db-cad2-4082-b060-21855782e170",
+          "name": "By-postman-config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-postman-config/{{config_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-postman-config",
+                "{{config_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "0d2d7260-4e02-44e5-a0c6-f00ca53a88c4",
+          "name": "By-state count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-state/{{state}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-state",
+                "{{state}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "1d774aff-9f3d-49e1-b97a-1b5f392340f9",
+          "name": "By-state list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-state/{{state}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-state",
+                "{{state}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "809f9ac1-385d-4657-824d-8d5f7d58eea3",
+          "name": "By-usage-context analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-context/analytics/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-context",
+                "analytics"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "3e7cde1c-6d4f-4ea1-bc07-bfe593dbc898",
+          "name": "By-usage-context authentication",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-context/authentication/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-context",
+                "authentication"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "8ddcfe33-c3f5-4f82-9aea-d9afa02f7b19",
+          "name": "By-usage-context count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-context/{{usage_context}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-context",
+                "{{usage_context}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "0efb315e-c66f-44f3-b8f6-714274eb3ba3",
+          "name": "By-usage-context data_fetching",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-context/data_fetching/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-context",
+                "data_fetching"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "69eb491b-46e3-4347-a4fd-9a33aa186a74",
+          "name": "By-usage-context data_mutation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-context/data_mutation/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-context",
+                "data_mutation"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "f0f0362f-7973-4c76-8e82-4ab1ab286499",
+          "name": "By-usage-type by-usage-context",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-type/{{usage_type}}/by-usage-context/{{usage_context}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-type",
+                "{{usage_type}}",
+                "by-usage-context",
+                "{{usage_context}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "91a7a117-ea60-4cfe-aa6d-d7578ac6fbdb",
+          "name": "By-usage-type conditional",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-type/conditional/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-type",
+                "conditional"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "9e39023b-8c65-4588-98ee-a843bf2c360e",
+          "name": "By-usage-type count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-type/{{usage_type}}/count/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-type",
+                "{{usage_type}}",
+                "count"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "98125dc6-81d3-4839-92a5-ded9e9b951dd",
+          "name": "By-usage-type primary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-type/primary/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-type",
+                "primary"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "15140235-2a9f-4ffb-abce-5a21c2a2a696",
+          "name": "By-usage-type secondary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/by-usage-type/secondary/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "by-usage-type",
+                "secondary"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b6c065ed-3576-4cb0-8e90-c4dcabadf5a2",
+          "name": "List relationships",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/?limit=20&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships"
+              ],
+              "protocol": "https",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "page_id",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "endpoint_id",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "expand",
+                  "value": "{{expand}}",
+                  "disabled": true,
+                  "description": "Optional. Set to `full` to return full documents per item; default returns summary list items."
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "81b81448-1525-4e42-9dac-d317c86ce2d2",
+          "name": "Performance errors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/performance/errors/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "performance",
+                "errors"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "e3f0a7f2-c75a-4569-b53a-0e5fd529526d",
+          "name": "Performance slow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/performance/slow/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "performance",
+                "slow"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "c98be31c-e2bb-4857-bd37-e416d77a5389",
+          "name": "Relationship access-control",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/access-control/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}",
+                "access-control"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "5056c6e4-1366-4174-80d7-701757a4b9a2",
+          "name": "Relationship data-flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/data-flow/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}",
+                "data-flow"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "895fdb56-3a94-4317-bd41-98202b59a4f2",
+          "name": "Relationship dependencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/dependencies/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}",
+                "dependencies"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "b95dda63-a473-4ff9-941a-048812024a53",
+          "name": "Relationship detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "8d430737-16b3-4528-a3d4-86c572061ea4",
+          "name": "Relationship performance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/performance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}",
+                "performance"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "4935c733-de9e-426f-b22a-9bf9c27d3f5d",
+          "name": "Relationship postman",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/{{relationship_id}}/postman/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "{{relationship_id}}",
+                "postman"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "cc7c6ac4-4abd-4a7c-9fe6-fea057235ecf",
+          "name": "Usage-contexts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/usage-contexts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "usage-contexts"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        },
+        {
+          "id": "524ad3b4-eae9-4941-9866-80dd7260cdde",
+          "name": "Usage-types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/relationships/usage-types/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "relationships",
+                "usage-types"
+              ],
+              "protocol": "https"
+            }
+          },
+          "response": [],
+          "event": []
+        }
+      ],
+      "variable": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "283058b5-9340-4a85-996a-818db3c871eb",
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "default"
+    },
+    {
+      "id": "409e40e3-e4a2-48ff-ac50-c743c028915e",
+      "key": "page_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "e2289a4f-52cb-4e4c-a3ae-b2e05ef87533",
+      "key": "endpoint_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "f1de051a-ef04-4e06-aade-4cc83f2f7670",
+      "key": "relationship_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "3c10a277-4b21-4674-af2e-ff5ac70dcecb",
+      "key": "config_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "ad6bad0c-f305-4440-95a0-adc2264af8b1",
+      "key": "user_type",
+      "value": "developer",
+      "type": "default"
+    },
+    {
+      "id": "0589b7b6-bf35-4b0a-9325-27f2c85e8d2e",
+      "key": "state",
+      "value": "published",
+      "type": "default"
+    },
+    {
+      "id": "06e3caaf-f4c9-49fd-8894-f3d9e6d98751",
+      "key": "page_type",
+      "value": "docs",
+      "type": "default"
+    },
+    {
+      "id": "e547381b-0a74-4d3d-8b79-9f06982fc5af",
+      "key": "api_version",
+      "value": "v1",
+      "type": "default"
+    },
+    {
+      "id": "a6318cfa-6697-42e6-8e8b-8d0b4a6b8151",
+      "key": "method",
+      "value": "GET",
+      "type": "default"
+    },
+    {
+      "id": "36a85161-4a43-4540-a8a5-552555f08508",
+      "key": "service_name",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "371bb28d-4bb4-4a62-8a9a-faea1dc27207",
+      "key": "usage_type",
+      "value": "primary",
+      "type": "default"
+    },
+    {
+      "id": "d237ec84-b503-4793-848d-8c00920f18df",
+      "key": "usage_context",
+      "value": "data_fetching",
+      "type": "default"
+    },
+    {
+      "id": "4b6617db-49a7-44fb-8f23-38e17e116e73",
+      "key": "pattern",
+      "value": "sync",
+      "type": "default"
+    },
+    {
+      "id": "24a75099-ae96-48fd-94a2-114e642f9c3b",
+      "key": "env_name",
+      "value": "local",
+      "type": "default"
+    },
+    {
+      "id": "b1f5015d-39dc-4004-8889-d01a52de6a54",
+      "key": "mapping_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "9d588039-9a81-413d-a368-32c5706b4730",
+      "key": "suite_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

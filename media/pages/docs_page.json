@@ -1,0 +1,29 @@
+{
+  "_id": "docs_page-001",
+  "page_id": "docs_page",
+  "page_type": "docs",
+  "metadata": {
+    "route": "/docs",
+    "file_path": "contact360/dashboard/app/(dashboard)/docs/page.tsx",
+    "purpose": "Documentation listing page displaying available documentation pages in a grid or list view with search and filtering capabilities.",
+    "s3_key": "data/pages/docs_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [],
+    "ui_components": [],
+    "versions": [],
+    "endpoint_count": 0,
+    "api_versions": [],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

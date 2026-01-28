@@ -1,0 +1,80 @@
+<!-- Pages Tab Content -->
+<div id="pages-content" role="tabpanel" aria-labelledby="tab-pages" class="tab-content active">
+    <!-- View Mode: List -->
+    <div id="pages-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+        <!-- Tab Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Pages</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage documentation pages</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <div id="pages-filters" class="flex items-center gap-2">
+                    <label for="page-type-filter" class="sr-only">Filter by type</label>
+                    <select id="page-type-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            aria-label="Filter pages by type">
+                        <option value="">All Types</option>
+                        <option value="docs">Docs</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="dashboard">Dashboard</option>
+                        <option value="settings">Settings</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <label for="page-status-filter" class="sr-only">Filter by status</label>
+                    <select id="page-status-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            aria-label="Filter pages by status">
+                        <option value="">All Statuses</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                    <label for="page-state-filter" class="sr-only">Filter by state</label>
+                    <select id="page-state-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            aria-label="Filter pages by state">
+                        <option value="">All States</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                        <option value="coming_soon">Coming Soon</option>
+                        <option value="development">Development</option>
+                        <option value="test">Test</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label for="page-search" class="sr-only">Search pages</label>
+                    <input type="text" 
+                           id="page-search" 
+                           data-search-input="true"
+                           data-tab="pages"
+                           placeholder="Search pages..."
+                           class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors w-64"
+                           aria-label="Search pages">
+                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Chips -->
+        <div id="pages-filter-chips" class="mb-4 filter-chips"></div>
+        
+        <!-- List Container -->
+        <div id="pages-list" class="space-y-4" role="list" aria-label="Pages list">
+            {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading pages...' %}
+        </div>
+        
+        <!-- Pagination -->
+        <div id="pages-pagination" class="mt-6" aria-label="Pages pagination"></div>
+    </div>
+    
+    <!-- View Mode: Grid -->
+    <div id="pages-grid-view" class="view-mode-content {% if view_mode == 'grid' %}active{% else %}hidden{% endif %}">
+        <div id="pages-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Pages grid">
+            {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+        </div>
+        <div id="pages-grid-pagination" class="mt-6" aria-label="Pages grid pagination"></div>
+    </div>
+</div>

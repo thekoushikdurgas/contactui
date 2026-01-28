@@ -1,0 +1,144 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "30103425-3fae-496c-9074-e9093f6f1d43",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=http://3.95.58.90/api/v1/executions?includeData=true&status=running&workflowId=02M7wwoJIe1sUfGh&limit=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTQyOWZjYi1iN2MwLTRjOTMtYTAyZi04ZmQzYjU4Y2U4ZjgiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY0Nzg0ODI1LCJleHAiOjE3NjczMzAwMDB9.TT4b5KxsiK4kKQGDSfwTv--4hTSvJhseLQoWrFfl-3s"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        240,
+        0
+      ],
+      "id": "23bdfcbc-55ac-46c0-8165-b0e07543c108",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a5f3dc0d-2c21-46a3-a6da-c5549f46973d",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "0edaa35f-8504-45b5-8b87-7d5178e6c306",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) FROM public.contacts\nWHERE status = '0'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        16,
+        0
+      ],
+      "id": "fa0025fc-cd9a-4e26-9610-82985cc2ffb3",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "g85UbejkLtkUlrao",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "isArtificialRecoveredEventItem": true
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0d1c1219-be47-468d-b331-73f30697c739",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edce98a1672701afdb4509156bf76146eada53c7f0b3f7573f4df91a299fc8ba"
+  },
+  "id": "uKQviatWLlLnwi4L",
+  "tags": [],
+  "workflow_id": "My workflow"
+}

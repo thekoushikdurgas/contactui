@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ task.title }} - Tasks{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'tasks:list' %}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">{{ task.title }}</h1>
+                <p class="text-xs text-gray-400 dark:text-gray-500 font-medium mt-2">
+                    Created: {{ task.created_at|date:"M d, Y H:i" }}
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            {% if task.status == 'pending' %}
+                <a href="{% url 'tasks:start' task_id=task.task_id %}" class="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all">Start</a>
+            {% elif task.status == 'in_progress' %}
+                <a href="{% url 'tasks:complete' task_id=task.task_id %}" class="px-6 py-2 bg-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition-all">Complete</a>
+            {% endif %}
+            <a href="{% url 'tasks:edit' task_id=task.task_id %}" class="px-6 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-gray-900 dark:text-gray-100">Edit</a>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Task Details -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-6">Details</h2>
+                <dl class="space-y-6">
+                    <div>
+                        <dt class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Status</dt>
+                        <dd>
+                            {% include 'components/status_badge.html' with status=task.status %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Priority</dt>
+                        <dd>
+                            {% if task.priority %}
+                                {% include 'components/badge.html' with text=task.priority|title variant='info' %}
+                            {% else %}
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Not set</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Task Type</dt>
+                        <dd class="text-sm text-gray-700 dark:text-gray-300 font-medium">{{ task.get_task_type_display|default:task.task_type|title }}</dd>
+                    </div>
+                    {% if task.assigned_to %}
+                        <div>
+                            <dt class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Assigned To</dt>
+                            <dd class="text-sm text-gray-700 dark:text-gray-300 font-medium">{{ task.assigned_to.username }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if task.description %}
+                        <div>
+                            <dt class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Description</dt>
+                            <dd class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">{{ task.description }}</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+        
+        <!-- Comments -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <h2 class="text-base font-bold text-gray-900 dark:text-gray-100 mb-4">Comments</h2>
+            {% if comments %}
+                <div class="space-y-4">
+                    {% for comment in comments %}
+                        <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-700/50">
+                            <p class="text-sm text-gray-800 dark:text-gray-200 mb-2">{{ comment.content }}</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                                {{ comment.author.username|default:"System" }} • {{ comment.created_at|date:"M d, Y H:i" }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-8">No comments yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

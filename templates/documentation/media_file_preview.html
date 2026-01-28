@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Preview: {{ file_name }} - DocsAI{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex flex-wrap items-start justify-between gap-4 p-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
+        <div class="flex-1 min-w-0">
+            <a href="{% url 'documentation:dashboard' %}" class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                Back to Media Manager
+            </a>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">{{ file_name }}</h1>
+            <div class="flex flex-wrap gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <span class="truncate max-w-xs" title="{{ file_path }}">{{ file_path }}</span>
+                <span>{{ size|filesizeformat }}</span>
+            </div>
+        </div>
+        <a href="{% url 'documentation:media_file_preview' file_path=file_path %}?download=1" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-medium">
+            Download
+        </a>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <pre class="p-6 text-sm overflow-auto max-h-[70vh] bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono whitespace-pre"><code>{{ content }}</code></pre>
+    </div>
+</div>
+{% endblock %}

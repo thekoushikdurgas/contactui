@@ -1,0 +1,4071 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-01-22T21:46:31.798347+00:00",
+  "total": 125,
+  "relationships": [
+    {
+      "endpoint_path": "graphql/AdminMarketingPages",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/marketing",
+          "page_title": "Admin Marketing Page",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/AggregateMetrics",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/analytics",
+          "page_title": "Analytics Page",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CancelExport",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/export",
+          "page_title": "Export Page",
+          "via_service": "exportsService",
+          "via_hook": "useExportManager",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CancelSubscription",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CountContacts",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "contactsService",
+          "via_hook": "useContactsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateAIChat",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateAPIKey",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useAPIKeys",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateCompanyExport",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/companies",
+          "page_title": "Companies Page",
+          "via_service": "exportsService",
+          "via_hook": "useCompanyExport",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateContactExport",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "exportsService",
+          "via_hook": "useContactExport",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateDashboardPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/dashboard-pages",
+          "page_title": "Admin Dashboard Pages Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "page_title": "Admin Dashboard Pages Pageid Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateLog",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/logs",
+          "page_title": "Admin Logs Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateMarketingPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/marketing/new",
+          "page_title": "Admin Marketing New Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing",
+          "page_title": "Admin Marketing Page",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "page_title": "Admin Marketing Pageid Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/CreateSavedSearch",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteAIChat",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteAPIKey",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useAPIKeys",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteDashboardPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/dashboard-pages",
+          "page_title": "Admin Dashboard Pages Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteLog",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/logs",
+          "page_title": "Admin Logs Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteMarketingPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/marketing",
+          "page_title": "Admin Marketing Page",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteSavedSearch",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/DeleteUser",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/users",
+          "page_title": "Admin Users Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Disable2FA",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ExportLinkedIn",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/linkedin",
+          "page_title": "Linkedin Page",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/FindSingleEmail",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/app",
+          "page_title": "Finder Page",
+          "via_service": "emailService",
+          "via_hook": null,
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Get2FAStatus",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "twoFactorService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetActivities",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/activities",
+          "page_title": "Activities Page",
+          "via_service": "activitiesService",
+          "via_hook": "useActivitiesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/dashboard",
+          "page_title": "Dashboard Page",
+          "via_service": "activitiesService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/verifier",
+          "page_title": "Verifier Page",
+          "via_service": "activitiesService",
+          "via_hook": "useVerifier",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetActivityStats",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/activities",
+          "page_title": "Activities Page",
+          "via_service": "activitiesService",
+          "via_hook": "useActivitiesPage",
+          "usage_type": "primary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetAddons",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetAdminAddons",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetAdminPlans",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetAIChat",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetAPIMetadata",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/system-status",
+          "page_title": "Admin System Status Page",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetBilling",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetCompany",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/companies/[id]",
+          "page_title": "Companies Id Page",
+          "via_service": "companiesService",
+          "via_hook": "useCompanyDetail",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/companies",
+          "page_title": "Companies Page",
+          "via_service": "companiesService",
+          "via_hook": "useCompanySummary",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetCompanyContacts",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/companies/[id]",
+          "page_title": "Companies Id Page",
+          "via_service": "companiesService",
+          "via_hook": "useCompanyContacts",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetCompanyFilters",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/companies",
+          "page_title": "Companies Page",
+          "via_service": "companiesService",
+          "via_hook": "useCompaniesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetDashboardPage",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "page_title": "Admin Dashboard Pages Pageid Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/dashboard/[pageId]",
+          "page_title": "Dashboard Pageid Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetExport",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/export",
+          "page_title": "Export Page",
+          "via_service": "exportsService",
+          "via_hook": "useExportManager",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetHealth",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/system-status",
+          "page_title": "Admin System Status Page",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetInvoices",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetLogStatistics",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/logs",
+          "page_title": "Admin Logs Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetMarketingPage",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/about",
+          "page_title": "About Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "page_title": "Admin Marketing Pageid Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/api",
+          "page_title": "Api Docs Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/careers",
+          "page_title": "Careers Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/chrome-extension",
+          "page_title": "Chrome Extension Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/integrations",
+          "page_title": "Integrations Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/privacy",
+          "page_title": "Privacy Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/ai-email-writer",
+          "page_title": "Products Ai Email Writer Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/cfo-email-list",
+          "page_title": "Products Cfo Email List Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/chrome-extension",
+          "page_title": "Products Chrome Extension Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/email-finder",
+          "page_title": "Products Email Finder Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/email-verifier",
+          "page_title": "Products Email Verifier Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/products/prospect-finder",
+          "page_title": "Products Prospect Finder Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/terms",
+          "page_title": "Terms Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetMe",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "authService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetPerformanceMetrics",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/analytics",
+          "page_title": "Analytics Page",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetPlans",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetSession",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/login",
+          "page_title": "Login Page",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetUsage",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/usage",
+          "page_title": "Usage Page",
+          "via_service": "usageService",
+          "via_hook": "useUsageTracking",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetUserHistory",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/user-history",
+          "page_title": "Admin User History Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUserHistory",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetUserStats",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/statistics",
+          "page_title": "Admin Statistics Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminStatistics",
+          "usage_type": "primary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/users",
+          "page_title": "Admin Users Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/dashboard",
+          "page_title": "Dashboard Page",
+          "via_service": "adminService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "conditional",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetVQLHealth",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/system-status",
+          "page_title": "Admin System Status Page",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/GetVQLStats",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/system-status",
+          "page_title": "Admin System Status Page",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListAIChats",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListAPIKeys",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListDashboardPages",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/dashboard-pages",
+          "page_title": "Admin Dashboard Pages Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListExports",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/dashboard",
+          "page_title": "Dashboard Page",
+          "via_service": "exportsService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/export",
+          "page_title": "Export Page",
+          "via_service": "exportsService",
+          "via_hook": "useExportPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListSavedSearches",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "savedSearchesService",
+          "via_hook": "useContactsPage",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListSessions",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListTeamMembers",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/ListUsers",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/users",
+          "page_title": "Admin Users Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Login",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/login",
+          "page_title": "Login Page",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "primary",
+          "usage_context": "authentication",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/PublishMarketingPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/marketing",
+          "page_title": "Admin Marketing Page",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/PurchaseAddon",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/QueryCompanies",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/companies",
+          "page_title": "Companies Page",
+          "via_service": "companiesService",
+          "via_hook": "useCompaniesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/QueryContacts",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "contactsService",
+          "via_hook": "useContactsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/QueryLogs",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/logs",
+          "page_title": "Admin Logs Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Register",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/register",
+          "page_title": "Register Page",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "primary",
+          "usage_context": "authentication",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/RevokeSession",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "profileService",
+          "via_hook": "useSessions",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/SearchLinkedIn",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/linkedin",
+          "page_title": "Linkedin Page",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/SearchLogs",
+      "method": "QUERY",
+      "pages": [
+        {
+          "page_path": "/admin/logs",
+          "page_title": "Admin Logs Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/SendMessage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Setup2FA",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/SubmitMetric",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/analytics",
+          "page_title": "Analytics Page",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Subscribe",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/billing",
+          "page_title": "Billing Page",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateAIChat",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/ai-chat",
+          "page_title": "Ai Chat Page",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateDashboardPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/dashboard-pages",
+          "page_title": "Admin Dashboard Pages Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "page_title": "Admin Dashboard Pages Pageid Page",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateMarketingPage",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/marketing",
+          "page_title": "Admin Marketing Page",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "page_title": "Admin Marketing Pageid Page",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateProfile",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "usersService",
+          "via_hook": "useUserProfile",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateSavedSearch",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/contacts",
+          "page_title": "Contacts Page",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateUserCredits",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/users",
+          "page_title": "Admin Users Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpdateUserRole",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/admin/users",
+          "page_title": "Admin Users Page",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UploadAvatar",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "usersService",
+          "via_hook": "useUserProfile",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/UpsertByLinkedInUrl",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/linkedin",
+          "page_title": "Linkedin Page",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/Verify2FA",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/profile",
+          "page_title": "Profile Page",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/VerifyAndFind",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/app",
+          "page_title": "Finder Page",
+          "via_service": "emailService",
+          "via_hook": null,
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/VerifyBulkEmails",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/verifier",
+          "page_title": "Verifier Page",
+          "via_service": "emailService",
+          "via_hook": "useVerifier",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "endpoint_path": "graphql/VerifySingleEmail",
+      "method": "MUTATION",
+      "pages": [
+        {
+          "page_path": "/verifier",
+          "page_title": "Verifier Page",
+          "via_service": "emailService",
+          "via_hook": "useVerifier",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/about",
+      "endpoints": [
+        {
+          "page_path": "/about",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/activities",
+      "endpoints": [
+        {
+          "page_path": "/activities",
+          "endpoint_path": "graphql/GetActivities",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "activitiesService",
+          "via_hook": "useActivitiesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/activities",
+          "endpoint_path": "graphql/GetActivityStats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "activitiesService",
+          "via_hook": "useActivitiesPage",
+          "usage_type": "primary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/dashboard-pages",
+      "endpoints": [
+        {
+          "page_path": "/admin/dashboard-pages",
+          "endpoint_path": "graphql/ListDashboardPages",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages",
+          "endpoint_path": "graphql/CreateDashboardPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages",
+          "endpoint_path": "graphql/UpdateDashboardPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages",
+          "endpoint_path": "graphql/DeleteDashboardPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useAdminDashboardPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/dashboard-pages/[pageId]",
+      "endpoints": [
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "endpoint_path": "graphql/GetDashboardPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "endpoint_path": "graphql/UpdateDashboardPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/dashboard-pages/[pageId]",
+          "endpoint_path": "graphql/CreateDashboardPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPageEditor",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/logs",
+      "endpoints": [
+        {
+          "page_path": "/admin/logs",
+          "endpoint_path": "graphql/QueryLogs",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/logs",
+          "endpoint_path": "graphql/SearchLogs",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/logs",
+          "endpoint_path": "graphql/GetLogStatistics",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/logs",
+          "endpoint_path": "graphql/CreateLog",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/logs",
+          "endpoint_path": "graphql/DeleteLog",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminLogs",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/marketing",
+      "endpoints": [
+        {
+          "page_path": "/admin/marketing",
+          "endpoint_path": "graphql/AdminMarketingPages",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing",
+          "endpoint_path": "graphql/CreateMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing",
+          "endpoint_path": "graphql/UpdateMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing",
+          "endpoint_path": "graphql/DeleteMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing",
+          "endpoint_path": "graphql/PublishMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useAdminMarketingPages",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/marketing/[pageId]",
+      "endpoints": [
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "endpoint_path": "graphql/UpdateMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/marketing/[pageId]",
+          "endpoint_path": "graphql/CreateMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/marketing/new",
+      "endpoints": [
+        {
+          "page_path": "/admin/marketing/new",
+          "endpoint_path": "graphql/CreateMarketingPage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPageEditor",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/statistics",
+      "endpoints": [
+        {
+          "page_path": "/admin/statistics",
+          "endpoint_path": "graphql/GetUserStats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminStatistics",
+          "usage_type": "primary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/system-status",
+      "endpoints": [
+        {
+          "page_path": "/admin/system-status",
+          "endpoint_path": "graphql/GetHealth",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/system-status",
+          "endpoint_path": "graphql/GetAPIMetadata",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/system-status",
+          "endpoint_path": "graphql/GetVQLHealth",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/system-status",
+          "endpoint_path": "graphql/GetVQLStats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "healthService",
+          "via_hook": "useSystemStatus",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/user-history",
+      "endpoints": [
+        {
+          "page_path": "/admin/user-history",
+          "endpoint_path": "graphql/GetUserHistory",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUserHistory",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/admin/users",
+      "endpoints": [
+        {
+          "page_path": "/admin/users",
+          "endpoint_path": "graphql/ListUsers",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/users",
+          "endpoint_path": "graphql/GetUserStats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/users",
+          "endpoint_path": "graphql/UpdateUserRole",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/users",
+          "endpoint_path": "graphql/UpdateUserCredits",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/admin/users",
+          "endpoint_path": "graphql/DeleteUser",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useAdminUsers",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/ai-chat",
+      "endpoints": [
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/ListAIChats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/GetAIChat",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/CreateAIChat",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/UpdateAIChat",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/DeleteAIChat",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/ai-chat",
+          "endpoint_path": "graphql/SendMessage",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "aiChatsService",
+          "via_hook": "useAiChat",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/analytics",
+      "endpoints": [
+        {
+          "page_path": "/analytics",
+          "endpoint_path": "graphql/GetPerformanceMetrics",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/analytics",
+          "endpoint_path": "graphql/AggregateMetrics",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "secondary",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/analytics",
+          "endpoint_path": "graphql/SubmitMetric",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "analyticsService",
+          "via_hook": "useAnalyticsPage",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/api",
+      "endpoints": [
+        {
+          "page_path": "/api",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/app",
+      "endpoints": [
+        {
+          "page_path": "/app",
+          "endpoint_path": "graphql/FindSingleEmail",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "emailService",
+          "via_hook": null,
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2025-01-27T12:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/app",
+          "endpoint_path": "graphql/VerifyAndFind",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "emailService",
+          "via_hook": null,
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2025-01-27T12:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/billing",
+      "endpoints": [
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetBilling",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetPlans",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetAddons",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetInvoices",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBillingPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/Subscribe",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/PurchaseAddon",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/CancelSubscription",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetAdminPlans",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/billing",
+          "endpoint_path": "graphql/GetAdminAddons",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "billingService",
+          "via_hook": "useBilling",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/careers",
+      "endpoints": [
+        {
+          "page_path": "/careers",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/chrome-extension",
+      "endpoints": [
+        {
+          "page_path": "/chrome-extension",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/companies",
+      "endpoints": [
+        {
+          "page_path": "/companies",
+          "endpoint_path": "graphql/QueryCompanies",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "companiesService",
+          "via_hook": "useCompaniesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/companies",
+          "endpoint_path": "graphql/GetCompanyFilters",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "companiesService",
+          "via_hook": "useCompaniesPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/companies",
+          "endpoint_path": "graphql/GetCompany",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "companiesService",
+          "via_hook": "useCompanySummary",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/companies",
+          "endpoint_path": "graphql/CreateCompanyExport",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useCompanyExport",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/companies/[id]",
+      "endpoints": [
+        {
+          "page_path": "/companies/[id]",
+          "endpoint_path": "graphql/GetCompany",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "companiesService",
+          "via_hook": "useCompanyDetail",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/companies/[id]",
+          "endpoint_path": "graphql/GetCompanyContacts",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "companiesService",
+          "via_hook": "useCompanyContacts",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/contacts",
+      "endpoints": [
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/QueryContacts",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "contactsService",
+          "via_hook": "useContactsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/CountContacts",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "contactsService",
+          "via_hook": "useContactsPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/ListSavedSearches",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "savedSearchesService",
+          "via_hook": "useContactsPage",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/CreateSavedSearch",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/UpdateSavedSearch",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/DeleteSavedSearch",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "savedSearchesService",
+          "via_hook": "useSavedSearches",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/contacts",
+          "endpoint_path": "graphql/CreateContactExport",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useContactExport",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/dashboard",
+      "endpoints": [
+        {
+          "page_path": "/dashboard",
+          "endpoint_path": "graphql/GetUserStats",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "adminService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "conditional",
+          "usage_context": "analytics",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/dashboard",
+          "endpoint_path": "graphql/GetActivities",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "activitiesService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/dashboard",
+          "endpoint_path": "graphql/ListExports",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/dashboard/[pageId]",
+      "endpoints": [
+        {
+          "page_path": "/dashboard/[pageId]",
+          "endpoint_path": "graphql/GetDashboardPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "dashboardPagesService",
+          "via_hook": "useDashboardPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/export",
+      "endpoints": [
+        {
+          "page_path": "/export",
+          "endpoint_path": "graphql/ListExports",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useExportPage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/export",
+          "endpoint_path": "graphql/GetExport",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useExportManager",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/export",
+          "endpoint_path": "graphql/CancelExport",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "exportsService",
+          "via_hook": "useExportManager",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/integrations",
+      "endpoints": [
+        {
+          "page_path": "/integrations",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/linkedin",
+      "endpoints": [
+        {
+          "page_path": "/linkedin",
+          "endpoint_path": "graphql/SearchLinkedIn",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/linkedin",
+          "endpoint_path": "graphql/UpsertByLinkedInUrl",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/linkedin",
+          "endpoint_path": "graphql/ExportLinkedIn",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "linkedinService",
+          "via_hook": "useLinkedIn",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/login",
+      "endpoints": [
+        {
+          "page_path": "/login",
+          "endpoint_path": "graphql/Login",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "primary",
+          "usage_context": "authentication",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/login",
+          "endpoint_path": "graphql/GetSession",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/privacy",
+      "endpoints": [
+        {
+          "page_path": "/privacy",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/ai-email-writer",
+      "endpoints": [
+        {
+          "page_path": "/products/ai-email-writer",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/cfo-email-list",
+      "endpoints": [
+        {
+          "page_path": "/products/cfo-email-list",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/chrome-extension",
+      "endpoints": [
+        {
+          "page_path": "/products/chrome-extension",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/email-finder",
+      "endpoints": [
+        {
+          "page_path": "/products/email-finder",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/email-verifier",
+      "endpoints": [
+        {
+          "page_path": "/products/email-verifier",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/products/prospect-finder",
+      "endpoints": [
+        {
+          "page_path": "/products/prospect-finder",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/profile",
+      "endpoints": [
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/GetMe",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "authService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/ListAPIKeys",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/ListSessions",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/ListTeamMembers",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/Get2FAStatus",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "twoFactorService",
+          "via_hook": "useProfilePage",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/CreateAPIKey",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useAPIKeys",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/DeleteAPIKey",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useAPIKeys",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/RevokeSession",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "profileService",
+          "via_hook": "useSessions",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/Setup2FA",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/Verify2FA",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/Disable2FA",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "twoFactorService",
+          "via_hook": "use2FA",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/UpdateProfile",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "usersService",
+          "via_hook": "useUserProfile",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/profile",
+          "endpoint_path": "graphql/UploadAvatar",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "usersService",
+          "via_hook": "useUserProfile",
+          "usage_type": "secondary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/register",
+      "endpoints": [
+        {
+          "page_path": "/register",
+          "endpoint_path": "graphql/Register",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "authService",
+          "via_hook": "useAuth",
+          "usage_type": "primary",
+          "usage_context": "authentication",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/terms",
+      "endpoints": [
+        {
+          "page_path": "/terms",
+          "endpoint_path": "graphql/GetMarketingPage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "marketingService",
+          "via_hook": "useMarketingPage",
+          "usage_type": "conditional",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/usage",
+      "endpoints": [
+        {
+          "page_path": "/usage",
+          "endpoint_path": "graphql/GetUsage",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "usageService",
+          "via_hook": "useUsageTracking",
+          "usage_type": "primary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    },
+    {
+      "page_path": "/verifier",
+      "endpoints": [
+        {
+          "page_path": "/verifier",
+          "endpoint_path": "graphql/VerifySingleEmail",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "emailService",
+          "via_hook": "useVerifier",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/verifier",
+          "endpoint_path": "graphql/VerifyBulkEmails",
+          "method": "MUTATION",
+          "api_version": "graphql",
+          "via_service": "emailService",
+          "via_hook": "useVerifier",
+          "usage_type": "primary",
+          "usage_context": "data_mutation",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        },
+        {
+          "page_path": "/verifier",
+          "endpoint_path": "graphql/GetActivities",
+          "method": "QUERY",
+          "api_version": "graphql",
+          "via_service": "activitiesService",
+          "via_hook": "useVerifier",
+          "usage_type": "secondary",
+          "usage_context": "data_fetching",
+          "created_at": "2026-01-20T00:00:00.000000+00:00",
+          "updated_at": "2026-01-21T13:33:51.897968+00:00"
+        }
+      ],
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "indexes": {
+    "by_page": {
+      "/about": [
+        ""
+      ],
+      "/activities": [
+        ""
+      ],
+      "/admin/dashboard-pages": [
+        ""
+      ],
+      "/admin/dashboard-pages/[pageId]": [
+        ""
+      ],
+      "/admin/logs": [
+        ""
+      ],
+      "/admin/marketing": [
+        ""
+      ],
+      "/admin/marketing/[pageId]": [
+        ""
+      ],
+      "/admin/marketing/new": [
+        ""
+      ],
+      "/admin/statistics": [
+        ""
+      ],
+      "/admin/system-status": [
+        ""
+      ],
+      "/admin/user-history": [
+        ""
+      ],
+      "/admin/users": [
+        ""
+      ],
+      "/ai-chat": [
+        ""
+      ],
+      "/analytics": [
+        ""
+      ],
+      "/api": [
+        ""
+      ],
+      "/app": [
+        ""
+      ],
+      "/billing": [
+        ""
+      ],
+      "/careers": [
+        ""
+      ],
+      "/chrome-extension": [
+        ""
+      ],
+      "/companies": [
+        ""
+      ],
+      "/companies/[id]": [
+        ""
+      ],
+      "/contacts": [
+        ""
+      ],
+      "/dashboard": [
+        ""
+      ],
+      "/dashboard/[pageId]": [
+        ""
+      ],
+      "/export": [
+        ""
+      ],
+      "/integrations": [
+        ""
+      ],
+      "/linkedin": [
+        ""
+      ],
+      "/login": [
+        ""
+      ],
+      "/privacy": [
+        ""
+      ],
+      "/products/ai-email-writer": [
+        ""
+      ],
+      "/products/cfo-email-list": [
+        ""
+      ],
+      "/products/chrome-extension": [
+        ""
+      ],
+      "/products/email-finder": [
+        ""
+      ],
+      "/products/email-verifier": [
+        ""
+      ],
+      "/products/prospect-finder": [
+        ""
+      ],
+      "/profile": [
+        ""
+      ],
+      "/register": [
+        ""
+      ],
+      "/terms": [
+        ""
+      ],
+      "/usage": [
+        ""
+      ],
+      "/verifier": [
+        ""
+      ]
+    },
+    "by_endpoint": {
+      "graphql/AdminMarketingPages:QUERY": [
+        ""
+      ],
+      "graphql/AggregateMetrics:QUERY": [
+        ""
+      ],
+      "graphql/CancelExport:MUTATION": [
+        ""
+      ],
+      "graphql/CancelSubscription:MUTATION": [
+        ""
+      ],
+      "graphql/CountContacts:QUERY": [
+        ""
+      ],
+      "graphql/CreateAIChat:MUTATION": [
+        ""
+      ],
+      "graphql/CreateAPIKey:MUTATION": [
+        ""
+      ],
+      "graphql/CreateCompanyExport:MUTATION": [
+        ""
+      ],
+      "graphql/CreateContactExport:MUTATION": [
+        ""
+      ],
+      "graphql/CreateDashboardPage:MUTATION": [
+        ""
+      ],
+      "graphql/CreateLog:MUTATION": [
+        ""
+      ],
+      "graphql/CreateMarketingPage:MUTATION": [
+        ""
+      ],
+      "graphql/CreateSavedSearch:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteAIChat:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteAPIKey:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteDashboardPage:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteLog:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteMarketingPage:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteSavedSearch:MUTATION": [
+        ""
+      ],
+      "graphql/DeleteUser:MUTATION": [
+        ""
+      ],
+      "graphql/Disable2FA:MUTATION": [
+        ""
+      ],
+      "graphql/ExportLinkedIn:MUTATION": [
+        ""
+      ],
+      "graphql/FindSingleEmail:MUTATION": [
+        ""
+      ],
+      "graphql/Get2FAStatus:QUERY": [
+        ""
+      ],
+      "graphql/GetActivities:QUERY": [
+        ""
+      ],
+      "graphql/GetActivityStats:QUERY": [
+        ""
+      ],
+      "graphql/GetAddons:QUERY": [
+        ""
+      ],
+      "graphql/GetAdminAddons:QUERY": [
+        ""
+      ],
+      "graphql/GetAdminPlans:QUERY": [
+        ""
+      ],
+      "graphql/GetAIChat:QUERY": [
+        ""
+      ],
+      "graphql/GetAPIMetadata:QUERY": [
+        ""
+      ],
+      "graphql/GetBilling:QUERY": [
+        ""
+      ],
+      "graphql/GetCompany:QUERY": [
+        ""
+      ],
+      "graphql/GetCompanyContacts:QUERY": [
+        ""
+      ],
+      "graphql/GetCompanyFilters:QUERY": [
+        ""
+      ],
+      "graphql/GetDashboardPage:QUERY": [
+        ""
+      ],
+      "graphql/GetExport:QUERY": [
+        ""
+      ],
+      "graphql/GetHealth:QUERY": [
+        ""
+      ],
+      "graphql/GetInvoices:QUERY": [
+        ""
+      ],
+      "graphql/GetLogStatistics:QUERY": [
+        ""
+      ],
+      "graphql/GetMarketingPage:QUERY": [
+        ""
+      ],
+      "graphql/GetMe:QUERY": [
+        ""
+      ],
+      "graphql/GetPerformanceMetrics:QUERY": [
+        ""
+      ],
+      "graphql/GetPlans:QUERY": [
+        ""
+      ],
+      "graphql/GetSession:QUERY": [
+        ""
+      ],
+      "graphql/GetUsage:QUERY": [
+        ""
+      ],
+      "graphql/GetUserHistory:QUERY": [
+        ""
+      ],
+      "graphql/GetUserStats:QUERY": [
+        ""
+      ],
+      "graphql/GetVQLHealth:QUERY": [
+        ""
+      ],
+      "graphql/GetVQLStats:QUERY": [
+        ""
+      ],
+      "graphql/ListAIChats:QUERY": [
+        ""
+      ],
+      "graphql/ListAPIKeys:QUERY": [
+        ""
+      ],
+      "graphql/ListDashboardPages:QUERY": [
+        ""
+      ],
+      "graphql/ListExports:QUERY": [
+        ""
+      ],
+      "graphql/ListSavedSearches:QUERY": [
+        ""
+      ],
+      "graphql/ListSessions:QUERY": [
+        ""
+      ],
+      "graphql/ListTeamMembers:QUERY": [
+        ""
+      ],
+      "graphql/ListUsers:QUERY": [
+        ""
+      ],
+      "graphql/Login:MUTATION": [
+        ""
+      ],
+      "graphql/PublishMarketingPage:MUTATION": [
+        ""
+      ],
+      "graphql/PurchaseAddon:MUTATION": [
+        ""
+      ],
+      "graphql/QueryCompanies:QUERY": [
+        ""
+      ],
+      "graphql/QueryContacts:QUERY": [
+        ""
+      ],
+      "graphql/QueryLogs:QUERY": [
+        ""
+      ],
+      "graphql/Register:MUTATION": [
+        ""
+      ],
+      "graphql/RevokeSession:MUTATION": [
+        ""
+      ],
+      "graphql/SearchLinkedIn:MUTATION": [
+        ""
+      ],
+      "graphql/SearchLogs:QUERY": [
+        ""
+      ],
+      "graphql/SendMessage:MUTATION": [
+        ""
+      ],
+      "graphql/Setup2FA:MUTATION": [
+        ""
+      ],
+      "graphql/SubmitMetric:MUTATION": [
+        ""
+      ],
+      "graphql/Subscribe:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateAIChat:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateDashboardPage:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateMarketingPage:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateProfile:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateSavedSearch:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateUserCredits:MUTATION": [
+        ""
+      ],
+      "graphql/UpdateUserRole:MUTATION": [
+        ""
+      ],
+      "graphql/UploadAvatar:MUTATION": [
+        ""
+      ],
+      "graphql/UpsertByLinkedInUrl:MUTATION": [
+        ""
+      ],
+      "graphql/Verify2FA:MUTATION": [
+        ""
+      ],
+      "graphql/VerifyAndFind:MUTATION": [
+        ""
+      ],
+      "graphql/VerifyBulkEmails:MUTATION": [
+        ""
+      ],
+      "graphql/VerifySingleEmail:MUTATION": [
+        ""
+      ]
+    },
+    "by_usage_type": {
+      "primary": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "secondary": [],
+      "conditional": []
+    },
+    "by_usage_context": {
+      "data_fetching": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "data_mutation": [],
+      "authentication": [],
+      "analytics": []
+    },
+    "by_state": {
+      "coming_soon": [],
+      "development": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "draft": [],
+      "test": [],
+      "published": []
+    }
+  },
+  "statistics": {
+    "total": 125,
+    "unique_pages": 40,
+    "unique_endpoints": 85,
+    "by_api_version": {
+      "unknown": 125
+    },
+    "by_usage_type": {
+      "primary": 125
+    },
+    "by_usage_context": {
+      "data_fetching": 125
+    },
+    "by_state": {
+      "development": 125
+    }
+  }
+}

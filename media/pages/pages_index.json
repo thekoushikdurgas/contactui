@@ -1,0 +1,3715 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-01-20T00:00:00.000000+00:00",
+  "total": 50,
+  "pages": [
+    {
+      "page_id": "about_page",
+      "page_type": "marketing",
+      "route": "/about",
+      "status": "published",
+      "page_state": "published",
+      "_id": "about_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/about",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "About Contact360 page displaying company information, mission, values, and story. We're on a mission to democratize B2B data accuracy.",
+        "s3_key": "data/pages/about_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AboutPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "activities_page",
+      "page_type": "dashboard",
+      "route": "/activities",
+      "status": "published",
+      "page_state": "published",
+      "_id": "activities_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/activities",
+        "file_path": "contact360/dashboard/app/(dashboard)/activities/page.tsx",
+        "purpose": "Activity tracking page displaying user activities with filtering, statistics, and detailed activity information.",
+        "s3_key": "data/pages/activities_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 2,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetActivities",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "activitiesService",
+            "via_hook": "useActivitiesPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get user activities with filtering and pagination. Batched with activity stats in useActivitiesPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetActivityStats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "activitiesService",
+            "via_hook": "useActivitiesPage",
+            "usage_type": "primary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get activity statistics (total, by service type, by action type, by status). Batched with activities in useActivitiesPage hook."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DataPageLayout",
+            "file_path": "components/layouts/DataPageLayout.tsx"
+          },
+          {
+            "name": "DataToolbar",
+            "file_path": "components/patterns/DataToolbar.tsx"
+          },
+          {
+            "name": "ActivityStatsCards",
+            "file_path": "components/features/activities/ActivityStatsCards.tsx"
+          },
+          {
+            "name": "ActivityTable",
+            "file_path": "components/features/activities/ActivityTable.tsx"
+          },
+          {
+            "name": "ActivityDetailsModal",
+            "file_path": "components/features/activities/ActivityDetailsModal.tsx"
+          },
+          {
+            "name": "ActivitiesSidebar",
+            "file_path": "components/features/activities/ActivitiesSidebar.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_dashboard_pages_page",
+      "page_type": "dashboard",
+      "route": "/admin/dashboard-pages",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_dashboard_pages_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/dashboard-pages",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/dashboard-pages/page.tsx",
+        "purpose": "Admin dashboard pages management page for creating, editing, and deleting custom dashboard pages.",
+        "s3_key": "data/pages/admin_dashboard_pages_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 4,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/ListDashboardPages",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useAdminDashboardPages",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "List all dashboard pages"
+          },
+          {
+            "endpoint_path": "graphql/CreateDashboardPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useAdminDashboardPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new dashboard page"
+          },
+          {
+            "endpoint_path": "graphql/UpdateDashboardPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useAdminDashboardPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Update an existing dashboard page"
+          },
+          {
+            "endpoint_path": "graphql/DeleteDashboardPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useAdminDashboardPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Delete a dashboard page"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AdminManagementPage",
+            "file_path": "components/templates/AdminManagementPage.tsx"
+          },
+          {
+            "name": "DashboardPageTable",
+            "file_path": "components/features/admin-dashboard/DashboardPageTable.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_dashboard_pages_pageid_page",
+      "page_type": "dashboard",
+      "route": "/admin/dashboard-pages/[pageId]",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_dashboard_pages_pageid_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/dashboard-pages/[pageId]",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/dashboard-pages/[pageId]/page.tsx",
+        "purpose": "Admin dashboard page editor for creating and editing custom dashboard pages with sections and access control.",
+        "s3_key": "data/pages/admin_dashboard_pages_pageid_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetDashboardPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useDashboardPageEditor",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get dashboard page data for editing"
+          },
+          {
+            "endpoint_path": "graphql/UpdateDashboardPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useDashboardPageEditor",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Update dashboard page content, sections, and access control"
+          },
+          {
+            "endpoint_path": "graphql/CreateDashboardPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useDashboardPageEditor",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new dashboard page (when pageId is 'new')"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DashboardPageEditor",
+            "file_path": "components/features/admin-dashboard/DashboardPageEditor.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_logs_page",
+      "page_type": "dashboard",
+      "route": "/admin/logs",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_logs_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/logs",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/logs/page.tsx",
+        "purpose": "Admin system logs page for viewing, searching, and managing system logs. Admin/Super Admin only.",
+        "s3_key": "data/pages/admin_logs_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin or Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 5,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/QueryLogs",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminLogs",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Query system logs with filtering (level, service, date range, etc.) and pagination"
+          },
+          {
+            "endpoint_path": "graphql/SearchLogs",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminLogs",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Search logs by text content"
+          },
+          {
+            "endpoint_path": "graphql/GetLogStatistics",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminLogs",
+            "usage_type": "secondary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get log statistics for a time range (counts by level, service, etc.)"
+          },
+          {
+            "endpoint_path": "graphql/CreateLog",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminLogs",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new log entry"
+          },
+          {
+            "endpoint_path": "graphql/DeleteLog",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminLogs",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Delete a log entry"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AdminLogs",
+            "file_path": "components/features/admin/AdminLogs.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_marketing_new_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing/new",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_marketing_new_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/marketing/new",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/marketing/new/page.tsx",
+        "purpose": "Admin page for creating new marketing pages. Redirects to editor with pageId='new'.",
+        "s3_key": "data/pages/admin_marketing_new_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/CreateMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPageEditor",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new marketing page"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "MarketingPageEditor",
+            "file_path": "components/features/admin-marketing/MarketingPageEditor.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_marketing_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_marketing_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/marketing",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/marketing/page.tsx",
+        "purpose": "Admin marketing pages management page for creating, editing, publishing, and deleting marketing pages.",
+        "s3_key": "data/pages/admin_marketing_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 5,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/AdminMarketingPages",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useAdminMarketingPages",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "List all marketing pages with admin filters"
+          },
+          {
+            "endpoint_path": "graphql/CreateMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useAdminMarketingPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new marketing page"
+          },
+          {
+            "endpoint_path": "graphql/UpdateMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useAdminMarketingPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Update an existing marketing page"
+          },
+          {
+            "endpoint_path": "graphql/DeleteMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useAdminMarketingPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Delete a marketing page"
+          },
+          {
+            "endpoint_path": "graphql/PublishMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useAdminMarketingPages",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Publish or unpublish a marketing page"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AdminManagementPage",
+            "file_path": "components/templates/AdminManagementPage.tsx"
+          },
+          {
+            "name": "MarketingPageTable",
+            "file_path": "components/features/admin-marketing/MarketingPageTable.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_marketing_pageid_page",
+      "page_type": "dashboard",
+      "route": "/admin/marketing/[pageId]",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_marketing_pageid_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/marketing/[pageId]",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/marketing/[pageId]/page.tsx",
+        "purpose": "Admin marketing page editor for creating and editing marketing pages with rich content editor.",
+        "s3_key": "data/pages/admin_marketing_pageid_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPageEditor",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get marketing page data for editing"
+          },
+          {
+            "endpoint_path": "graphql/UpdateMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPageEditor",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Update marketing page content and metadata"
+          },
+          {
+            "endpoint_path": "graphql/CreateMarketingPage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPageEditor",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Create a new marketing page (when pageId is 'new')"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "MarketingPageEditor",
+            "file_path": "components/features/admin-marketing/MarketingPageEditor.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_settings_page",
+      "page_type": "dashboard",
+      "route": "/admin/settings",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_settings_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/settings",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/settings/page.tsx",
+        "purpose": "Admin settings page for configuring system-wide or team-level settings. Admin/Super Admin only.",
+        "s3_key": "data/pages/admin_settings_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin or Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "DashboardPageLayout",
+            "file_path": "components/layouts/DashboardPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "Card3D",
+            "file_path": "components/ui/Card3D.tsx"
+          },
+          {
+            "name": "Input3D",
+            "file_path": "components/ui/Input3D.tsx"
+          },
+          {
+            "name": "Button3D",
+            "file_path": "components/ui/Button3D.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_statistics_page",
+      "page_type": "dashboard",
+      "route": "/admin/statistics",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_statistics_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/statistics",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/statistics/page.tsx",
+        "purpose": "Admin statistics page displaying system-wide statistics and analytics. Admin/Super Admin only.",
+        "s3_key": "data/pages/admin_statistics_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin or Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetUserStats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminStatistics",
+            "usage_type": "primary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get user statistics (total users, active users, users by role/plan)"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AdminStatistics",
+            "file_path": "components/features/admin/AdminStatistics.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_system_status_page",
+      "page_type": "dashboard",
+      "route": "/admin/system-status",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_system_status_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/system-status",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/system-status/page.tsx",
+        "purpose": "Admin system status page displaying system health, API metadata, and VQL statistics. Admin/Super Admin only.",
+        "s3_key": "data/pages/admin_system_status_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Admin or Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 4,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetHealth",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "healthService",
+            "via_hook": "useSystemStatus",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get system health status"
+          },
+          {
+            "endpoint_path": "graphql/GetAPIMetadata",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "healthService",
+            "via_hook": "useSystemStatus",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get API metadata and version information"
+          },
+          {
+            "endpoint_path": "graphql/GetVQLHealth",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "healthService",
+            "via_hook": "useSystemStatus",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get VQL (Vivek Query Language) health status"
+          },
+          {
+            "endpoint_path": "graphql/GetVQLStats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "healthService",
+            "via_hook": "useSystemStatus",
+            "usage_type": "secondary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get VQL statistics and performance metrics"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "SystemStatus",
+            "file_path": "components/features/admin/SystemStatus.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_user_history_page",
+      "page_type": "dashboard",
+      "route": "/admin/user-history",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_user_history_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/user-history",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/user-history/page.tsx",
+        "purpose": "Admin user history page for viewing detailed user activity history. Super Admin only.",
+        "s3_key": "data/pages/admin_user_history_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetUserHistory",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUserHistory",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "Get user activity history with filtering (user ID, date range, action type, etc.)"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "AdminUserHistory",
+            "file_path": "components/features/admin/AdminUserHistory.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "admin_users_page",
+      "page_type": "dashboard",
+      "route": "/admin/users",
+      "status": "published",
+      "page_state": "published",
+      "_id": "admin_users_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/admin/users",
+        "file_path": "contact360/dashboard/app/(dashboard)/admin/users/page.tsx",
+        "purpose": "Admin user management page for viewing, editing, and managing user accounts, roles, and credits. Super Admin only.",
+        "s3_key": "data/pages/admin_users_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Super Admin role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 5,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/ListUsers",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUsers",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "List all users with filtering and pagination. Supports search by email, name, role, etc."
+          },
+          {
+            "endpoint_path": "graphql/GetUserStats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUsers",
+            "usage_type": "secondary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "Get user statistics (total users, active users, users by role/plan)"
+          },
+          {
+            "endpoint_path": "graphql/UpdateUserRole",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUsers",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "Update user role"
+          },
+          {
+            "endpoint_path": "graphql/UpdateUserCredits",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUsers",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "Update user credits"
+          },
+          {
+            "endpoint_path": "graphql/DeleteUser",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useAdminUsers",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Super Admin role required",
+            "description": "Delete a user account"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DataPageLayout",
+            "file_path": "components/layouts/DataPageLayout.tsx"
+          },
+          {
+            "name": "DataToolbar",
+            "file_path": "components/patterns/DataToolbar.tsx"
+          },
+          {
+            "name": "Pagination",
+            "file_path": "components/patterns/Pagination.tsx"
+          },
+          {
+            "name": "Card3D",
+            "file_path": "components/ui/Card3D.tsx"
+          },
+          {
+            "name": "Modal3D",
+            "file_path": "components/ui/Modal3D.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "ai_chat_page",
+      "page_type": "dashboard",
+      "route": "/ai-chat",
+      "status": "published",
+      "page_state": "published",
+      "_id": "ai_chat_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/ai-chat",
+        "file_path": "contact360/dashboard/app/(dashboard)/ai-chat/page.tsx",
+        "purpose": "AI chat assistant page for interacting with AI models, managing chat history, and sending messages. Pro users only.",
+        "s3_key": "data/pages/ai_chat_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": "Pro user role required",
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 6,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/ListAIChats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "List all AI chats with optional filters (search, date range, etc.)"
+          },
+          {
+            "endpoint_path": "graphql/GetAIChat",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "Get a specific AI chat with all messages"
+          },
+          {
+            "endpoint_path": "graphql/CreateAIChat",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "Create a new AI chat"
+          },
+          {
+            "endpoint_path": "graphql/UpdateAIChat",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "Update an AI chat (e.g., title, metadata)"
+          },
+          {
+            "endpoint_path": "graphql/DeleteAIChat",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "Delete an AI chat"
+          },
+          {
+            "endpoint_path": "graphql/SendMessage",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "aiChatsService",
+            "via_hook": "useAiChat",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Pro user role required",
+            "description": "Send a message to the AI chat and receive response"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ChatSidebar",
+            "file_path": "components/features/ai-chat/ChatSidebar.tsx"
+          },
+          {
+            "name": "ChatHeader",
+            "file_path": "components/features/ai-chat/ChatHeader.tsx"
+          },
+          {
+            "name": "ChatRateLimitAlert",
+            "file_path": "components/features/ai-chat/ChatRateLimitAlert.tsx"
+          },
+          {
+            "name": "ChatMessagesList",
+            "file_path": "components/features/ai-chat/ChatMessagesList.tsx"
+          },
+          {
+            "name": "ChatMobileSidebar",
+            "file_path": "components/features/ai-chat/ChatMobileSidebar.tsx"
+          },
+          {
+            "name": "ChatWelcomeOrInput",
+            "file_path": "components/features/ai-chat/ChatWelcomeOrInput.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "analytics_page",
+      "page_type": "dashboard",
+      "route": "/analytics",
+      "status": "published",
+      "page_state": "published",
+      "_id": "analytics_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/analytics",
+        "file_path": "contact360/dashboard/app/(dashboard)/analytics/page.tsx",
+        "purpose": "Analytics page displaying performance metrics, system analytics, and performance charts with date range filtering.",
+        "s3_key": "data/pages/analytics_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetPerformanceMetrics",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "analyticsService",
+            "via_hook": "useAnalyticsPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get performance metrics with date range filtering. Returns metrics summary and time series data."
+          },
+          {
+            "endpoint_path": "graphql/AggregateMetrics",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "analyticsService",
+            "via_hook": "useAnalyticsPage",
+            "usage_type": "secondary",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get aggregated metrics summary"
+          },
+          {
+            "endpoint_path": "graphql/SubmitMetric",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "analyticsService",
+            "via_hook": "useAnalyticsPage",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Submit a performance metric (typically called automatically by performance monitor)"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DashboardPageLayout",
+            "file_path": "components/layouts/DashboardPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "AnalyticsHeader",
+            "file_path": "components/features/analytics/AnalyticsHeader.tsx"
+          },
+          {
+            "name": "MetricsOverview",
+            "file_path": "components/features/analytics/MetricsOverview.tsx"
+          },
+          {
+            "name": "PerformanceChart",
+            "file_path": "components/features/analytics/PerformanceChart.tsx"
+          },
+          {
+            "name": "MetricsTable",
+            "file_path": "components/features/analytics/MetricsTable.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "api_docs_page",
+      "page_type": "marketing",
+      "route": "/api",
+      "status": "published",
+      "page_state": "published",
+      "_id": "api_docs_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/api",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Contact360 API documentation page displaying API endpoints, authentication, usage examples, and integration guides. Integrate our verified data directly into your application.",
+        "s3_key": "data/pages/api_docs_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ApiPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "billing_cancel_page",
+      "page_type": "dashboard",
+      "route": "/billing/cancel",
+      "status": "published",
+      "page_state": "published",
+      "_id": "billing_cancel_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/billing/cancel",
+        "file_path": "contact360/dashboard/app/(dashboard)/billing/cancel/page.tsx",
+        "purpose": "Billing cancel page displayed when payment is cancelled. Shows cancellation message and redirects to billing page.",
+        "s3_key": "data/pages/billing_cancel_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "BillingCancel",
+            "file_path": "components/features/billing/BillingCancel.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "billing_page",
+      "page_type": "dashboard",
+      "route": "/billing",
+      "status": "published",
+      "page_state": "published",
+      "_id": "billing_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/billing",
+        "file_path": "contact360/dashboard/app/(dashboard)/billing/page.tsx",
+        "purpose": "Billing and subscription management page with current subscription, plans, addons, payment methods, invoices, and admin billing management.",
+        "s3_key": "data/pages/billing_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 9,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetBilling",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBillingPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get current user billing information. Batched with plans, addons, and invoices in useBillingPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetPlans",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBillingPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get available subscription plans. Batched with billing info, addons, and invoices in useBillingPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetAddons",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBillingPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get available addon packages. Batched with billing info, plans, and invoices in useBillingPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetInvoices",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBillingPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get user invoices with pagination. Batched with billing info, plans, and addons in useBillingPage hook."
+          },
+          {
+            "endpoint_path": "graphql/Subscribe",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBilling",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Subscribe to a subscription plan"
+          },
+          {
+            "endpoint_path": "graphql/PurchaseAddon",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBilling",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Purchase an addon package"
+          },
+          {
+            "endpoint_path": "graphql/CancelSubscription",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBilling",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Cancel current subscription"
+          },
+          {
+            "endpoint_path": "graphql/GetAdminPlans",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBilling",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get all plans including inactive ones (admin only)"
+          },
+          {
+            "endpoint_path": "graphql/GetAdminAddons",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "billingService",
+            "via_hook": "useBilling",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin role required",
+            "description": "Get all addons including inactive ones (admin only)"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DashboardPageLayout",
+            "file_path": "components/layouts/DashboardPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "CurrentSubscription",
+            "file_path": "components/features/billing/CurrentSubscription.tsx"
+          },
+          {
+            "name": "SubscriptionPlans",
+            "file_path": "components/features/billing/SubscriptionPlans.tsx"
+          },
+          {
+            "name": "AddonPackages",
+            "file_path": "components/features/billing/AddonPackages.tsx"
+          },
+          {
+            "name": "AdminBillingView",
+            "file_path": "components/features/billing/AdminBillingView.tsx"
+          },
+          {
+            "name": "PaymentMethodCard",
+            "file_path": "components/features/billing/PaymentMethodCard.tsx"
+          },
+          {
+            "name": "InvoiceHistory",
+            "file_path": "components/features/billing/InvoiceHistory.tsx"
+          },
+          {
+            "name": "PaymentModal",
+            "file_path": "components/features/billing/PaymentModal.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "billing_success_page",
+      "page_type": "dashboard",
+      "route": "/billing/success",
+      "status": "published",
+      "page_state": "published",
+      "_id": "billing_success_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/billing/success",
+        "file_path": "contact360/dashboard/app/(dashboard)/billing/success/page.tsx",
+        "purpose": "Billing success page displayed after successful payment or subscription. Shows confirmation message and redirects to billing page.",
+        "s3_key": "data/pages/billing_success_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "BillingSuccess",
+            "file_path": "components/features/billing/BillingSuccess.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "careers_page",
+      "page_type": "marketing",
+      "route": "/careers",
+      "status": "published",
+      "page_state": "published",
+      "_id": "careers_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/careers",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Careers page displaying job openings and company culture information. Help us build the future of B2B intelligence.",
+        "s3_key": "data/pages/careers_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "CareersPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "chrome_extension_page",
+      "page_type": "marketing",
+      "route": "/chrome-extension",
+      "status": "published",
+      "page_state": "published",
+      "_id": "chrome_extension_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/chrome-extension",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Chrome extension information page displaying features, installation instructions, and benefits. Find emails on LinkedIn and company websites with one click.",
+        "s3_key": "data/pages/chrome_extension_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ChromeExtensionPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "companies_id_page",
+      "page_type": "dashboard",
+      "route": "/companies/[id]",
+      "status": "published",
+      "page_state": "published",
+      "_id": "companies_id_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/companies/[id]",
+        "file_path": "contact360/dashboard/app/(dashboard)/companies/[id]/page.tsx",
+        "purpose": "Company detail page displaying individual company information, contacts, and related data.",
+        "s3_key": "data/pages/companies_id_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 2,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetCompany",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "companiesService",
+            "via_hook": "useCompanyDetail",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get detailed information for a specific company by UUID"
+          },
+          {
+            "endpoint_path": "graphql/GetCompanyContacts",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "companiesService",
+            "via_hook": "useCompanyContacts",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get contacts belonging to a specific company with VQL filtering and pagination"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "CompanyDetail",
+            "file_path": "components/features/companies/CompanyDetail.tsx"
+          },
+          {
+            "name": "CompanyContactsList",
+            "file_path": "components/features/companies/CompanyContactsList.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "companies_page",
+      "page_type": "dashboard",
+      "route": "/companies",
+      "status": "published",
+      "page_state": "published",
+      "_id": "companies_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/companies",
+        "file_path": "contact360/dashboard/app/(dashboard)/companies/page.tsx",
+        "purpose": "Company listing and management page with filtering, search, bulk operations, pagination, and AI-powered company summaries.",
+        "s3_key": "data/pages/companies_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 4,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/QueryCompanies",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "companiesService",
+            "via_hook": "useCompaniesPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Query companies with VQL filtering, pagination, and sorting. Batched with filter definitions in useCompaniesPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetCompanyFilters",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "companiesService",
+            "via_hook": "useCompaniesPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get available filter definitions for companies. Batched with company data in useCompaniesPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetCompany",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "companiesService",
+            "via_hook": "useCompanySummary",
+            "usage_type": "secondary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get single company details for AI summary generation"
+          },
+          {
+            "endpoint_path": "graphql/CreateCompanyExport",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useCompanyExport",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Create a CSV export of selected companies"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DataPageLayout",
+            "file_path": "components/layouts/DataPageLayout.tsx"
+          },
+          {
+            "name": "CompaniesFilterSidebar",
+            "file_path": "components/features/companies/CompaniesFilterSidebar.tsx"
+          },
+          {
+            "name": "CompaniesDataDisplay",
+            "file_path": "components/features/companies/CompaniesDataDisplay.tsx"
+          },
+          {
+            "name": "CompaniesModals",
+            "file_path": "components/features/companies/CompaniesModals.tsx"
+          },
+          {
+            "name": "DataToolbar",
+            "file_path": "components/patterns/DataToolbar.tsx"
+          },
+          {
+            "name": "Pagination",
+            "file_path": "components/patterns/Pagination.tsx"
+          },
+          {
+            "name": "ExportConfirmModal",
+            "file_path": "components/features/export/ExportConfirmModal.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "contacts_page",
+      "page_type": "dashboard",
+      "route": "/contacts",
+      "status": "published",
+      "page_state": "published",
+      "_id": "contacts_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/contacts",
+        "file_path": "contact360/dashboard/app/(dashboard)/contacts/page.tsx",
+        "purpose": "Contact listing and management page with advanced filtering, search, VQL query builder, saved searches, bulk operations, and pagination.",
+        "s3_key": "data/pages/contacts_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 7,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/QueryContacts",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "contactsService",
+            "via_hook": "useContactsPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Query contacts with VQL filtering, pagination, and sorting. Batched with count and saved searches in useContactsPage hook."
+          },
+          {
+            "endpoint_path": "graphql/CountContacts",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "contactsService",
+            "via_hook": "useContactsPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get total contact count with filters applied. Batched with contact data in useContactsPage hook."
+          },
+          {
+            "endpoint_path": "graphql/ListSavedSearches",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "savedSearchesService",
+            "via_hook": "useContactsPage",
+            "usage_type": "secondary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List saved searches for contacts. Batched with contact data in useContactsPage hook."
+          },
+          {
+            "endpoint_path": "graphql/CreateSavedSearch",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "savedSearchesService",
+            "via_hook": "useSavedSearches",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Create a new saved search for contacts"
+          },
+          {
+            "endpoint_path": "graphql/UpdateSavedSearch",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "savedSearchesService",
+            "via_hook": "useSavedSearches",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Update an existing saved search"
+          },
+          {
+            "endpoint_path": "graphql/DeleteSavedSearch",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "savedSearchesService",
+            "via_hook": "useSavedSearches",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Delete a saved search"
+          },
+          {
+            "endpoint_path": "graphql/CreateContactExport",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useContactExport",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Create a CSV export of selected contacts"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DataPageLayout",
+            "file_path": "components/layouts/DataPageLayout.tsx"
+          },
+          {
+            "name": "ContactsFilters",
+            "file_path": "components/features/contacts/ContactsFilters.tsx"
+          },
+          {
+            "name": "ContactsTableContainer",
+            "file_path": "components/features/contacts/ContactsTableContainer.tsx"
+          },
+          {
+            "name": "ContactsModals",
+            "file_path": "components/features/contacts/ContactsModals.tsx"
+          },
+          {
+            "name": "VQLQueryBuilder",
+            "file_path": "components/features/contacts/VQLQueryBuilder.tsx"
+          },
+          {
+            "name": "SaveSearchModal",
+            "file_path": "components/features/saved-searches/SaveSearchModal.tsx"
+          },
+          {
+            "name": "SavedSearchesModal",
+            "file_path": "components/features/saved-searches/SavedSearchesModal.tsx"
+          },
+          {
+            "name": "ExportConfirmModal",
+            "file_path": "components/features/export/ExportConfirmModal.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "dashboard_page",
+      "page_type": "dashboard",
+      "route": "/dashboard",
+      "status": "published",
+      "page_state": "published",
+      "_id": "dashboard_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/dashboard",
+        "file_path": "contact360/dashboard/app/(dashboard)/dashboard/page.tsx",
+        "purpose": "Main dashboard page displaying user statistics, recent activities, pending exports, performance charts, and quick actions.",
+        "s3_key": "data/pages/dashboard_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetUserStats",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "adminService",
+            "via_hook": "useDashboardPage",
+            "usage_type": "conditional",
+            "usage_context": "analytics",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "Admin or Super Admin role required",
+            "description": "Get user statistics (total users, active users, users by role/plan). Only included if user is admin/superAdmin. Batched with activities and exports in useDashboardPage hook."
+          },
+          {
+            "endpoint_path": "graphql/GetActivities",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "activitiesService",
+            "via_hook": "useDashboardPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get recent user activities with limit. Batched with stats and exports in useDashboardPage hook."
+          },
+          {
+            "endpoint_path": "graphql/ListExports",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useDashboardPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List pending and processing exports. Filtered by status. Batched with stats and activities in useDashboardPage hook."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DashboardPageLayout",
+            "file_path": "components/layouts/DashboardPageLayout.tsx"
+          },
+          {
+            "name": "DashboardHeader",
+            "file_path": "components/features/dashboard/DashboardHeader.tsx"
+          },
+          {
+            "name": "StatsGrid",
+            "file_path": "components/shared/StatsGrid.tsx"
+          },
+          {
+            "name": "DashboardPerformanceChart",
+            "file_path": "components/features/dashboard/DashboardPerformanceChart.tsx"
+          },
+          {
+            "name": "DashboardActivityFeed",
+            "file_path": "components/features/dashboard/DashboardActivityFeed.tsx"
+          },
+          {
+            "name": "DashboardQuickActions",
+            "file_path": "components/features/dashboard/DashboardQuickActions.tsx"
+          },
+          {
+            "name": "DashboardPendingExports",
+            "file_path": "components/features/dashboard/DashboardPendingExports.tsx"
+          },
+          {
+            "name": "DashboardUpgradeBanner",
+            "file_path": "components/features/dashboard/DashboardUpgradeBanner.tsx"
+          },
+          {
+            "name": "UsageOverview",
+            "file_path": "components/features/usage/UsageOverview.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "dashboard_pageid_page",
+      "page_type": "dashboard",
+      "route": "/dashboard/[pageId]",
+      "status": "published",
+      "page_state": "published",
+      "_id": "dashboard_pageid_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/dashboard/[pageId]",
+        "file_path": "contact360/dashboard/app/(dashboard)/dashboard/[pageId]/page.tsx",
+        "purpose": "Dynamic dashboard page displaying custom dashboard pages configured by admins. Supports custom sections and layouts.",
+        "s3_key": "data/pages/dashboard_pageid_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetDashboardPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "dashboardPagesService",
+            "via_hook": "useDashboardPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get custom dashboard page by pageId with sections, metadata, and access control"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DynamicDashboardPage",
+            "file_path": "components/features/dashboard/DynamicDashboardPage.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "export_page",
+      "page_type": "dashboard",
+      "route": "/export",
+      "status": "published",
+      "page_state": "published",
+      "_id": "export_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/export",
+        "file_path": "contact360/dashboard/app/(dashboard)/export/page.tsx",
+        "purpose": "Export management page for viewing, downloading, canceling, and deleting export jobs. Includes S3 file browser for super admins.",
+        "s3_key": "data/pages/export_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/ListExports",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useExportPage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List all exports with pagination and optional status filter. Auto-refreshes every 3 seconds for pending/processing exports."
+          },
+          {
+            "endpoint_path": "graphql/GetExport",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useExportManager",
+            "usage_type": "secondary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get details of a specific export"
+          },
+          {
+            "endpoint_path": "graphql/CancelExport",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "exportsService",
+            "via_hook": "useExportManager",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Cancel a pending or processing export"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ToolPageLayout",
+            "file_path": "components/layouts/ToolPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "ExportFilters",
+            "file_path": "components/features/export/ExportFilters.tsx"
+          },
+          {
+            "name": "ExportListTable",
+            "file_path": "components/features/export/ExportListTable.tsx"
+          },
+          {
+            "name": "ExportDeleteModal",
+            "file_path": "components/features/export/ExportDeleteModal.tsx"
+          },
+          {
+            "name": "ExportMessages",
+            "file_path": "components/features/export/ExportMessages.tsx"
+          },
+          {
+            "name": "S3FileBrowser",
+            "file_path": "components/features/export/S3FileBrowser.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "finder_page",
+      "page_type": "dashboard",
+      "route": "/app",
+      "status": "published",
+      "page_state": "published",
+      "_id": "finder_page-001",
+      "created_at": "2025-01-27T12:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/app",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/EmailFinderTool.tsx",
+        "purpose": "Email Finder tool page for finding verified email addresses using first name, last name, and company domain. Main application dashboard with sidebar navigation.",
+        "s3_key": "data/pages/finder_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by AuthGuard)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 2,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/FindSingleEmail",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "emailService",
+            "via_hook": null,
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get a single email address for a contact using first name, last name, and company domain. Main API call for Email Finder functionality."
+          },
+          {
+            "endpoint_path": "graphql/VerifyAndFind",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "emailService",
+            "via_hook": null,
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Verify and find the first valid email with verification. Alternative endpoint for enhanced email finding."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "EmailFinderTool",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/EmailFinderTool.tsx"
+          },
+          {
+            "name": "EmailFinderView",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/EmailFinderTool.tsx"
+          },
+          {
+            "name": "DataSearch",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/app/DataSearch.tsx"
+          },
+          {
+            "name": "IconGenerator",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/app/IconGenerator.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "integrations_page",
+      "page_type": "marketing",
+      "route": "/integrations",
+      "status": "published",
+      "page_state": "published",
+      "_id": "integrations_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/integrations",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Integrations page displaying partner integrations and API connections. Connect Contact360 with your favorite tools.",
+        "s3_key": "data/pages/integrations_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "IntegrationsPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "landing_page",
+      "page_type": "marketing",
+      "route": "/",
+      "status": "published",
+      "page_state": "published",
+      "_id": "landing_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/App.tsx",
+        "purpose": "Landing page with hero section, features showcase, product demonstrations, pricing tiers, and footer. The world's most accurate B2B data platform with 200M+ verified contacts.",
+        "s3_key": "data/pages/landing_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "Navbar",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Navbar.tsx"
+          },
+          {
+            "name": "Hero",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Hero.tsx"
+          },
+          {
+            "name": "Features",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Features.tsx"
+          },
+          {
+            "name": "ProductShowcase",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/ProductShowcase.tsx"
+          },
+          {
+            "name": "Pricing",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Pricing.tsx"
+          },
+          {
+            "name": "Footer",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/Footer.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "linkedin_page",
+      "page_type": "dashboard",
+      "route": "/linkedin",
+      "status": "published",
+      "page_state": "published",
+      "_id": "linkedin_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/linkedin",
+        "file_path": "contact360/dashboard/app/(dashboard)/linkedin/page.tsx",
+        "purpose": "LinkedIn data extraction page with search, CSV upload, and URL paste functionality for enriching contact data.",
+        "s3_key": "data/pages/linkedin_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/SearchLinkedIn",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "linkedinService",
+            "via_hook": "useLinkedIn",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Search LinkedIn profiles and extract contact data"
+          },
+          {
+            "endpoint_path": "graphql/UpsertByLinkedInUrl",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "linkedinService",
+            "via_hook": "useLinkedIn",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Extract and upsert contact data from LinkedIn URLs"
+          },
+          {
+            "endpoint_path": "graphql/ExportLinkedIn",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "linkedinService",
+            "via_hook": "useLinkedIn",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Export LinkedIn extracted data"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ToolPageLayout",
+            "file_path": "components/layouts/ToolPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "UsageCounter",
+            "file_path": "components/shared/UsageCounter.tsx"
+          },
+          {
+            "name": "LinkedInSearchTab",
+            "file_path": "components/features/linkedin/LinkedInSearchTab.tsx"
+          },
+          {
+            "name": "LinkedInUploadTab",
+            "file_path": "components/features/linkedin/LinkedInUploadTab.tsx"
+          },
+          {
+            "name": "LinkedInPasteTab",
+            "file_path": "components/features/linkedin/LinkedInPasteTab.tsx"
+          },
+          {
+            "name": "LinkedInHeader",
+            "file_path": "components/features/linkedin/LinkedInHeader.tsx"
+          },
+          {
+            "name": "LinkedInTabNavigation",
+            "file_path": "components/features/linkedin/LinkedInTabNavigation.tsx"
+          },
+          {
+            "name": "LinkedInCsvMappingModal",
+            "file_path": "components/features/linkedin/LinkedInCsvMappingModal.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "login_page",
+      "page_type": "docs",
+      "route": "/login",
+      "status": "published",
+      "page_state": "published",
+      "_id": "login_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/login",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/auth/Login.tsx",
+        "purpose": "User login page with email/password authentication. Welcome back page to sign in to access verified data.",
+        "s3_key": "data/pages/login_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 2,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/Login",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "authService",
+            "via_hook": "useAuth",
+            "usage_type": "primary",
+            "usage_context": "authentication",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Authenticate user with email and password. Returns access token and refresh token."
+          },
+          {
+            "endpoint_path": "graphql/GetSession",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "authService",
+            "via_hook": "useAuth",
+            "usage_type": "secondary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get current session information after login"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "Login",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/auth/Login.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "privacy_page",
+      "page_type": "marketing",
+      "route": "/privacy",
+      "status": "published",
+      "page_state": "published",
+      "_id": "privacy_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/privacy",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Privacy policy page displaying data protection and privacy information, GDPR compliance, and user rights.",
+        "s3_key": "data/pages/privacy_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "LegalPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_ai_email_writer_page",
+      "page_type": "marketing",
+      "route": "/products/ai-email-writer",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_ai_email_writer_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/ai-email-writer",
+        "file_path": "contact360/marketing/app/(marketing)/products/ai-email-writer/page.tsx",
+        "purpose": "AI Email Writer product page displaying features, benefits, workflow, integrations, and social proof.",
+        "s3_key": "data/pages/products_ai_email_writer_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "PersonalizationEngineAnimation",
+            "file_path": "components/landing/animations/PersonalizationEngineAnimation.tsx"
+          },
+          {
+            "name": "FunnelImpact",
+            "file_path": "components/landing/sections/ai-writer/FunnelImpact.tsx"
+          },
+          {
+            "name": "WriterWorkflow",
+            "file_path": "components/landing/sections/ai-writer/WriterWorkflow.tsx"
+          },
+          {
+            "name": "BeforeAfterComparison",
+            "file_path": "components/landing/sections/ai-writer/BeforeAfterComparison.tsx"
+          },
+          {
+            "name": "WriterIntegrations",
+            "file_path": "components/landing/sections/ai-writer/WriterIntegrations.tsx"
+          },
+          {
+            "name": "WriterSocialProof",
+            "file_path": "components/landing/sections/ai-writer/WriterSocialProof.tsx"
+          },
+          {
+            "name": "AiBenefits",
+            "file_path": "components/landing/sections/ai-writer/AiBenefits.tsx"
+          },
+          {
+            "name": "WriterFAQ",
+            "file_path": "components/landing/sections/ai-writer/WriterFAQ.tsx"
+          },
+          {
+            "name": "AIWriterCTASection",
+            "file_path": "components/marketing/AIWriterCTASection.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_cfo_email_list_page",
+      "page_type": "marketing",
+      "route": "/products/cfo-email-list",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_cfo_email_list_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/cfo-email-list",
+        "file_path": "contact360/marketing/app/(marketing)/products/cfo-email-list/page.tsx",
+        "purpose": "CFO Email List product page displaying features, hero stats, hero table, sections, and metadata.",
+        "s3_key": "data/pages/products_cfo_email_list_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "CFOEmailListPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_chrome_extension_page",
+      "page_type": "marketing",
+      "route": "/products/chrome-extension",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_chrome_extension_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/chrome-extension",
+        "file_path": "contact360/marketing/app/(marketing)/products/chrome-extension/page.tsx",
+        "purpose": "Chrome Extension product page displaying features, installation instructions, and benefits.",
+        "s3_key": "data/pages/products_chrome_extension_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "ChromeExtensionPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_email_finder_page",
+      "page_type": "marketing",
+      "route": "/products/email-finder",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_email_finder_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/email-finder",
+        "file_path": "contact360/marketing/app/(marketing)/products/email-finder/page.tsx",
+        "purpose": "Email Finder product page displaying features, benefits, and use cases.",
+        "s3_key": "data/pages/products_email_finder_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "EmailFinderPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_email_verifier_page",
+      "page_type": "marketing",
+      "route": "/products/email-verifier",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_email_verifier_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/email-verifier",
+        "file_path": "contact360/marketing/app/(marketing)/products/email-verifier/page.tsx",
+        "purpose": "Email Verifier product page displaying features, benefits, and verification capabilities.",
+        "s3_key": "data/pages/products_email_verifier_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "EmailVerifierPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "products_prospect_finder_page",
+      "page_type": "marketing",
+      "route": "/products/prospect-finder",
+      "status": "published",
+      "page_state": "published",
+      "_id": "products_prospect_finder_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/products/prospect-finder",
+        "file_path": "contact360/marketing/app/(marketing)/products/prospect-finder/page.tsx",
+        "purpose": "Prospect Finder product page displaying features, benefits, and use cases.",
+        "s3_key": "data/pages/products_prospect_finder_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProductPageLayout",
+            "file_path": "components/landing/shared/ProductPageLayout.tsx"
+          },
+          {
+            "name": "MarketingPageContainer",
+            "file_path": "components/marketing/MarketingPageContainer.tsx"
+          },
+          {
+            "name": "ProspectFinderPage",
+            "file_path": "components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "profile_page",
+      "page_type": "dashboard",
+      "route": "/profile",
+      "status": "published",
+      "page_state": "published",
+      "_id": "profile_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/profile",
+        "file_path": "contact360/dashboard/app/(dashboard)/profile/page.tsx",
+        "purpose": "User profile management page with tabs for profile editing, team management, AI settings, appearance, notifications, security, API keys, and billing.",
+        "s3_key": "data/pages/profile_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 13,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMe",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "authService",
+            "via_hook": "useProfilePage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get current user profile information. Batched with API keys, sessions, team, and 2FA status in useProfilePage hook."
+          },
+          {
+            "endpoint_path": "graphql/ListAPIKeys",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useProfilePage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List user API keys. Batched with profile, sessions, team, and 2FA in useProfilePage hook."
+          },
+          {
+            "endpoint_path": "graphql/ListSessions",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useProfilePage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List active user sessions. Batched with profile, API keys, team, and 2FA in useProfilePage hook."
+          },
+          {
+            "endpoint_path": "graphql/ListTeamMembers",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useProfilePage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "List team members (admin only). Batched with profile, API keys, sessions, and 2FA in useProfilePage hook."
+          },
+          {
+            "endpoint_path": "graphql/Get2FAStatus",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "twoFactorService",
+            "via_hook": "useProfilePage",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get 2FA status for current user. Batched with profile, API keys, sessions, and team in useProfilePage hook."
+          },
+          {
+            "endpoint_path": "graphql/CreateAPIKey",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useAPIKeys",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Create a new API key"
+          },
+          {
+            "endpoint_path": "graphql/DeleteAPIKey",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useAPIKeys",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Delete an API key"
+          },
+          {
+            "endpoint_path": "graphql/RevokeSession",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "profileService",
+            "via_hook": "useSessions",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Revoke a specific session"
+          },
+          {
+            "endpoint_path": "graphql/Setup2FA",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "twoFactorService",
+            "via_hook": "use2FA",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Setup 2FA for user account"
+          },
+          {
+            "endpoint_path": "graphql/Verify2FA",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "twoFactorService",
+            "via_hook": "use2FA",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Verify 2FA code"
+          },
+          {
+            "endpoint_path": "graphql/Disable2FA",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "twoFactorService",
+            "via_hook": "use2FA",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Disable 2FA for user account"
+          },
+          {
+            "endpoint_path": "graphql/UpdateProfile",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "usersService",
+            "via_hook": "useUserProfile",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Update current user's profile (jobTitle, bio, timezone, notifications)"
+          },
+          {
+            "endpoint_path": "graphql/UploadAvatar",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "usersService",
+            "via_hook": "useUserProfile",
+            "usage_type": "secondary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Upload avatar image for current user (supports base64, URL, or file path)"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "ProfileTabNavigation",
+            "file_path": "components/features/profile/ProfileTabNavigation.tsx"
+          },
+          {
+            "name": "ProfileHeader",
+            "file_path": "components/features/profile/ProfileHeader.tsx"
+          },
+          {
+            "name": "ProfileOverviewCard",
+            "file_path": "components/features/profile/ProfileOverviewCard.tsx"
+          },
+          {
+            "name": "ProfileEditForm",
+            "file_path": "components/features/profile/ProfileEditForm.tsx"
+          },
+          {
+            "name": "ProfileTeamManagement",
+            "file_path": "components/features/profile/ProfileTeamManagement.tsx"
+          },
+          {
+            "name": "ProfileAISettings",
+            "file_path": "components/features/profile/ProfileAISettings.tsx"
+          },
+          {
+            "name": "ProfileAppearance",
+            "file_path": "components/features/profile/ProfileAppearance.tsx"
+          },
+          {
+            "name": "ProfileNotifications",
+            "file_path": "components/features/profile/ProfileNotifications.tsx"
+          },
+          {
+            "name": "ProfileSecurity",
+            "file_path": "components/features/profile/ProfileSecurity.tsx"
+          },
+          {
+            "name": "ProfileAPIKeys",
+            "file_path": "components/features/profile/ProfileAPIKeys.tsx"
+          },
+          {
+            "name": "TwoFactorModal",
+            "file_path": "components/features/profile/TwoFactorModal.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "register_page",
+      "page_type": "docs",
+      "route": "/register",
+      "status": "published",
+      "page_state": "published",
+      "_id": "register_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/register",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/auth/Register.tsx",
+        "purpose": "User registration page for creating new accounts. Get 50 free credits every month.",
+        "s3_key": "data/pages/register_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/Register",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "authService",
+            "via_hook": "useAuth",
+            "usage_type": "primary",
+            "usage_context": "authentication",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Register a new user account. Returns access token and refresh token."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "Register",
+            "file_path": "components/auth/Register.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "root_page",
+      "page_type": "dashboard",
+      "route": "/",
+      "status": "published",
+      "page_state": "published",
+      "_id": "root_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/",
+        "file_path": "contact360/dashboard/app/page.tsx",
+        "purpose": "Root page that redirects authenticated users to dashboard and unauthenticated users to login.",
+        "s3_key": "data/pages/root_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (redirects based on auth status)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "RootPage",
+            "file_path": "app/page.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "settings_page",
+      "page_type": "dashboard",
+      "route": "/settings",
+      "status": "published",
+      "page_state": "published",
+      "_id": "settings_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/settings",
+        "file_path": "contact360/dashboard/app/(dashboard)/settings/page.tsx",
+        "purpose": "Settings page that redirects to profile page. Legacy route for backward compatibility.",
+        "s3_key": "data/pages/settings_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": []
+      }
+    },
+    {
+      "page_id": "terms_page",
+      "page_type": "marketing",
+      "route": "/terms",
+      "status": "published",
+      "page_state": "published",
+      "_id": "terms_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/terms",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx",
+        "purpose": "Terms of service page displaying terms and conditions, user agreements, and service usage policies.",
+        "s3_key": "data/pages/terms_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2025-01-27T12:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetMarketingPage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "marketingService",
+            "via_hook": "useMarketingPage",
+            "usage_type": "conditional",
+            "usage_context": "data_fetching",
+            "authentication": "Not required",
+            "authorization": null,
+            "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "LegalPage",
+            "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/pages/MarketingPages.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "ui_page",
+      "page_type": "marketing",
+      "route": "/ui",
+      "status": "published",
+      "page_state": "published",
+      "_id": "ui_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/ui",
+        "file_path": "contact360/marketing/app/(marketing)/ui/page.tsx",
+        "purpose": "UI showcase page displaying component library, interactive demos, and code examples for all reusable components.",
+        "s3_key": "data/pages/ui_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Not required (public page)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": [
+          {
+            "name": "ShowcaseLayout",
+            "file_path": "components/showcase/ShowcaseLayout.tsx"
+          },
+          {
+            "name": "FoundationDemos",
+            "file_path": "components/showcase/demos/FoundationDemos.tsx"
+          },
+          {
+            "name": "LayoutDemos",
+            "file_path": "components/showcase/demos/LayoutDemos.tsx"
+          },
+          {
+            "name": "CompositeDemos",
+            "file_path": "components/showcase/demos/CompositeDemos.tsx"
+          },
+          {
+            "name": "AdvancedDemos",
+            "file_path": "components/showcase/demos/AdvancedDemos.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "usage_page",
+      "page_type": "dashboard",
+      "route": "/usage",
+      "status": "published",
+      "page_state": "published",
+      "_id": "usage_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/usage",
+        "file_path": "contact360/dashboard/app/(dashboard)/usage/page.tsx",
+        "purpose": "Usage and limits page displaying feature usage statistics and remaining limits across all features in cards or table view.",
+        "s3_key": "data/pages/usage_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 1,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/GetUsage",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "usageService",
+            "via_hook": "useUsageTracking",
+            "usage_type": "primary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get usage information for all features or a specific feature. Returns used, limit, remaining, and resetAt for each feature."
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "DashboardPageLayout",
+            "file_path": "components/layouts/DashboardPageLayout.tsx"
+          },
+          {
+            "name": "PageHeader",
+            "file_path": "components/patterns/PageHeader.tsx"
+          },
+          {
+            "name": "UsageOverview",
+            "file_path": "components/features/usage/UsageOverview.tsx"
+          },
+          {
+            "name": "UsageLimitsTable",
+            "file_path": "components/features/usage/UsageLimitsTable.tsx"
+          },
+          {
+            "name": "Card3D",
+            "file_path": "components/ui/Card3D.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "verifier_page",
+      "page_type": "dashboard",
+      "route": "/verifier",
+      "status": "published",
+      "page_state": "published",
+      "_id": "verifier_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/verifier",
+        "file_path": "contact360/dashboard/app/(dashboard)/verifier/page.tsx",
+        "purpose": "Email verifier page with bulk verification, single email verification, management, and history tabs.",
+        "s3_key": "data/pages/verifier_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 3,
+        "api_versions": [
+          "graphql"
+        ],
+        "uses_endpoints": [
+          {
+            "endpoint_path": "graphql/VerifySingleEmail",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "emailService",
+            "via_hook": "useVerifier",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Verify a single email address for validity and risk"
+          },
+          {
+            "endpoint_path": "graphql/VerifyBulkEmails",
+            "method": "MUTATION",
+            "api_version": "graphql",
+            "via_service": "emailService",
+            "via_hook": "useVerifier",
+            "usage_type": "primary",
+            "usage_context": "data_mutation",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Verify multiple email addresses in bulk"
+          },
+          {
+            "endpoint_path": "graphql/GetActivities",
+            "method": "QUERY",
+            "api_version": "graphql",
+            "via_service": "activitiesService",
+            "via_hook": "useVerifier",
+            "usage_type": "secondary",
+            "usage_context": "data_fetching",
+            "authentication": "Bearer token (JWT)",
+            "authorization": "User role required",
+            "description": "Get verification activity history"
+          }
+        ],
+        "ui_components": [
+          {
+            "name": "VerifierHeader",
+            "file_path": "components/features/verifier/VerifierHeader.tsx"
+          },
+          {
+            "name": "VerifierTabNavigation",
+            "file_path": "components/features/verifier/VerifierTabNavigation.tsx"
+          },
+          {
+            "name": "VerifierBulkTab",
+            "file_path": "components/features/verifier/VerifierBulkTab.tsx"
+          },
+          {
+            "name": "VerifierEmailTab",
+            "file_path": "components/features/verifier/VerifierEmailTab.tsx"
+          },
+          {
+            "name": "VerifierManagementTab",
+            "file_path": "components/features/verifier/VerifierManagementTab.tsx"
+          },
+          {
+            "name": "VerifierHistoryTab",
+            "file_path": "components/features/verifier/VerifierHistoryTab.tsx"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "data_search_page",
+      "page_type": "dashboard",
+      "route": "/data-search",
+      "status": "published",
+      "page_state": "published",
+      "_id": "data_search_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/data-search",
+        "file_path": "contact360/dashboard/app/(dashboard)/data-search/page.tsx",
+        "purpose": "Unified data search interface for searching across contacts, companies, and other data entities with advanced filtering and query capabilities.",
+        "s3_key": "data/pages/data_search_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": []
+      }
+    },
+    {
+      "page_id": "docs_page",
+      "page_type": "docs",
+      "route": "/docs",
+      "status": "published",
+      "page_state": "published",
+      "_id": "docs_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/docs",
+        "file_path": "contact360/dashboard/app/(dashboard)/docs/page.tsx",
+        "purpose": "Documentation listing page displaying available documentation pages in a grid or list view with search and filtering capabilities.",
+        "s3_key": "data/pages/docs_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": []
+      }
+    },
+    {
+      "page_id": "docs_pageid_page",
+      "page_type": "docs",
+      "route": "/docs/[pageId]",
+      "status": "published",
+      "page_state": "published",
+      "_id": "docs_pageid_page-001",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "access_control": null,
+      "metadata": {
+        "route": "/docs/[pageId]",
+        "file_path": "contact360/dashboard/app/(dashboard)/docs/[pageId]/page.tsx",
+        "purpose": "Individual documentation page displaying markdown content with navigation sidebar, table of contents, and related documentation links.",
+        "s3_key": "data/pages/docs_pageid_page.json",
+        "status": "published",
+        "page_state": "published",
+        "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+        "authorization": null,
+        "last_updated": "2026-01-20T00:00:00.000000+00:00",
+        "versions": [],
+        "endpoint_count": 0,
+        "api_versions": [],
+        "uses_endpoints": [],
+        "ui_components": []
+      }
+    }
+  ],
+  "indexes": {
+    "by_type": {
+      "docs": [
+        "login_page",
+        "register_page",
+        "docs_page",
+        "docs_pageid_page",
+        "root_page"
+      ],
+      "marketing": [
+        "about_page",
+        "api_docs_page",
+        "careers_page",
+        "chrome_extension_page",
+        "integrations_page",
+        "landing_page",
+        "privacy_page",
+        "products_ai_email_writer_page",
+        "products_cfo_email_list_page",
+        "products_chrome_extension_page",
+        "products_email_finder_page",
+        "products_email_verifier_page",
+        "products_prospect_finder_page",
+        "terms_page",
+        "ui_page"
+      ],
+      "dashboard": [
+        "activities_page",
+        "admin_dashboard_pages_page",
+        "admin_dashboard_pages_pageid_page",
+        "admin_logs_page",
+        "admin_marketing_new_page",
+        "admin_marketing_page",
+        "admin_marketing_pageid_page",
+        "admin_settings_page",
+        "admin_statistics_page",
+        "admin_system_status_page",
+        "admin_user_history_page",
+        "admin_users_page",
+        "ai_chat_page",
+        "analytics_page",
+        "billing_cancel_page",
+        "billing_page",
+        "billing_success_page",
+        "companies_id_page",
+        "companies_page",
+        "contacts_page",
+        "dashboard_page",
+        "dashboard_pageid_page",
+        "export_page",
+        "finder_page",
+        "linkedin_page",
+        "profile_page",
+        "root_page",
+        "settings_page",
+        "usage_page",
+        "verifier_page"
+      ]
+    },
+    "by_route": {
+      "/about": "about_page",
+      "/activities": "activities_page",
+      "/admin/dashboard-pages": "admin_dashboard_pages_page",
+      "/admin/dashboard-pages/[pageId]": "admin_dashboard_pages_pageid_page",
+      "/admin/logs": "admin_logs_page",
+      "/admin/marketing/new": "admin_marketing_new_page",
+      "/admin/marketing": "admin_marketing_page",
+      "/admin/marketing/[pageId]": "admin_marketing_pageid_page",
+      "/admin/settings": "admin_settings_page",
+      "/admin/statistics": "admin_statistics_page",
+      "/admin/system-status": "admin_system_status_page",
+      "/admin/user-history": "admin_user_history_page",
+      "/admin/users": "admin_users_page",
+      "/ai-chat": "ai_chat_page",
+      "/analytics": "analytics_page",
+      "/api": "api_docs_page",
+      "/billing/cancel": "billing_cancel_page",
+      "/billing": "billing_page",
+      "/billing/success": "billing_success_page",
+      "/careers": "careers_page",
+      "/chrome-extension": "chrome_extension_page",
+      "/companies/[id]": "companies_id_page",
+      "/companies": "companies_page",
+      "/contacts": "contacts_page",
+      "/dashboard": "dashboard_page",
+      "/dashboard/[pageId]": "dashboard_pageid_page",
+      "/export": "export_page",
+      "/app": "finder_page",
+      "/integrations": "integrations_page",
+      "/": "root_page",
+      "/linkedin": "linkedin_page",
+      "/login": "login_page",
+      "/privacy": "privacy_page",
+      "/products/ai-email-writer": "products_ai_email_writer_page",
+      "/products/cfo-email-list": "products_cfo_email_list_page",
+      "/products/chrome-extension": "products_chrome_extension_page",
+      "/products/email-finder": "products_email_finder_page",
+      "/products/email-verifier": "products_email_verifier_page",
+      "/products/prospect-finder": "products_prospect_finder_page",
+      "/profile": "profile_page",
+      "/register": "register_page",
+      "/settings": "settings_page",
+      "/terms": "terms_page",
+      "/ui": "ui_page",
+      "/usage": "usage_page",
+      "/verifier": "verifier_page",
+      "/data-search": "data_search_page",
+      "/docs": "docs_page",
+      "/docs/[pageId]": "docs_pageid_page"
+    },
+    "by_status": {
+      "published": [
+        "about_page",
+        "activities_page",
+        "admin_dashboard_pages_page",
+        "admin_dashboard_pages_pageid_page",
+        "admin_logs_page",
+        "admin_marketing_new_page",
+        "admin_marketing_page",
+        "admin_marketing_pageid_page",
+        "admin_settings_page",
+        "admin_statistics_page",
+        "admin_system_status_page",
+        "admin_user_history_page",
+        "admin_users_page",
+        "ai_chat_page",
+        "analytics_page",
+        "api_docs_page",
+        "billing_cancel_page",
+        "billing_page",
+        "billing_success_page",
+        "careers_page",
+        "chrome_extension_page",
+        "companies_id_page",
+        "companies_page",
+        "contacts_page",
+        "dashboard_page",
+        "dashboard_pageid_page",
+        "export_page",
+        "finder_page",
+        "integrations_page",
+        "landing_page",
+        "linkedin_page",
+        "login_page",
+        "privacy_page",
+        "products_ai_email_writer_page",
+        "products_cfo_email_list_page",
+        "products_chrome_extension_page",
+        "products_email_finder_page",
+        "products_email_verifier_page",
+        "products_prospect_finder_page",
+        "profile_page",
+        "register_page",
+        "root_page",
+        "settings_page",
+        "terms_page",
+        "ui_page",
+        "usage_page",
+        "verifier_page",
+        "data_search_page"
+      ],
+      "draft": [],
+      "deleted": []
+    },
+    "by_page_state": {
+      "coming_soon": [],
+      "development": [],
+      "draft": [],
+      "test": [],
+      "published": [
+        "about_page",
+        "activities_page",
+        "admin_dashboard_pages_page",
+        "admin_dashboard_pages_pageid_page",
+        "admin_logs_page",
+        "admin_marketing_new_page",
+        "admin_marketing_page",
+        "admin_marketing_pageid_page",
+        "admin_settings_page",
+        "admin_statistics_page",
+        "admin_system_status_page",
+        "admin_user_history_page",
+        "admin_users_page",
+        "ai_chat_page",
+        "analytics_page",
+        "api_docs_page",
+        "billing_cancel_page",
+        "billing_page",
+        "billing_success_page",
+        "careers_page",
+        "chrome_extension_page",
+        "companies_id_page",
+        "companies_page",
+        "contacts_page",
+        "dashboard_page",
+        "dashboard_pageid_page",
+        "export_page",
+        "finder_page",
+        "integrations_page",
+        "landing_page",
+        "linkedin_page",
+        "login_page",
+        "privacy_page",
+        "products_ai_email_writer_page",
+        "products_cfo_email_list_page",
+        "products_chrome_extension_page",
+        "products_email_finder_page",
+        "products_email_verifier_page",
+        "products_prospect_finder_page",
+        "profile_page",
+        "register_page",
+        "root_page",
+        "settings_page",
+        "terms_page",
+        "ui_page",
+        "usage_page",
+        "verifier_page",
+        "data_search_page",
+        "docs_page",
+        "docs_pageid_page"
+      ]
+    }
+  },
+  "statistics": {
+    "total": 50,
+    "by_type": {
+      "docs": {
+        "total": 5,
+        "published": 5,
+        "draft": 0,
+        "deleted": 0
+      },
+      "marketing": {
+        "total": 15,
+        "published": 15,
+        "draft": 0,
+        "deleted": 0
+      },
+      "dashboard": {
+        "total": 31,
+        "published": 31,
+        "draft": 0,
+        "deleted": 0
+      }
+    },
+    "by_status": {
+      "published": 50,
+      "draft": 0,
+      "deleted": 0
+    },
+    "by_page_state": {
+      "coming_soon": 0,
+      "development": 0,
+      "draft": 0,
+      "test": 0,
+      "published": 50
+    }
+  }
+}

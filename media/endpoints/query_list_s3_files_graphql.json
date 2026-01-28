@@ -1,0 +1,26 @@
+{
+  "_id": "query_list_s3_files_graphql-001",
+  "endpoint_id": "query_list_s3_files_graphql",
+  "endpoint_path": "graphql/ListS3Files",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List CSV files in S3 bucket. Accepts optional prefix (String) for directory-like filtering (e.g., 'exports/', 'imports/'). Returns S3FileList with files (array of S3File with key, name, size, lastModified, contentType) and total count. Only CSV files are returned (filtered by .csv extension). Uses S3Service for file listing. Raises ServiceUnavailableError (503) if S3 service is unavailable.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/s3/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/s3Service.ts",
+  "service_methods": [
+    "s3Files"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "query ListS3Files($prefix: String) { s3 { s3Files(prefix: $prefix) { files { key name size lastModified } total } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,53 @@
+{% comment %}
+Loading State Component - Unified loading states (spinner, skeleton, progress bar).
+
+Usage:
+{% include 'components/loading-state.html' with type='spinner' size='md' %}
+{% include 'components/loading-state.html' with type='skeleton' lines=3 %}
+{% include 'components/loading-state.html' with type='progress' progress=50 %}
+
+Parameters:
+- type: Loading type (spinner, skeleton, progress) - default: spinner
+- size: Size for spinner (sm, md, lg) - default: md
+- lines: Number of skeleton lines - default: 3
+- progress: Progress percentage (0-100) - for progress bar
+- message: Loading message (optional)
+- class: Additional CSS classes (optional)
+{% endcomment %}
+
+{% load static %}
+
+{% if type == 'skeleton' %}
+    <div class="animate-pulse space-y-3 {{ class|default:'' }}">
+        {% for i in "x"|ljust:lines|default:"3" %}
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded {% if forloop.last %}w-3/4{% else %}w-full{% endif %}"></div>
+        {% endfor %}
+    </div>
+{% elif type == 'progress' %}
+    <div class="w-full {{ class|default:'' }}">
+        {% if message %}
+        <div class="mb-2 text-sm text-gray-600 dark:text-gray-400">{{ message }}</div>
+        {% endif %}
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                 style="width: {{ progress|default:0 }}%"></div>
+        </div>
+        {% if progress %}
+        <div class="mt-1 text-xs text-gray-500 dark:text-gray-400 text-right">{{ progress }}%</div>
+        {% endif %}
+    </div>
+{% else %}
+    {# Spinner #}
+    <div class="flex flex-col items-center justify-center {{ class|default:'' }}">
+        {% if size == 'sm' %}
+            <div class="animate-spin rounded-full h-4 w-4 border-2 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400"></div>
+        {% elif size == 'lg' %}
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400"></div>
+        {% else %}
+            <div class="animate-spin rounded-full h-8 w-8 border-4 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400"></div>
+        {% endif %}
+        {% if message %}
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ message }}</p>
+        {% endif %}
+    </div>
+{% endif %}

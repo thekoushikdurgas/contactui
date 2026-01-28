@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_create_export_job_graphql-001",
+  "endpoint_id": "mutation_create_export_job_graphql",
+  "endpoint_path": "graphql/CreateExportJob",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a CSV export job with VQL query. Accepts CreateExportJobInput with service (required, enum: contact, company), vql (required, VQLQueryInput with selectColumns, optional where, orderBy, limit), s3Bucket (optional, String), retryCount (optional, Int). Uses build_export_vql_query to build VQL query, validates via validate_export_job_data, creates job via ConnectraClient with job_type 'export_csv_file'. Returns Job with uuid, jobType, status, data, createdAt. Export creates UserExport record (non-blocking). Raises ValidationError (422) if VQL query invalid.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/jobs/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/jobsService.ts",
+  "service_methods": [
+    "createExportJob"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateExportJob($input: CreateExportJobInput!) { jobs { createExportJob(input: $input) { uuid jobType status data createdAt } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

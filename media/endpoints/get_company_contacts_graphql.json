@@ -1,0 +1,36 @@
+{
+  "_id": "get_company_contacts_graphql-001",
+  "endpoint_id": "get_company_contacts_graphql",
+  "endpoint_path": "graphql/GetCompanyContacts",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get contacts belonging to a specific company. Accepts companyId (ID!, required, valid UUID format) and optional VQLQueryInput with filters, sort, pagination, fields. Returns ContactConnection with items (array of Contact), total count, limit, offset, hasNext, hasPrevious. Automatically filters contacts by company_id. Uses Connectra service for data retrieval. Raises NotFoundError (404) if company doesn't exist.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/companies/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/companiesService.ts",
+  "service_methods": [
+    "companyContacts"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/companies/[id]",
+      "page_title": "Companies Id Page",
+      "via_service": "companiesService",
+      "via_hook": "useCompanyContacts",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetCompanyContacts($companyId: ID!, $input: VQLQueryInput) { companies { companyContacts(companyId: $companyId, input: $input) { items { id firstName lastName email jobTitle } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

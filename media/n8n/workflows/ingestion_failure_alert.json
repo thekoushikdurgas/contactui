@@ -1,0 +1,150 @@
+{
+  "name": "Ingestion Failure Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Ingestion Failure Alerts via Webhook\n\nThis workflow:\n1. Receives error details via webhook\n2. Formats error message\n3. Sends to Slack #alerts channel\n4. Sends email to admin\n5. Logs to error tracking system",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ingestion-failure-alert",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#alerts",
+        "text": "❌ Ingestion Failure\n\nJob ID: {{$json.job_id || 'N/A'}}\nFile: {{$json.file_path || $json.object_key || 'N/A'}}\nError: {{$json.error || $json.message}}\nTimestamp: {{$now}}",
+        "otherOptions": {}
+      },
+      "id": "slack-alert-1",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$env.ADMIN_EMAIL}}",
+        "subject": "Ingestion Failure Alert - {{$now.toFormat('yyyy-MM-dd HH:mm:ss')}}",
+        "emailType": "html",
+        "message": "<h2>Ingestion Failure Alert</h2><p><strong>Job ID:</strong> {{$json.job_id || 'N/A'}}</p><p><strong>File:</strong> {{$json.file_path || $json.object_key || 'N/A'}}</p><p><strong>Error:</strong> {{$json.error || $json.message}}</p><p><strong>Timestamp:</strong> {{$now}}</p>",
+        "options": {}
+      },
+      "id": "send-email-1",
+      "name": "Send Email to Admin",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        50,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "error_logs",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{$json.job_id}}",
+            "error_type": "ingestion",
+            "error_message": "={{$json.error || $json.message}}",
+            "file_path": "={{$json.file_path || $json.object_key}}",
+            "created_at": "={{$now}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-postgres-1",
+      "name": "Log to Error Tracking",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        230,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email to Admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log to Error Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "ingestion_failure_alert"
+}

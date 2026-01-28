@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_session_graphql-001",
+  "endpoint_id": "query_get_session_graphql",
+  "endpoint_path": "graphql/GetSession",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get current session information. Returns user UUID, email, authentication status, and last sign-in timestamp. Used by useSessionGuard hook for session validation across protected pages.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/auth/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/authService.ts",
+  "service_methods": [
+    "getSession"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/login",
+      "page_title": "Login Page",
+      "via_service": "authService",
+      "via_hook": "useAuth",
+      "usage_type": "secondary",
+      "usage_context": "data_fetching",
+      "updated_at": "2025-01-27T12:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,241 @@
+{
+  "name": "Data Search",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Vector DB Search Functionality\n\nThis workflow:\n1. Accepts search query via webhook\n2. Generates embeddings (OpenAI/Cohere)\n3. Queries vector DB (Pinecone/Weaviate)\n4. Retrieves relevant company/contact records\n5. Returns formatted results\n6. Logs search to analytics",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "data-search",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "embeddings-1",
+      "name": "Generate Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "company_contact_data",
+          "mode": "list"
+        }
+      },
+      "id": "vector-query-1",
+      "name": "Query Vector DB",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1,
+      "position": [
+        50,
+        0
+      ],
+      "credentials": {
+        "pineconeApi": {
+          "id": "PINECONE_API",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT uuid, name, company_linkedin_url FROM companies WHERE uuid = ANY($1::uuid[]) UNION ALL SELECT uuid, CONCAT(first_name, ' ', last_name) as name, contact_linkedin_url FROM contacts WHERE uuid = ANY($1::uuid[])",
+        "options": {}
+      },
+      "id": "fetch-records-1",
+      "name": "Fetch Records from PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        230,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format search results\nconst query = $('Webhook Trigger').item.json.body.query || $('Webhook Trigger').item.json.query;\nconst results = $input.all();\n\nreturn {\n  json: {\n    query,\n    results: results.map(item => item.json),\n    count: results.length,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "format-results-1",
+      "name": "Format Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "search_analytics",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{$('Format Results').item.json.query}}",
+            "result_count": "={{$('Format Results').item.json.count}}",
+            "created_at": "={{$now}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-analytics-1",
+      "name": "Log Search to Analytics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        590,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$('Format Results').item.json}}",
+        "options": {}
+      },
+      "id": "respond-webhook-1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        770,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Query Vector DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Vector DB": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Fetch Records from PostgreSQL",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Records from PostgreSQL": {
+      "main": [
+        [
+          {
+            "node": "Format Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Results": {
+      "main": [
+        [
+          {
+            "node": "Log Search to Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Search to Analytics": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "data_search"
+}

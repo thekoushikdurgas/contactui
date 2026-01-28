@@ -1,0 +1,65 @@
+{% comment %}
+Skeleton Loader Component
+
+Usage:
+{% include 'components/skeleton_loader.html' with type='card' count=3 %}
+
+Parameters:
+- type: Skeleton type (card, list, table, text, avatar, button) - default: card
+- count: Number of skeleton items - default: 1
+- class: Additional CSS classes (optional)
+{% endcomment %}
+
+{% load static %}
+
+<div class="skeleton-container {{ class|default:'' }}">
+    {% if type == 'card' %}
+        {% for i in ''|make_list|slice:":count" %}
+        <div class="skeleton-card">
+            <div class="skeleton-line skeleton-line-title"></div>
+            <div class="skeleton-line skeleton-line-text"></div>
+            <div class="skeleton-line skeleton-line-text skeleton-line-short"></div>
+        </div>
+        {% endfor %}
+    {% elif type == 'list' %}
+        {% for i in ''|make_list|slice:":count" %}
+        <div class="skeleton-list-item">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-line skeleton-line-title"></div>
+                <div class="skeleton-line skeleton-line-text"></div>
+            </div>
+        </div>
+        {% endfor %}
+    {% elif type == 'table' %}
+        <div class="skeleton-table">
+            <div class="skeleton-table-header">
+                {% for i in ''|make_list|slice:":3" %}
+                <div class="skeleton-line skeleton-line-title"></div>
+                {% endfor %}
+            </div>
+            {% for i in ''|make_list|slice:":count" %}
+            <div class="skeleton-table-row">
+                {% for j in ''|make_list|slice:":3" %}
+                <div class="skeleton-line skeleton-line-text"></div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    {% elif type == 'text' %}
+        {% for i in ''|make_list|slice:":count" %}
+        <div class="skeleton-line {% if forloop.first %}skeleton-line-title{% else %}skeleton-line-text{% endif %} {% if forloop.last %}skeleton-line-short{% endif %}"></div>
+        {% endfor %}
+    {% elif type == 'avatar' %}
+        <div class="skeleton-avatar"></div>
+    {% elif type == 'button' %}
+        <div class="skeleton-button"></div>
+    {% else %}
+        {# Default card skeleton #}
+        <div class="skeleton-card">
+            <div class="skeleton-line skeleton-line-title"></div>
+            <div class="skeleton-line skeleton-line-text"></div>
+            <div class="skeleton-line skeleton-line-text skeleton-line-short"></div>
+        </div>
+    {% endif %}
+</div>

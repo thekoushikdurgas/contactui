@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_generate_company_summary_graphql-001",
+  "endpoint_id": "mutation_generate_company_summary_graphql",
+  "endpoint_path": "graphql/GenerateCompanySummary",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Generate an AI-powered company summary. Accepts GenerateCompanySummaryInput with companyName (required, String, max 255 chars) and industry (required, String, max 255 chars). Returns CompanySummaryResponse with summary (String, comprehensive AI-generated company overview including business description, market position, key products/services, and industry context). Uses LambdaAIClient with Google Gemini AI. Activity logged (non-blocking). Raises ValidationError (422) if inputs exceed max length.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "generateCompanySummary"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation GenerateCompanySummary($input: GenerateCompanySummaryInput!) { aiChats { generateCompanySummary(input: $input) { summary } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

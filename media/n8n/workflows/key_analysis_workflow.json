@@ -1,0 +1,828 @@
+{
+  "name": "Key Analysis Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Comprehensive Data Analysis Workflow\n\nThis workflow implements the complete analysis pipeline:\n1. Queries database in batches\n2. Categorizes records (valid/invalid/needs cleaning)\n3. Collects statistics and patterns\n4. Generates reports (text/CSV/JSON)\n5. Exports reports to multiple destinations",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "key-analysis",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize analysis\nconst body = $input.item.json.body || $input.item.json;\nconst analysisType = body.analysis_type || 'comprehensive';\nconst batchSize = body.batch_size || 1000;\n\nreturn {\n  json: {\n    analysis_type: analysisType,\n    batch_size: batchSize,\n    stats: {\n      company_names: {\n        total: 0,\n        valid: 0,\n        invalid: 0,\n        needs_cleaning: 0,\n        null_or_empty: 0\n      },\n      keywords: {\n        total_keywords: 0,\n        valid_keywords: 0,\n        invalid_keywords: 0,\n        needs_cleaning: 0\n      },\n      titles: {\n        total_contacts: 0,\n        valid: 0,\n        invalid: 0,\n        needs_cleaning: 0,\n        null_or_empty: 0\n      }\n    },\n    examples: {\n      invalid_names: [],\n      encoding_issues: [],\n      placeholder_examples: []\n    }\n  }\n};"
+      },
+      "id": "initialize-analysis-1",
+      "name": "Initialize Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, name FROM companies ORDER BY id",
+        "options": {}
+      },
+      "id": "query-companies-1",
+      "name": "Query Companies",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        50,
+        -100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, keywords FROM companies WHERE keywords IS NOT NULL AND array_length(keywords, 1) > 0 ORDER BY id",
+        "options": {}
+      },
+      "id": "query-keywords-1",
+      "name": "Query Keywords",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        50,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, title FROM contacts ORDER BY id",
+        "options": {}
+      },
+      "id": "query-titles-1",
+      "name": "Query Titles",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        50,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1000,
+        "options": {}
+      },
+      "id": "split-companies-1",
+      "name": "Split Companies in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        230,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1000,
+        "options": {}
+      },
+      "id": "split-keywords-1",
+      "name": "Split Keywords in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1000,
+        "options": {}
+      },
+      "id": "split-titles-1",
+      "name": "Split Titles in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        230,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/company-names",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "company_names",
+              "value": "={{$input.all().map(i => ({ id: i.json.id, name: i.json.name }))}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "analyze-company-names-1",
+      "name": "Analyze Company Names",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        410,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/keywords",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keywords",
+              "value": "={{$input.all().map(i => ({ id: i.json.id, keywords: i.json.keywords }))}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "analyze-keywords-1",
+      "name": "Analyze Keywords",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/titles",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "titles",
+              "value": "={{$input.all().map(i => ({ id: i.json.id, title: i.json.title }))}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "analyze-titles-1",
+      "name": "Analyze Titles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        410,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Categorize company names\nconst results = $input.item.json.analyses || [];\nconst categorized = [];\n\nfor (const analysis of results) {\n  const category = analysis.is_valid ? \n    (analysis.needs_cleaning ? 'needs_cleaning' : 'valid') : \n    (analysis.name === null || analysis.name === '' ? 'null_or_empty' : 'invalid');\n  \n  categorized.push({\n    json: {\n      id: analysis.id,\n      name: analysis.name,\n      category,\n      cleaned_name: analysis.cleaned_name,\n      is_valid: analysis.is_valid,\n      needs_cleaning: analysis.needs_cleaning,\n      invalid_pattern: analysis.invalid_pattern\n    }\n  });\n}\n\nreturn categorized;"
+      },
+      "id": "categorize-company-names-1",
+      "name": "Categorize Company Names",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        590,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Categorize keywords\nconst results = $input.item.json.analyses || [];\nconst categorized = [];\n\nfor (const analysis of results) {\n  for (const keywordAnalysis of analysis.keyword_analyses || []) {\n    const category = keywordAnalysis.is_valid ? \n      (keywordAnalysis.needs_cleaning ? 'needs_cleaning' : 'valid') : 'invalid';\n    \n    categorized.push({\n      json: {\n        company_id: analysis.id,\n        keyword: keywordAnalysis.keyword,\n        category,\n        cleaned_keyword: keywordAnalysis.cleaned_keyword,\n        is_valid: keywordAnalysis.is_valid,\n        needs_cleaning: keywordAnalysis.needs_cleaning\n      }\n    });\n  }\n}\n\nreturn categorized;"
+      },
+      "id": "categorize-keywords-1",
+      "name": "Categorize Keywords",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        590,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Categorize titles\nconst results = $input.item.json.analyses || [];\nconst categorized = [];\n\nfor (const analysis of results) {\n  const category = analysis.is_valid ? \n    (analysis.needs_cleaning ? 'needs_cleaning' : 'valid') : \n    (analysis.title === null || analysis.title === '' ? 'null_or_empty' : 'invalid');\n  \n  categorized.push({\n    json: {\n      id: analysis.id,\n      title: analysis.title,\n      category,\n      cleaned_title: analysis.cleaned_title,\n      is_valid: analysis.is_valid,\n      needs_cleaning: analysis.needs_cleaning\n    }\n  });\n}\n\nreturn categorized;"
+      },
+      "id": "categorize-titles-1",
+      "name": "Categorize Titles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        590,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "company_categories",
+        "options": {}
+      },
+      "id": "aggregate-companies-1",
+      "name": "Aggregate Company Categories",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        770,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "keyword_categories",
+        "options": {}
+      },
+      "id": "aggregate-keywords-1",
+      "name": "Aggregate Keyword Categories",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        770,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "title_categories",
+        "options": {}
+      },
+      "id": "aggregate-titles-1",
+      "name": "Aggregate Title Categories",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        770,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate statistics summary\nconst companyCategories = $('Aggregate Company Categories').item.json.company_categories || [];\nconst keywordCategories = $('Aggregate Keyword Categories').item.json.keyword_categories || [];\nconst titleCategories = $('Aggregate Title Categories').item.json.title_categories || [];\n\n// Count company name categories\nconst companyStats = {\n  total: companyCategories.length,\n  valid: companyCategories.filter(c => c.category === 'valid').length,\n  invalid: companyCategories.filter(c => c.category === 'invalid').length,\n  needs_cleaning: companyCategories.filter(c => c.category === 'needs_cleaning').length,\n  null_or_empty: companyCategories.filter(c => c.category === 'null_or_empty').length\n};\n\n// Count keyword categories\nconst keywordStats = {\n  total_keywords: keywordCategories.length,\n  valid_keywords: keywordCategories.filter(c => c.category === 'valid').length,\n  invalid_keywords: keywordCategories.filter(c => c.category === 'invalid').length,\n  needs_cleaning: keywordCategories.filter(c => c.category === 'needs_cleaning').length\n};\n\n// Count title categories\nconst titleStats = {\n  total_contacts: titleCategories.length,\n  valid: titleCategories.filter(c => c.category === 'valid').length,\n  invalid: titleCategories.filter(c => c.category === 'invalid').length,\n  needs_cleaning: titleCategories.filter(c => c.category === 'needs_cleaning').length,\n  null_or_empty: titleCategories.filter(c => c.category === 'null_or_empty').length\n};\n\n// Collect examples\nconst invalidNames = companyCategories.filter(c => c.category === 'invalid').slice(0, 50);\nconst encodingIssues = companyCategories.filter(c => c.invalid_pattern === 'encoding').slice(0, 20);\nconst placeholderExamples = companyCategories.filter(c => c.invalid_pattern === 'placeholder').slice(0, 20);\n\nreturn [{\n  json: {\n    statistics: {\n      company_names: companyStats,\n      keywords: keywordStats,\n      titles: titleStats\n    },\n    examples: {\n      invalid_names: invalidNames,\n      encoding_issues: encodingIssues,\n      placeholder_examples: placeholderExamples\n    },\n    timestamp: new Date().toISOString(),\n    company_categories: companyCategories,\n    keyword_categories: keywordCategories,\n    title_categories: titleCategories\n  }\n}];"
+      },
+      "id": "generate-statistics-1",
+      "name": "Generate Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        950,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate text report\nconst stats = $input.item.json.statistics;\nconst examples = $input.item.json.examples;\nconst timestamp = $input.item.json.timestamp;\n\nlet report = '='.repeat(100) + '\\n';\nreport += 'COMPREHENSIVE DATA QUALITY ANALYSIS REPORT\\n';\nreport += `Generated: ${timestamp}\\n`;\nreport += '='.repeat(100) + '\\n\\n';\n\n// Company Names Section\nreport += '='.repeat(100) + '\\n';\nreport += '1. COMPANY NAMES ANALYSIS\\n';\nreport += '='.repeat(100) + '\\n\\n';\n\nconst cn = stats.company_names;\nreport += `Total Companies:              ${cn.total.toLocaleString()}\\n`;\nreport += `  Valid Names:                ${cn.valid.toLocaleString()} (${(cn.valid/cn.total*100).toFixed(1)}%)\\n`;\nreport += `  Invalid Names:               ${cn.invalid.toLocaleString()} (${(cn.invalid/cn.total*100).toFixed(1)}%)\\n`;\nreport += `  Needs Cleaning:             ${cn.needs_cleaning.toLocaleString()} (${(cn.needs_cleaning/cn.total*100).toFixed(1)}%)\\n`;\nreport += `  NULL or Empty:              ${cn.null_or_empty.toLocaleString()} (${(cn.null_or_empty/cn.total*100).toFixed(1)}%)\\n\\n`;\n\n// Keywords Section\nreport += '='.repeat(100) + '\\n';\nreport += '2. KEYWORDS ANALYSIS\\n';\nreport += '='.repeat(100) + '\\n\\n';\n\nconst kw = stats.keywords;\nreport += `Total Keywords:               ${kw.total_keywords.toLocaleString()}\\n`;\nreport += `  Valid Keywords:             ${kw.valid_keywords.toLocaleString()} (${(kw.valid_keywords/kw.total_keywords*100).toFixed(1)}%)\\n`;\nreport += `  Invalid Keywords:           ${kw.invalid_keywords.toLocaleString()} (${(kw.invalid_keywords/kw.total_keywords*100).toFixed(1)}%)\\n`;\nreport += `  Needs Cleaning:             ${kw.needs_cleaning.toLocaleString()} (${(kw.needs_cleaning/kw.total_keywords*100).toFixed(1)}%)\\n\\n`;\n\n// Titles Section\nreport += '='.repeat(100) + '\\n';\nreport += '3. CONTACT TITLES ANALYSIS\\n';\nreport += '='.repeat(100) + '\\n\\n';\n\nconst ti = stats.titles;\nreport += `Total Contacts:               ${ti.total_contacts.toLocaleString()}\\n`;\nreport += `  Valid Titles:               ${ti.valid.toLocaleString()} (${(ti.valid/ti.total_contacts*100).toFixed(1)}%)\\n`;\nreport += `  Invalid Titles:             ${ti.invalid.toLocaleString()} (${(ti.invalid/ti.total_contacts*100).toFixed(1)}%)\\n`;\nreport += `  Needs Cleaning:             ${ti.needs_cleaning.toLocaleString()} (${(ti.needs_cleaning/ti.total_contacts*100).toFixed(1)}%)\\n`;\nreport += `  NULL or Empty:              ${ti.null_or_empty.toLocaleString()} (${(ti.null_or_empty/ti.total_contacts*100).toFixed(1)}%)\\n\\n`;\n\n// Examples Section\nif (examples.invalid_names.length > 0) {\n  report += 'INVALID NAMES (Sample):\\n';\n  report += '-'.repeat(100) + '\\n';\n  examples.invalid_names.slice(0, 20).forEach((ex, i) => {\n    report += `${i+1}. ID ${ex.id}: ${JSON.stringify(ex.name)}\\n`;\n  });\n  report += '\\n';\n}\n\nreturn [{\n  json: {\n    ...$input.item.json,\n    text_report: report\n  }\n}];"
+      },
+      "id": "generate-text-report-1",
+      "name": "Generate Text Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate CSV report\nconst stats = $input.item.json;\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\n\n// Company names CSV\nlet companyCsv = 'id,category,name,cleaned_name,is_valid,needs_cleaning\\n';\nfor (const cat of stats.company_categories || []) {\n  const row = [\n    cat.id || '',\n    cat.category || '',\n    JSON.stringify(cat.name || ''),\n    JSON.stringify(cat.cleaned_name || ''),\n    cat.is_valid ? 'true' : 'false',\n    cat.needs_cleaning ? 'true' : 'false'\n  ];\n  companyCsv += row.map(cell => {\n    const str = String(cell);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return '\"' + str.replace(/\"/g, '\"\"') + '\"';\n    }\n    return str;\n  }).join(',') + '\\n';\n}\n\n// Keywords CSV\nlet keywordCsv = 'company_id,category,keyword,cleaned_keyword,is_valid,needs_cleaning\\n';\nfor (const cat of stats.keyword_categories || []) {\n  const row = [\n    cat.company_id || '',\n    cat.category || '',\n    JSON.stringify(cat.keyword || ''),\n    JSON.stringify(cat.cleaned_keyword || ''),\n    cat.is_valid ? 'true' : 'false',\n    cat.needs_cleaning ? 'true' : 'false'\n  ];\n  keywordCsv += row.map(cell => {\n    const str = String(cell);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return '\"' + str.replace(/\"/g, '\"\"') + '\"';\n    }\n    return str;\n  }).join(',') + '\\n';\n}\n\n// Titles CSV\nlet titleCsv = 'id,category,title,cleaned_title,is_valid,needs_cleaning\\n';\nfor (const cat of stats.title_categories || []) {\n  const row = [\n    cat.id || '',\n    cat.category || '',\n    JSON.stringify(cat.title || ''),\n    JSON.stringify(cat.cleaned_title || ''),\n    cat.is_valid ? 'true' : 'false',\n    cat.needs_cleaning ? 'true' : 'false'\n  ];\n  titleCsv += row.map(cell => {\n    const str = String(cell);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return '\"' + str.replace(/\"/g, '\"\"') + '\"';\n    }\n    return str;\n  }).join(',') + '\\n';\n}\n\nreturn [{\n  json: {\n    ...stats,\n    csv_reports: {\n      company_names: companyCsv,\n      keywords: keywordCsv,\n      titles: titleCsv\n    },\n    csv_filenames: {\n      company_names: `company_names_analysis_${timestamp}.csv`,\n      keywords: `keywords_analysis_${timestamp}.csv`,\n      titles: `titles_analysis_${timestamp}.csv`\n    }\n  }\n}];"
+      },
+      "id": "generate-csv-report-1",
+      "name": "Generate CSV Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1310,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate JSON report\nconst stats = $input.item.json;\n\nconst jsonReport = {\n  timestamp: stats.timestamp,\n  statistics: stats.statistics,\n  examples: stats.examples,\n  summary: {\n    total_companies: stats.statistics.company_names.total,\n    total_keywords: stats.statistics.keywords.total_keywords,\n    total_contacts: stats.statistics.titles.total_contacts,\n    overall_quality_score: (\n      (stats.statistics.company_names.valid / stats.statistics.company_names.total * 100) +\n      (stats.statistics.keywords.valid_keywords / stats.statistics.keywords.total_keywords * 100) +\n      (stats.statistics.titles.valid / stats.statistics.titles.total_contacts * 100)\n    ) / 3\n  }\n};\n\nreturn [{\n  json: {\n    ...stats,\n    json_report: JSON.stringify(jsonReport, null, 2),\n    json_filename: `comprehensive_analysis_${new Date().toISOString().replace(/[:.]/g, '-')}.json`\n  }\n}];"
+      },
+      "id": "generate-json-report-1",
+      "name": "Generate JSON Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1490,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write text report to file\nconst report = $input.item.json.text_report;\nconst fs = require('fs');\nconst path = require('path');\n\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\nconst filename = `comprehensive_analysis_${timestamp}.txt`;\nconst reportsDir = path.join(process.cwd(), 'scripts', 'data', 'reports');\n\nif (!fs.existsSync(reportsDir)) {\n  fs.mkdirSync(reportsDir, { recursive: true });\n}\n\nconst filePath = path.join(reportsDir, filename);\nfs.writeFileSync(filePath, report, 'utf8');\n\nreturn [{\n  json: {\n    ...$input.item.json,\n    text_report_path: filePath\n  }\n}];"
+      },
+      "id": "write-text-report-1",
+      "name": "Write Text Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1670,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write CSV reports to files\nconst reports = $input.item.json.csv_reports;\nconst filenames = $input.item.json.csv_filenames;\nconst fs = require('fs');\nconst path = require('path');\n\nconst reportsDir = path.join(process.cwd(), 'scripts', 'data', 'reports');\nif (!fs.existsSync(reportsDir)) {\n  fs.mkdirSync(reportsDir, { recursive: true });\n}\n\nconst filePaths = {};\n\nif (reports.company_names) {\n  const filePath = path.join(reportsDir, filenames.company_names);\n  fs.writeFileSync(filePath, reports.company_names, 'utf8');\n  filePaths.company_names = filePath;\n}\n\nif (reports.keywords) {\n  const filePath = path.join(reportsDir, filenames.keywords);\n  fs.writeFileSync(filePath, reports.keywords, 'utf8');\n  filePaths.keywords = filePath;\n}\n\nif (reports.titles) {\n  const filePath = path.join(reportsDir, filenames.titles);\n  fs.writeFileSync(filePath, reports.titles, 'utf8');\n  filePaths.titles = filePath;\n}\n\nreturn [{\n  json: {\n    ...$input.item.json,\n    csv_report_paths: filePaths\n  }\n}];"
+      },
+      "id": "write-csv-reports-1",
+      "name": "Write CSV Reports",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1850,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write JSON report to file\nconst jsonReport = $input.item.json.json_report;\nconst filename = $input.item.json.json_filename;\nconst fs = require('fs');\nconst path = require('path');\n\nconst reportsDir = path.join(process.cwd(), 'scripts', 'data', 'reports');\nif (!fs.existsSync(reportsDir)) {\n  fs.mkdirSync(reportsDir, { recursive: true });\n}\n\nconst filePath = path.join(reportsDir, filename);\nfs.writeFileSync(filePath, jsonReport, 'utf8');\n\nreturn [{\n  json: {\n    ...$input.item.json,\n    json_report_path: filePath\n  }\n}];"
+      },
+      "id": "write-json-report-1",
+      "name": "Write JSON Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2030,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "={{$env.S3_BUCKET_NAME}}",
+        "fileName": "={{$json.json_filename}}",
+        "binaryData": false,
+        "fileContent": "={{$json.json_report}}",
+        "options": {}
+      },
+      "id": "upload-json-s3-1",
+      "name": "Upload JSON to S3",
+      "type": "n8n-nodes-base.aws",
+      "typeVersion": 1,
+      "position": [
+        2210,
+        0
+      ],
+      "credentials": {
+        "aws": {
+          "id": "AWS_CREDENTIALS",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$env.EMAIL_TO}}",
+        "subject": "Data Quality Analysis Report - {{$now.toFormat('yyyy-MM-dd')}}",
+        "emailType": "html",
+        "message": "<h2>Data Quality Analysis Report</h2><pre>{{$('Generate Text Report').item.json.text_report}}</pre><p>Reports saved to:</p><ul><li>Text: {{$('Write Text Report').item.json.text_report_path}}</li><li>CSV: {{JSON.stringify($('Write CSV Reports').item.json.csv_report_paths)}}</li><li>JSON: {{$('Write JSON Report').item.json.json_report_path}}</li></ul>",
+        "options": {}
+      },
+      "id": "send-email-report-1",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2390,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#reports",
+        "text": "📊 Data Quality Analysis Completed\n\nCompany Names:\n  Total: {{$('Generate Statistics').item.json.statistics.company_names.total}}\n  Valid: {{$('Generate Statistics').item.json.statistics.company_names.valid}}\n  Invalid: {{$('Generate Statistics').item.json.statistics.company_names.invalid}}\n\nKeywords:\n  Total: {{$('Generate Statistics').item.json.statistics.keywords.total_keywords}}\n  Valid: {{$('Generate Statistics').item.json.statistics.keywords.valid_keywords}}\n\nTitles:\n  Total: {{$('Generate Statistics').item.json.statistics.titles.total_contacts}}\n  Valid: {{$('Generate Statistics').item.json.statistics.titles.valid}}\n\nReports generated and sent via email.",
+        "otherOptions": {}
+      },
+      "id": "slack-notification-1",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2570,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Analysis": {
+      "main": [
+        [
+          {
+            "node": "Query Companies",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Keywords",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Titles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Companies": {
+      "main": [
+        [
+          {
+            "node": "Split Companies in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Keywords": {
+      "main": [
+        [
+          {
+            "node": "Split Keywords in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Titles": {
+      "main": [
+        [
+          {
+            "node": "Split Titles in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Companies in Batches": {
+      "main": [
+        [
+          {
+            "node": "Analyze Company Names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Keywords in Batches": {
+      "main": [
+        [
+          {
+            "node": "Analyze Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Titles in Batches": {
+      "main": [
+        [
+          {
+            "node": "Analyze Titles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Company Names": {
+      "main": [
+        [
+          {
+            "node": "Categorize Company Names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Keywords": {
+      "main": [
+        [
+          {
+            "node": "Categorize Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Titles": {
+      "main": [
+        [
+          {
+            "node": "Categorize Titles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Company Names": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Company Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Keywords": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Keyword Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Titles": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Title Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Company Categories": {
+      "main": [
+        [
+          {
+            "node": "Generate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Keyword Categories": {
+      "main": [
+        [
+          {
+            "node": "Generate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Title Categories": {
+      "main": [
+        [
+          {
+            "node": "Generate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Statistics": {
+      "main": [
+        [
+          {
+            "node": "Generate Text Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate CSV Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate JSON Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Text Report": {
+      "main": [
+        [
+          {
+            "node": "Write Text Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate CSV Report": {
+      "main": [
+        [
+          {
+            "node": "Write CSV Reports",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate JSON Report": {
+      "main": [
+        [
+          {
+            "node": "Write JSON Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Text Report": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write CSV Reports": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write JSON Report": {
+      "main": [
+        [
+          {
+            "node": "Upload JSON to S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload JSON to S3": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Report": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "key_analysis_workflow"
+}

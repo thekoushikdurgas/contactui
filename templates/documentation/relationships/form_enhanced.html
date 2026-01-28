@@ -1,0 +1,665 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Create{% endif %} Relationship - Documentation{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/form-responsive.css' %}?v=20260124d">
+<style>
+/* Tab button styles for link-based tabs */
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+.tab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+.tab-button.active {
+    color: #10b981;
+    border-bottom-color: #10b981;
+}
+.dark .tab-button {
+    color: #9ca3af;
+}
+.dark .tab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+.dark .tab-button.active {
+    color: #34d399;
+    border-bottom-color: #34d399;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:dashboard' %}?tab=relationships" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Relationships</a>
+        {% if is_edit and relationship.relationship_id %}
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:relationship_detail' relationship_id=relationship.relationship_id %}" class="hover:text-green-600 dark:hover:text-green-400 transition-colors truncate max-w-xs">{{ relationship.relationship_id }}</a>
+        {% endif %}
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">{% if is_edit %}Edit{% else %}Create{% endif %}</span>
+    </nav>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {% if is_edit %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                            {% if is_edit %}Edit Relationship{% else %}Create New Relationship{% endif %}
+                        </h1>
+                        {% if is_edit and relationship.relationship_id %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">{{ relationship.relationship_id }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if is_edit and relationship.relationship_id %}
+                <a href="{% url 'documentation:relationship_detail' relationship_id=relationship.relationship_id %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Cancel
+                </a>
+                {% else %}
+                <a href="{% url 'documentation:relationships_list' %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Cancel
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="p-6">
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=basic{% if return_url %}&return_url={{ return_url|urlencode }}{% endif %}" class="tab-button group {% if active_tab == 'basic' %}active{% endif %}" data-tab="basic" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Basic Info</span>
+                </a>
+                <a href="?tab=connection{% if return_url %}&return_url={{ return_url|urlencode }}{% endif %}" class="tab-button group {% if active_tab == 'connection' %}active{% endif %}" data-tab="connection" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Connection</span>
+                </a>
+                <a href="?tab=usage{% if return_url %}&return_url={{ return_url|urlencode }}{% endif %}" class="tab-button group {% if active_tab == 'usage' %}active{% endif %}" data-tab="usage" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Usage Context</span>
+                </a>
+                <a href="?tab=advanced{% if return_url %}&return_url={{ return_url|urlencode }}{% endif %}" class="tab-button group {% if active_tab == 'advanced' %}active{% endif %}" data-tab="advanced" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Advanced</span>
+                </a>
+            </nav>
+        </div>
+        
+        <form method="post" id="relationship-form" novalidate class="space-y-6">
+            {% if return_url %}
+            <input type="hidden" name="return_url" value="{{ return_url }}">
+            {% endif %}
+            {% csrf_token %}
+            <input type="hidden" id="relationship_data" name="relationship_data" value="">
+            
+            <!-- Error Messages -->
+            <div id="form-errors" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Please fix the following errors:</h3>
+                        <ul id="form-errors-list" class="list-disc list-inside text-sm text-red-700 dark:text-red-300 space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Basic Info Tab -->
+            <div class="tab-content {% if active_tab == 'basic' %}active{% endif %}" id="tab-basic" role="tabpanel">
+                <div class="space-y-6">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Basic Information</p>
+                                <p class="text-xs text-blue-700 dark:text-blue-300">Enter the core details for this relationship. The Relationship ID is required and cannot be changed after creation.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="relationship_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Relationship ID <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="relationship_id" 
+                                name="relationship_id" 
+                                value="{{ relationship.relationship_id|default:'' }}"
+                                required
+                                {% if is_edit %}readonly{% endif %}
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 {% if is_edit %}bg-gray-50 dark:bg-gray-800{% endif %} focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="page-endpoint-001"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Unique identifier for this relationship (e.g., about_page-get_company)</p>
+                        </div>
+                        
+                        <div>
+                            <label for="relationship_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Relationship Type
+                            </label>
+                            <input 
+                                type="text" 
+                                id="relationship_type" 
+                                name="relationship_type" 
+                                value="{{ relationship.relationship_type|default:'' }}"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="page-endpoint"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Type of relationship (optional)</p>
+                        </div>
+                        
+                        <div>
+                            <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                State
+                            </label>
+                            <select 
+                                id="state" 
+                                name="state"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="draft" {% if relationship.state == 'draft' or not relationship.state %}selected{% endif %}>Draft</option>
+                                <option value="development" {% if relationship.state == 'development' %}selected{% endif %}>Development</option>
+                                <option value="test" {% if relationship.state == 'test' %}selected{% endif %}>Test</option>
+                                <option value="published" {% if relationship.state == 'published' %}selected{% endif %}>Published</option>
+                                <option value="coming_soon" {% if relationship.state == 'coming_soon' %}selected{% endif %}>Coming Soon</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Current state of the relationship</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Description
+                        </label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            rows="4"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            placeholder="Describe the purpose and context of this relationship..."
+                        >{{ relationship.description|default:'' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Optional description explaining this relationship</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Connection Tab -->
+            <div class="tab-content {% if active_tab == 'connection' %}active{% endif %}" id="tab-connection" role="tabpanel">
+                <div class="space-y-6">
+                    <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-1">Connection Details</p>
+                                <p class="text-xs text-purple-700 dark:text-purple-300">Specify the page and endpoint that this relationship connects. Both are required.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="page_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Page ID <span class="text-red-500">*</span>
+                            </label>
+                            {% if available_pages %}
+                            <select 
+                                id="page_id" 
+                                name="page_id"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Select a page...</option>
+                                {% for page in available_pages %}
+                                <option value="{{ page.page_id }}" {% if relationship.page_id == page.page_id or relationship.page_path == page.page_id %}selected{% endif %}>
+                                    {{ page.page_id }} - {{ page.metadata.content_sections.title|default:"Untitled" }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input 
+                                type="text" 
+                                id="page_id" 
+                                name="page_id" 
+                                value="{{ relationship.page_id|default:'' }}"
+                                required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="about_page"
+                            />
+                            {% endif %}
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The page this relationship connects to</p>
+                        </div>
+                        
+                        <div>
+                            <label for="page_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Page Path (Legacy)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="page_path" 
+                                name="page_path" 
+                                value="{{ relationship.page_path|default:'' }}"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="/about"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Legacy field for backward compatibility</p>
+                        </div>
+                        
+                        <div>
+                            <label for="endpoint_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Endpoint ID <span class="text-red-500">*</span>
+                            </label>
+                            {% if available_endpoints %}
+                            <select 
+                                id="endpoint_id" 
+                                name="endpoint_id"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Select an endpoint...</option>
+                                {% for endpoint in available_endpoints %}
+                                <option value="{{ endpoint.endpoint_id }}" {% if relationship.endpoint_id == endpoint.endpoint_id or relationship.endpoint_path == endpoint.endpoint_id %}selected{% endif %}>
+                                    {{ endpoint.endpoint_id }} - {{ endpoint.method|default:"QUERY" }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input 
+                                type="text" 
+                                id="endpoint_id" 
+                                name="endpoint_id" 
+                                value="{{ relationship.endpoint_id|default:'' }}"
+                                required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="get_company"
+                            />
+                            {% endif %}
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The endpoint this relationship connects to</p>
+                        </div>
+                        
+                        <div>
+                            <label for="endpoint_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Endpoint Path (Legacy)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="endpoint_path" 
+                                name="endpoint_path" 
+                                value="{{ relationship.endpoint_path|default:'' }}"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="graphql/GetCompany"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Legacy field for backward compatibility</p>
+                        </div>
+                        
+                        <div>
+                            <label for="method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Method
+                            </label>
+                            <select 
+                                id="method" 
+                                name="method"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="QUERY" {% if relationship.method == 'QUERY' or not relationship.method %}selected{% endif %}>QUERY</option>
+                                <option value="MUTATION" {% if relationship.method == 'MUTATION' %}selected{% endif %}>MUTATION</option>
+                                <option value="GET" {% if relationship.method == 'GET' %}selected{% endif %}>GET</option>
+                                <option value="POST" {% if relationship.method == 'POST' %}selected{% endif %}>POST</option>
+                                <option value="PUT" {% if relationship.method == 'PUT' %}selected{% endif %}>PUT</option>
+                                <option value="PATCH" {% if relationship.method == 'PATCH' %}selected{% endif %}>PATCH</option>
+                                <option value="DELETE" {% if relationship.method == 'DELETE' %}selected{% endif %}>DELETE</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">HTTP method or GraphQL operation type</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Usage Context Tab -->
+            <div class="tab-content {% if active_tab == 'usage' %}active{% endif %}" id="tab-usage" role="tabpanel">
+                <div class="space-y-6">
+                    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm text-amber-800 dark:text-amber-200 font-medium mb-1">Usage Context</p>
+                                <p class="text-xs text-amber-700 dark:text-amber-300">Define how and where this relationship is used within the application.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="usage_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Usage Type
+                            </label>
+                            <select 
+                                id="usage_type" 
+                                name="usage_type"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="primary" {% if relationship.usage_type == 'primary' or not relationship.usage_type %}selected{% endif %}>Primary</option>
+                                <option value="secondary" {% if relationship.usage_type == 'secondary' %}selected{% endif %}>Secondary</option>
+                                <option value="conditional" {% if relationship.usage_type == 'conditional' %}selected{% endif %}>Conditional</option>
+                                <option value="lazy" {% if relationship.usage_type == 'lazy' %}selected{% endif %}>Lazy</option>
+                                <option value="prefetch" {% if relationship.usage_type == 'prefetch' %}selected{% endif %}>Prefetch</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">How this relationship is used (primary, secondary, conditional, etc.)</p>
+                        </div>
+                        
+                        <div>
+                            <label for="usage_context" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Usage Context
+                            </label>
+                            <select 
+                                id="usage_context" 
+                                name="usage_context"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Select context...</option>
+                                <option value="data_fetching" {% if relationship.usage_context == 'data_fetching' %}selected{% endif %}>Data Fetching</option>
+                                <option value="data_mutation" {% if relationship.usage_context == 'data_mutation' %}selected{% endif %}>Data Mutation</option>
+                                <option value="authentication" {% if relationship.usage_context == 'authentication' %}selected{% endif %}>Authentication</option>
+                                <option value="analytics" {% if relationship.usage_context == 'analytics' %}selected{% endif %}>Analytics</option>
+                                <option value="realtime" {% if relationship.usage_context == 'realtime' %}selected{% endif %}>Realtime</option>
+                                <option value="background" {% if relationship.usage_context == 'background' %}selected{% endif %}>Background</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Context in which this relationship is used</p>
+                        </div>
+                        
+                        <div>
+                            <label for="via_service" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Via Service
+                            </label>
+                            <input 
+                                type="text" 
+                                id="via_service" 
+                                name="via_service" 
+                                value="{{ relationship.via_service|default:'' }}"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="CompanyService"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Service layer through which this relationship is accessed</p>
+                        </div>
+                        
+                        <div>
+                            <label for="via_hook" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Via Hook
+                            </label>
+                            <input 
+                                type="text" 
+                                id="via_hook" 
+                                name="via_hook" 
+                                value="{{ relationship.via_hook|default:'' }}"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="useCompanyData"
+                            />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">React hook or function through which this relationship is accessed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Tab -->
+            <div class="tab-content {% if active_tab == 'advanced' %}active{% endif %}" id="tab-advanced" role="tabpanel">
+                <div class="space-y-6">
+                    <div class="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-800 dark:text-gray-200 font-medium mb-1">Advanced Options</p>
+                                <p class="text-xs text-gray-700 dark:text-gray-300">Additional configuration and metadata for this relationship.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Advanced fields can be added here as needed. Currently, the basic relationship structure is sufficient for most use cases.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-4">
+                    <button 
+                        type="submit"
+                        class="inline-flex items-center px-6 py-2.5 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm"
+                    >
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {% if is_edit %}Update Relationship{% else %}Create Relationship{% endif %}
+                    </button>
+                    {% if is_edit and relationship.relationship_id %}
+                    <a href="{% url 'documentation:relationship_detail' relationship_id=relationship.relationship_id %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        View Relationship
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'documentation:relationships_list' %}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                        Cancel
+                    </a>
+                </div>
+                <div id="form-status" class="text-xs text-gray-500 dark:text-gray-400"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'basic';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks - links will handle navigation
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // If it's a link, let it navigate naturally
+            if (this.tagName === 'A') {
+                return;
+            }
+            
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update URL without page reload
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'basic';
+        
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+    
+    // Form validation before submission
+    const formElement = document.getElementById('relationship-form');
+    const formErrors = document.getElementById('form-errors');
+    const formErrorsList = document.getElementById('form-errors-list');
+    
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            const errors = [];
+            
+            // Validate required fields
+            const relationshipId = document.getElementById('relationship_id').value.trim();
+            if (!relationshipId) {
+                errors.push('Relationship ID is required.');
+            }
+            
+            const pageId = document.getElementById('page_id').value.trim();
+            const pagePath = document.getElementById('page_path').value.trim();
+            if (!pageId && !pagePath) {
+                errors.push('Either Page ID or Page Path is required.');
+            }
+            
+            const endpointId = document.getElementById('endpoint_id').value.trim();
+            const endpointPath = document.getElementById('endpoint_path').value.trim();
+            if (!endpointId && !endpointPath) {
+                errors.push('Either Endpoint ID or Endpoint Path is required.');
+            }
+            
+            if (errors.length > 0) {
+                e.preventDefault();
+                formErrorsList.innerHTML = '';
+                errors.forEach(error => {
+                    const li = document.createElement('li');
+                    li.textContent = error;
+                    formErrorsList.appendChild(li);
+                });
+                formErrors.classList.remove('hidden');
+                formErrors.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return false;
+            }
+            
+            // Collect all form data
+            const relationshipData = {
+                relationship_id: relationshipId,
+                page_id: pageId || pagePath,
+                page_path: pagePath,
+                endpoint_id: endpointId || endpointPath,
+                endpoint_path: endpointPath,
+                method: document.getElementById('method').value,
+                usage_type: document.getElementById('usage_type').value,
+                usage_context: document.getElementById('usage_context').value,
+                via_service: document.getElementById('via_service').value.trim(),
+                via_hook: document.getElementById('via_hook').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                state: document.getElementById('state').value,
+                relationship_type: document.getElementById('relationship_type').value.trim(),
+            };
+            
+            // Set the hidden field with JSON data
+            document.getElementById('relationship_data').value = JSON.stringify(relationshipData);
+        });
+    }
+});
+</script>
+{% endblock %}

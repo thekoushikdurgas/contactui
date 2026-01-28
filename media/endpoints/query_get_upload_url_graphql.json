@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_upload_url_graphql-001",
+  "endpoint_id": "query_get_upload_url_graphql",
+  "endpoint_path": "graphql/GetUploadUrl",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get presigned S3 upload URL for CSV import. Accepts filename (required, non-empty string, max 255 characters). Returns UploadUrlResponse with uploadUrl (presigned S3 URL), s3Key (S3 key for uploaded file), and expiresIn (expiration time, e.g., '24h0m0s'). Uses ConnectraClient.get_upload_url. Presigned URL is used for direct S3 upload (bypasses server). Used in import workflow: get upload URL, upload CSV to S3, then create import job with the s3Key.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/jobsService.ts",
+  "service_methods": [
+    "getUploadUrl"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

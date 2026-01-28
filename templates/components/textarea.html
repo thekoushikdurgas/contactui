@@ -1,0 +1,62 @@
+{% comment %}
+Textarea Component
+
+Usage:
+{% include 'components/textarea.html' with name='description' label='Description' rows=5 %}
+
+Parameters:
+- name: Textarea name (required)
+- id: Textarea ID (defaults to name if not provided)
+- label: Label text (optional)
+- placeholder: Placeholder text (optional)
+- value: Initial value (optional)
+- rows: Number of rows - default: 4
+- cols: Number of columns (optional)
+- required: Boolean - default: false
+- disabled: Boolean - default: false
+- readonly: Boolean - default: false
+- size: Textarea size (sm, md, lg) - default: md
+- error: Error message (optional)
+- help_text: Help text (optional)
+- maxlength: Maximum length (optional)
+- class: Additional CSS classes (optional)
+- aria_label: ARIA label (optional)
+{% endcomment %}
+
+{% load static %}
+
+<div class="form-field">
+    {% if label %}
+    <label for="{{ id|default:name }}" class="form-label{% if required %} form-label-required{% endif %}">
+        {{ label }}
+    </label>
+    {% endif %}
+    
+    <div class="form-textarea-wrapper form-textarea-{{ size|default:'md' }}{% if error %} form-textarea-error{% endif %}">
+        <textarea name="{{ name }}"
+                  id="{{ id|default:name }}"
+                  class="form-textarea {{ class|default:'' }}"
+                  rows="{{ rows|default:4 }}"
+                  {% if cols %}cols="{{ cols }}"{% endif %}
+                  {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                  {% if required %}required{% endif %}
+                  {% if disabled %}disabled{% endif %}
+                  {% if readonly %}readonly{% endif %}
+                  {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
+                  {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+                  {% if error %}aria-invalid="true" aria-describedby="{{ id|default:name }}-error"{% endif %}
+                  {% if help_text %}aria-describedby="{{ id|default:name }}-help"{% endif %}>{{ value|default:'' }}</textarea>
+    </div>
+    
+    {% if error %}
+    <p id="{{ id|default:name }}-error" class="form-error" role="alert">
+        {{ error }}
+    </p>
+    {% endif %}
+    
+    {% if help_text and not error %}
+    <p id="{{ id|default:name }}-help" class="form-help">
+        {{ help_text }}
+    </p>
+    {% endif %}
+</div>

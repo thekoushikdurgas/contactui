@@ -1,0 +1,38 @@
+{
+  "_id": "query_list_saved_searches_graphql-001",
+  "endpoint_id": "query_list_saved_searches_graphql",
+  "endpoint_path": "graphql/ListSavedSearches",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List all saved searches for current user. Accepts optional SavedSearchFilterInput with searchType (enum: contacts, companies), limit (Int, default 100), offset (Int, default 0). Returns SavedSearchConnection with items (array of SavedSearch with uuid, name, description, searchType, filters, searchTerm, sort, useCount, lastUsedAt, createdAt, updatedAt), total, limit, offset, hasNext, hasPrevious. User isolation enforced at repository level.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/saved_searches/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/savedSearchesService.ts",
+  "service_methods": [
+    "savedSearches"
+  ],
+  "repository_methods": [
+    "get_saved_searches_by_user"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/contacts",
+      "page_title": "Contacts Page",
+      "via_service": "savedSearchesService",
+      "via_hook": "useContactsPage",
+      "usage_type": "secondary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query ListSavedSearches($input: SavedSearchFilterInput) { savedSearches { savedSearches(input: $input) { items { uuid name searchType useCount lastUsedAt } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_documentation_content_graphql-001",
+  "endpoint_id": "query_get_documentation_content_graphql",
+  "endpoint_path": "graphql/GetDocumentationContent",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get documentation page markdown content directly. Accepts pageId (String!, required, non-empty string, max 255 characters). Returns DocumentationPageContent with pageId and content (plain text markdown content, not presigned URL). Uses LambdaDocumentationClient.get_page_content to retrieve markdown content. Returns plain text markdown content (not presigned URL). Raises NotFoundError if page doesn't exist. Content must be a string (validated before returning). Public endpoint (no authentication required). Response is cached.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/documentationService.ts",
+  "service_methods": [
+    "fetchDocumentationContent"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

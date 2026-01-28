@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Create{% endif %} Task - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500 max-w-3xl mx-auto">
+    <div class="flex items-center gap-4">
+        <a href="{% url 'tasks:list' %}" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+        <h1 class="text-2xl font-black text-gray-900 tracking-tight">
+            {% if is_edit %}Edit Task{% else %}Create New Task{% endif %}
+        </h1>
+    </div>
+    
+    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <form method="post" class="space-y-8">
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Basic Information</h2>
+                
+                <div>
+                    <label for="title" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Title <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        value="{{ task.title|default:'' }}"
+                        required
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                        placeholder="Task title"
+                    />
+                </div>
+            
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="task_type" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            Task Type
+                        </label>
+                        <select 
+                            id="task_type" 
+                            name="task_type"
+                            class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                        >
+                            <option value="documentation_sync" {% if task.task_type == 'documentation_sync' %}selected{% endif %}>Documentation Sync</option>
+                            <option value="codebase_analysis" {% if task.task_type == 'codebase_analysis' %}selected{% endif %}>Codebase Analysis</option>
+                            <option value="ai_learning" {% if task.task_type == 'ai_learning' %}selected{% endif %}>AI Learning</option>
+                            <option value="knowledge_extraction" {% if task.task_type == 'knowledge_extraction' %}selected{% endif %}>Knowledge Extraction</option>
+                            <option value="s3_sync" {% if task.task_type == 's3_sync' %}selected{% endif %}>S3 Sync</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="priority" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            Priority
+                        </label>
+                        <select 
+                            id="priority" 
+                            name="priority"
+                            class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                        >
+                            <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Low</option>
+                            <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Medium</option>
+                            <option value="high" {% if task.priority == 'high' %}selected{% endif %}>High</option>
+                            <option value="urgent" {% if task.priority == 'urgent' %}selected{% endif %}>Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                
+                {% if is_edit %}
+                <div>
+                    <label for="status" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Status
+                    </label>
+                    <select 
+                        id="status" 
+                        name="status"
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                    >
+                        <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                        <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+                        <option value="failed" {% if task.status == 'failed' %}selected{% endif %}>Failed</option>
+                        <option value="cancelled" {% if task.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Description</h2>
+                
+                <div>
+                    <label for="description" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Description
+                    </label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        rows="8"
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium resize-none"
+                        placeholder="Task description..."
+                    >{{ task.description|default:'' }}</textarea>
+                </div>
+            </div>
+            
+            {% if not is_edit %}
+            <div>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" name="assign_to_me" checked class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Assign to me</span>
+                </label>
+            </div>
+            {% endif %}
+            
+            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
+                <a href="{% url 'tasks:list' %}" class="px-6 py-2 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all">Cancel</a>
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all"
+                >
+                    {% if is_edit %}Update Task{% else %}Create Task{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

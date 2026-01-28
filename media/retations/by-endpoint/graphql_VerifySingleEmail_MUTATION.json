@@ -1,0 +1,33 @@
+{
+  "endpoint_path": "graphql/VerifySingleEmail",
+  "method": "MUTATION",
+  "pages": [
+    {
+      "_id": "verifier_graphql_VerifySingleEmail_MUTATION",
+      "relationship_id": "verifier_graphql_VerifySingleEmail_MUTATION",
+      "state": "development",
+      "access_control": null,
+      "page_reference": null,
+      "endpoint_reference": null,
+      "connection": null,
+      "files": null,
+      "data_flow": null,
+      "postman_reference": null,
+      "dependencies": null,
+      "performance": null,
+      "metadata": null,
+      "page_path": "/verifier",
+      "endpoint_path": "graphql/VerifySingleEmail",
+      "method": "MUTATION",
+      "api_version": null,
+      "via_service": "emailService",
+      "via_hook": "useVerifier",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "created_at": "2026-01-21T13:33:51.897968+00:00",
+  "updated_at": "2026-01-21T13:33:51.897968+00:00"
+}

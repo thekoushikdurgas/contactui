@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_upload_avatar_graphql-001",
+  "endpoint_id": "mutation_upload_avatar_graphql",
+  "endpoint_path": "graphql/UploadAvatar",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Upload avatar image for current user. Accepts UploadAvatarInput with fileData (optional, base64-encoded file data OR HTTP/HTTPS URL OR file:// URL) or filePath (optional, local server path). Exactly one of fileData or filePath must be provided. Supported formats: JPEG, PNG, GIF, WebP (detected from file content using magic bytes). Max file size: 5MB. Filename is auto-generated as {user_id}.jpg. S3 key format: avatars/{user_id}/{user_id}.jpg. Returns UserProfile with updated avatarUrl (presigned URL if S3_USE_PRESIGNED_URLS enabled). Database rollback on S3 upload failure. Raises BadRequestError (400) if file type or size is invalid. Raises ServiceUnavailableError (503) if S3 service is unavailable.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/users/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usersService.ts",
+  "service_methods": [
+    "uploadAvatar"
+  ],
+  "repository_methods": [
+    "update_avatar_url"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "usersService",
+      "via_hook": "useUserProfile",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation UploadAvatar($input: UploadAvatarInput!) { users { uploadAvatar(input: $input) { userId avatarUrl jobTitle bio role credits } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,16 @@
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group">
+    <div class="flex items-start justify-between">
+        <div class="p-3 rounded-xl {{ color }} transition-transform group-hover:scale-110 duration-300">
+            {{ icon|safe }}
+        </div>
+        {% if change %}
+        <span class="text-xs font-bold px-2 py-1 rounded-full {% if trend == 'up' %}bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400{% elif trend == 'down' %}bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400{% else %}bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300{% endif %}">
+            {% if trend == 'up' %}+{% elif trend == 'down' %}-{% endif %}{{ change }}
+        </span>
+        {% endif %}
+    </div>
+    <div class="mt-4">
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ label }}</p>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{{ value }}</h3>
+    </div>
+</div>

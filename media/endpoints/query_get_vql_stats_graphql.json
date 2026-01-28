@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_vql_stats_graphql-001",
+  "endpoint_id": "query_get_vql_stats_graphql",
+  "endpoint_path": "graphql/GetVQLStats",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get VQL (Vivek Query Language) statistics and performance metrics. Returns message and note.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/healthService.ts",
+  "service_methods": [
+    "getVQLStats"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/system-status",
+      "page_title": "Admin System Status Page",
+      "via_service": "healthService",
+      "via_hook": "useSystemStatus",
+      "usage_type": "secondary",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

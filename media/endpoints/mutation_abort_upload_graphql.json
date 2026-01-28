@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_abort_upload_graphql-001",
+  "endpoint_id": "mutation_abort_upload_graphql",
+  "endpoint_path": "graphql/AbortUpload",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Abort an incomplete multipart upload and clean up resources. Accepts AbortUploadInput with uploadId (required, String). Uses S3Service.abort_multipart_upload to cancel in S3. Session deleted after abort. Returns AbortUploadResponse with status (String: 'aborted'), uploadId (String). Idempotent: returns success even if session not found. Prevents orphaned multipart uploads and associated S3 storage costs. Raises ServiceUnavailableError (503) if S3 unavailable.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/upload/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/uploadService.ts",
+  "service_methods": [
+    "abortUpload"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation AbortUpload($input: AbortUploadInput!) { upload { abortUpload(input: $input) { status uploadId } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

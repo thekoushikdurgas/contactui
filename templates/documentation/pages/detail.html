@@ -1,0 +1,846 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.metadata.content_sections.title|default:page.page_id }} - Documentation{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/form-responsive.css' %}?v=20260124d">
+<link rel="stylesheet" href="{% static 'css/components/tabs.css' %}?v=20260125">
+<style>
+/* Tab button styles for link-based tabs */
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+.tab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+.tab-button.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+.dark .tab-button {
+    color: #9ca3af;
+}
+.dark .tab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+.dark .tab-button.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:dashboard' %}?tab=pages" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pages</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium truncate max-w-xs">{{ page.metadata.content_sections.title|default:page.page_id }}</span>
+    </nav>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-start justify-between">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ page.metadata.content_sections.title|default:page.page_id }}</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-mono mt-0.5">{{ page.page_id }}</p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                            {% include 'components/badge.html' with type='status' status=page.metadata.status|default:'draft' text=page.metadata.status|default:'draft' %}
+                            {% if page.metadata.route %}
+                            {% include 'components/badge.html' with type='resource' resource_type='pages' text=page.metadata.route size='sm' %}
+                            {% endif %}
+                            {% include 'components/badge.html' with type='resource' resource_type='pages' text=page.page_type|default:'page' size='sm' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'documentation:page_edit' page_id=page.page_id %}" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm shadow-sm">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                    </a>
+                    <a href="{% url 'documentation:page_delete' page_id=page.page_id %}" class="inline-flex items-center px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                <a href="?tab=overview" class="tab-button group {% if active_tab == 'overview' %}active{% endif %}" data-tab="overview" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Overview</span>
+                </a>
+                <a href="?tab=content" class="tab-button group {% if active_tab == 'content' %}active{% endif %}" data-tab="content" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                    <span>Content</span>
+                </a>
+                <a href="?tab=relationships" class="tab-button group {% if active_tab == 'relationships' %}active{% endif %}" data-tab="relationships" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Relationships</span>
+                    {% if relationships_count %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full">{{ relationships_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="?tab=endpoints" class="tab-button group {% if active_tab == 'endpoints' %}active{% endif %}" data-tab="endpoints" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Endpoints</span>
+                    {% if endpoints_count %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full">{{ endpoints_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="?tab=components" class="tab-button group {% if active_tab == 'components' %}active{% endif %}" data-tab="components" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                    </svg>
+                    <span>Components</span>
+                    {% if page.metadata.ui_components %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full">{{ page.metadata.ui_components|length }}</span>
+                    {% endif %}
+                </a>
+                <a href="?tab=access" class="tab-button group {% if active_tab == 'access' %}active{% endif %}" data-tab="access" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Access</span>
+                </a>
+                <a href="?tab=raw" class="tab-button group {% if active_tab == 'raw' %}active{% endif %}" data-tab="raw" role="tab">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <span>Raw JSON</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="p-6">
+            <!-- Overview Tab -->
+            <div class="tab-content {% if active_tab == 'overview' %}active{% endif %}" id="tab-overview" role="tabpanel">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Basic Info -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Basic Information
+                        </h3>
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Page ID</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ page.page_id }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Title</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.content_sections.title|default:"-" }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Type</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 capitalize">{{ page.page_type|default:"page" }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Purpose</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 truncate max-w-xs" title="{{ page.metadata.purpose }}">{{ page.metadata.purpose|default:"-"|truncatechars:50 }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Status</dt>
+                                <dd>{% include 'components/badge.html' with type='status' status=page.metadata.status|default:'draft' text=page.metadata.status|default:'draft' %}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    
+                    <!-- Metadata -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                            Metadata
+                        </h3>
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Route</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ page.metadata.route|default:"/" }}</dd>
+                            </div>
+                            {% if page.metadata.description %}
+                            <div>
+                                <dt class="text-sm text-gray-500 dark:text-gray-400 mb-1">Description</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.description }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if page.metadata.version %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Version</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.version }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if page.metadata.last_imported %}
+                            <div class="flex justify-between">
+                                <dt class="text-sm text-gray-500 dark:text-gray-400">Last Imported</dt>
+                                <dd class="text-sm text-gray-900 dark:text-gray-100">{{ page.metadata.last_imported }}</dd>
+                            </div>
+                            {% endif %}
+                        </dl>
+                    </div>
+                    
+                    <!-- Statistics -->
+                    <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ page.metadata.uses_endpoints|length|default:0 }}</div>
+                            <div class="text-xs text-blue-600/70 dark:text-blue-400/70 mt-1">Endpoints</div>
+                        </div>
+                        <div class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ page.metadata.ui_components|length|default:0 }}</div>
+                            <div class="text-xs text-purple-600/70 dark:text-purple-400/70 mt-1">Components</div>
+                        </div>
+                        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ page.metadata.content_sections.value_propositions|length|default:0 }}</div>
+                            <div class="text-xs text-green-600/70 dark:text-green-400/70 mt-1">Sections</div>
+                        </div>
+                        <div class="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ page.metadata.fallback_data|length|default:0 }}</div>
+                            <div class="text-xs text-amber-600/70 dark:text-amber-400/70 mt-1">Fallbacks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Relationships Tab -->
+            <div class="tab-content {% if active_tab == 'relationships' %}active{% endif %}" id="tab-relationships" role="tabpanel">
+                {% if page_relationships %}
+                <div class="space-y-6">
+                    <!-- Primary Relationships -->
+                    {% if relationships_by_type.primary %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Primary Relationships ({{ relationships_by_type.primary|length }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for rel in relationships_by_type.primary %}
+                            <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        {% if rel.endpoint_id %}
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=rel.endpoint_id %}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400">
+                                            {{ rel.endpoint_path|default:rel.endpoint_id }}
+                                        </a>
+                                        {% else %}
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ rel.endpoint_path|default:"Unknown Endpoint" }}</span>
+                                        {% endif %}
+                                        {% if rel.method %}
+                                        <span class="px-2 py-1 text-xs font-bold rounded
+                                            {% if rel.method == 'GET' or rel.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                            {% elif rel.method == 'POST' or rel.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                            {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                            {{ rel.method }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if rel.usage_context %}
+                                <div class="flex flex-wrap gap-2 text-xs mt-2">
+                                    <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ rel.usage_context|title }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Secondary Relationships -->
+                    {% if relationships_by_type.secondary %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Secondary Relationships ({{ relationships_by_type.secondary|length }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for rel in relationships_by_type.secondary %}
+                            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        {% if rel.endpoint_id %}
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=rel.endpoint_id %}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400">
+                                            {{ rel.endpoint_path|default:rel.endpoint_id }}
+                                        </a>
+                                        {% else %}
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ rel.endpoint_path|default:"Unknown Endpoint" }}</span>
+                                        {% endif %}
+                                        {% if rel.method %}
+                                        <span class="px-2 py-1 text-xs font-bold rounded
+                                            {% if rel.method == 'GET' or rel.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                            {% elif rel.method == 'POST' or rel.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                            {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                            {{ rel.method }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if rel.usage_context %}
+                                <div class="flex flex-wrap gap-2 text-xs mt-2">
+                                    <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ rel.usage_context|title }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Conditional Relationships -->
+                    {% if relationships_by_type.conditional %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Conditional Relationships ({{ relationships_by_type.conditional|length }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for rel in relationships_by_type.conditional %}
+                            <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        {% if rel.endpoint_id %}
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=rel.endpoint_id %}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-amber-600 dark:hover:text-amber-400">
+                                            {{ rel.endpoint_path|default:rel.endpoint_id }}
+                                        </a>
+                                        {% else %}
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ rel.endpoint_path|default:"Unknown Endpoint" }}</span>
+                                        {% endif %}
+                                        {% if rel.method %}
+                                        <span class="px-2 py-1 text-xs font-bold rounded
+                                            {% if rel.method == 'GET' or rel.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                            {% elif rel.method == 'POST' or rel.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                            {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                            {{ rel.method }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if rel.usage_context %}
+                                <div class="flex flex-wrap gap-2 text-xs mt-2">
+                                    <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ rel.usage_context|title }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Other Relationships -->
+                    {% if relationships_by_type.other %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Other Relationships ({{ relationships_by_type.other|length }})
+                        </h3>
+                        <div class="space-y-3">
+                            {% for rel in relationships_by_type.other %}
+                            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        {% if rel.endpoint_id %}
+                                        <a href="{% url 'documentation:endpoint_detail' endpoint_id=rel.endpoint_id %}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-400">
+                                            {{ rel.endpoint_path|default:rel.endpoint_id }}
+                                        </a>
+                                        {% else %}
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ rel.endpoint_path|default:"Unknown Endpoint" }}</span>
+                                        {% endif %}
+                                        {% if rel.method %}
+                                        <span class="px-2 py-1 text-xs font-bold rounded
+                                            {% if rel.method == 'GET' or rel.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                            {% elif rel.method == 'POST' or rel.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                            {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                            {{ rel.method }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if rel.usage_context %}
+                                <div class="flex flex-wrap gap-2 text-xs mt-2">
+                                    <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ rel.usage_context|title }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Relationships</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No relationships found for this page. Create relationships to connect this page with endpoints.</p>
+                    <a href="{% url 'documentation:relationship_create' %}" class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors text-sm font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Create Relationship
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Content Tab -->
+            <div class="tab-content {% if active_tab == 'content' %}active{% endif %}" id="tab-content" role="tabpanel">
+                {% if page.metadata.content_sections %}
+                <div class="space-y-6">
+                    <!-- Title & Subtitle -->
+                    {% if page.metadata.content_sections.title %}
+                    <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ page.metadata.content_sections.title }}</h2>
+                        {% if page.metadata.content_sections.subtitle %}
+                        <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">{{ page.metadata.content_sections.subtitle }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Value Propositions -->
+                    {% if page.metadata.content_sections.value_propositions %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Value Propositions</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {% for prop in page.metadata.content_sections.value_propositions %}
+                            <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="text-blue-500">{{ prop.icon|default:"📌" }}</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">{{ prop.title }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ prop.description }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Story -->
+                    {% if page.metadata.content_sections.story %}
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{{ page.metadata.content_sections.story.title }}</h3>
+                        <p class="text-gray-700 dark:text-gray-300">{{ page.metadata.content_sections.story.description }}</p>
+                        {% if page.metadata.content_sections.story.cta %}
+                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">{{ page.metadata.content_sections.story.cta }}</button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% elif page_html %}
+                <article class="prose prose-blue dark:prose-invert max-w-none">
+                    {{ page_html|safe }}
+                </article>
+                {% elif page.content %}
+                <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto"><code>{{ page.content }}</code></pre>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Content</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No content available for this page.</p>
+                    <a href="{% url 'documentation:page_edit' page_id=page.page_id %}" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit Page
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Endpoints Tab -->
+            <div class="tab-content {% if active_tab == 'endpoints' %}active{% endif %}" id="tab-endpoints" role="tabpanel">
+                {% if endpoints_used %}
+                <div class="space-y-3">
+                    {% for endpoint in endpoints_used %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3 flex-1 min-w-0">
+                                {% if endpoint.endpoint_id %}
+                                <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="flex items-center space-x-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    <span class="px-2 py-1 text-xs font-bold rounded
+                                        {% if endpoint.method == 'GET' or endpoint.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                        {% elif endpoint.method == 'POST' or endpoint.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                        {{ endpoint.method|default:"GET" }}
+                                    </span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100 font-mono text-sm truncate">{{ endpoint.endpoint_path|default:endpoint.endpoint_id }}</span>
+                                </a>
+                                {% else %}
+                                <span class="px-2 py-1 text-xs font-bold rounded
+                                    {% if endpoint.method == 'GET' or endpoint.method == 'QUERY' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                    {% elif endpoint.method == 'POST' or endpoint.method == 'MUTATION' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                    {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                    {{ endpoint.method|default:"GET" }}
+                                </span>
+                                <span class="font-medium text-gray-900 dark:text-gray-100 font-mono text-sm truncate">{{ endpoint.endpoint_path|default:"Unknown" }}</span>
+                                {% endif %}
+                            </div>
+                            {% if endpoint.api_version %}
+                            <span class="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-400 ml-2">{{ endpoint.api_version }}</span>
+                            {% endif %}
+                        </div>
+                        {% if endpoint.description %}
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ endpoint.description }}</p>
+                        {% endif %}
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            {% if endpoint.via_service %}
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Service: {{ endpoint.via_service }}</span>
+                            {% endif %}
+                            {% if endpoint.via_hook %}
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">Hook: {{ endpoint.via_hook }}</span>
+                            {% endif %}
+                            {% if endpoint.usage_type %}
+                            <span class="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">{{ endpoint.usage_type|title }}</span>
+                            {% endif %}
+                            {% if endpoint.usage_context %}
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ endpoint.usage_context|title }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif page.metadata.uses_endpoints %}
+                <div class="space-y-3">
+                    {% for endpoint in page.metadata.uses_endpoints %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 text-xs font-bold rounded
+                                    {% if endpoint.method == 'GET' %}bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400
+                                    {% elif endpoint.method == 'POST' %}bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400
+                                    {% elif endpoint.method == 'QUERY' %}bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-400
+                                    {% elif endpoint.method == 'MUTATION' %}bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400
+                                    {% else %}bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                    {{ endpoint.method|default:"GET" }}
+                                </span>
+                                <span class="font-medium text-gray-900 dark:text-gray-100 font-mono text-sm">{{ endpoint.endpoint_path }}</span>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-400">{{ endpoint.api_version }}</span>
+                        </div>
+                        {% if endpoint.description %}
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ endpoint.description }}</p>
+                        {% endif %}
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            {% if endpoint.via_service %}
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Service: {{ endpoint.via_service }}</span>
+                            {% endif %}
+                            {% if endpoint.via_hook %}
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">Hook: {{ endpoint.via_hook }}</span>
+                            {% endif %}
+                            {% if endpoint.usage_type %}
+                            <span class="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">{{ endpoint.usage_type }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Endpoints</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No endpoints associated with this page.</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Components Tab -->
+            <div class="tab-content {% if active_tab == 'components' %}active{% endif %}" id="tab-components" role="tabpanel">
+                {% if page.metadata.ui_components %}
+                <div class="space-y-4">
+                    {% for component in page.metadata.ui_components %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                                </svg>
+                                <span class="font-medium text-gray-900 dark:text-gray-100">{{ component.name }}</span>
+                            </div>
+                        </div>
+                        {% if component.file_path %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-mono mb-3 truncate">{{ component.file_path }}</p>
+                        {% endif %}
+                        {% if component.access_control %}
+                        <div class="flex flex-wrap gap-2">
+                            {% if component.access_control.public %}<span class="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">Public</span>{% endif %}
+                            {% if component.access_control.freeUser %}<span class="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Free User</span>{% endif %}
+                            {% if component.access_control.proUser %}<span class="px-2 py-1 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">Pro User</span>{% endif %}
+                            {% if component.access_control.admin %}<span class="px-2 py-1 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">Admin</span>{% endif %}
+                            {% if component.access_control.superAdmin %}<span class="px-2 py-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded">Super Admin</span>{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No UI Components</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md">No UI components defined for this page.</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Access Control Tab -->
+            <div class="tab-content {% if active_tab == 'access' %}active{% endif %}" id="tab-access" role="tabpanel">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Authentication -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                            </svg>
+                            Authentication
+                        </h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            {{ page.metadata.authentication|default:"Not specified" }}
+                        </p>
+                    </div>
+                    
+                    <!-- Authorization -->
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Authorization
+                        </h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            {% if page.metadata.authorization %}{{ page.metadata.authorization }}{% else %}None required{% endif %}
+                        </p>
+                    </div>
+                    
+                    <!-- API Versions -->
+                    {% if page.metadata.api_versions %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            API Versions
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for version in page.metadata.api_versions %}
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-sm">{{ version }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- File Path -->
+                    {% if page.metadata.file_path %}
+                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                            </svg>
+                            Source File
+                        </h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">{{ page.metadata.file_path }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Raw JSON Tab -->
+            <div class="tab-content {% if active_tab == 'raw' %}active{% endif %}" id="tab-raw" role="tabpanel">
+                <div class="bg-gray-900 rounded-lg overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                        <span class="text-sm text-gray-400">page.json</span>
+                        <button type="button" onclick="copyJSON()" class="text-xs text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre id="json-content" class="p-4 text-sm text-gray-300 overflow-x-auto max-h-96"><code>{{ page_json }}</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <a href="{% url 'documentation:dashboard' %}?tab=pages" class="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Pages
+                </a>
+                <div class="text-xs text-gray-400">
+                    {% if page.metadata.last_imported %}
+                    Last imported: {{ page.metadata.last_imported }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching functionality with URL state management
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Get active tab from URL or default to overview
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabFromUrl = urlParams.get('tab') || 'overview';
+    
+    // Set initial active state based on URL
+    tabButtons.forEach(button => {
+        const tabId = button.getAttribute('data-tab');
+        if (tabId === activeTabFromUrl) {
+            button.classList.add('active');
+        }
+    });
+    
+    tabContents.forEach(content => {
+        const contentId = content.id.replace('tab-', '');
+        if (contentId === activeTabFromUrl) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle tab clicks - links will handle navigation, but we can add smooth scrolling
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // If it's a link, let it navigate naturally
+            // Otherwise, prevent default and handle programmatically
+            if (this.tagName === 'A') {
+                // Link will handle navigation
+                return;
+            }
+            
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update URL without page reload
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('tab', tabId);
+            window.history.pushState({}, '', newUrl);
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            this.classList.add('active');
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'overview';
+        
+        tabButtons.forEach(button => {
+            const tabId = button.getAttribute('data-tab');
+            button.classList.toggle('active', tabId === activeTab);
+        });
+        
+        tabContents.forEach(content => {
+            const contentId = content.id.replace('tab-', '');
+            content.classList.toggle('active', contentId === activeTab);
+        });
+    });
+});
+
+// Copy JSON functionality
+function copyJSON() {
+    const jsonContent = document.getElementById('json-content').textContent;
+    navigator.clipboard.writeText(jsonContent).then(() => {
+        // Show brief feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Copied!';
+        setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+    });
+}
+</script>
+{% endblock %}

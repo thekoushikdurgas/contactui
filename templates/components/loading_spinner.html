@@ -1,0 +1,10 @@
+{% comment %}
+Loading spinner component - React design pattern.
+
+Usage:
+{% include 'components/loading_spinner.html' with size='sm'|'md'|'lg' %}
+{% endcomment %}
+{% load static %}
+<div class="flex items-center justify-center {% if size == 'sm' %}p-2{% elif size == 'lg' %}p-8{% else %}p-4{% endif %}">
+    <div class="animate-spin rounded-full {% if size == 'sm' %}h-4 w-4 border-2 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400{% elif size == 'lg' %}h-12 w-12 border-4 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400{% else %}h-8 w-8 border-4 border-blue-100 dark:border-blue-900/50 border-t-blue-600 dark:border-t-blue-400{% endif %}"></div>
+</div>

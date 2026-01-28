@@ -1,0 +1,67 @@
+{
+  "_id": "admin_dashboard_pages_pageid_page-001",
+  "page_id": "admin_dashboard_pages_pageid_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/admin/dashboard-pages/[pageId]",
+    "file_path": "contact360/dashboard/app/(dashboard)/admin/dashboard-pages/[pageId]/page.tsx",
+    "purpose": "Admin dashboard page editor for creating and editing custom dashboard pages with sections and access control.",
+    "s3_key": "data/pages/admin_dashboard_pages_pageid_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": "Admin role required",
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetDashboardPage",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "dashboardPagesService",
+        "via_hook": "useDashboardPageEditor",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get dashboard page data for editing"
+      },
+      {
+        "endpoint_path": "graphql/UpdateDashboardPage",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "dashboardPagesService",
+        "via_hook": "useDashboardPageEditor",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Update dashboard page content, sections, and access control"
+      },
+      {
+        "endpoint_path": "graphql/CreateDashboardPage",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "dashboardPagesService",
+        "via_hook": "useDashboardPageEditor",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Create a new dashboard page (when pageId is 'new')"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "DashboardPageEditor",
+        "file_path": "components/features/admin-dashboard/DashboardPageEditor.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 3,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

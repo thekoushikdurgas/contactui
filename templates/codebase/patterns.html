@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patterns - Codebase Analysis{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detected Patterns</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Analysis: {{ analysis_id }}</p>
+        </div>
+    </div>
+    
+    {% if patterns %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div class="space-y-4">
+                {% for pattern in patterns %}
+                    <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-2">{{ pattern.name }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">{{ pattern.description }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Count: {{ pattern.count }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        {% include 'components/empty_state.html' with title="No patterns detected" message="Patterns will be identified during analysis" %}
+    {% endif %}
+</div>
+{% endblock %}

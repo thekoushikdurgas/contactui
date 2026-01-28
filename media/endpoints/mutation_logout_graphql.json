@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_logout_graphql-001",
+  "endpoint_id": "mutation_logout_graphql",
+  "endpoint_path": "graphql/Logout",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Logout current user and blacklist access token on server. No input required. Returns Boolean (true on success). The access token is added to a blacklist in the database, preventing reuse even if not expired. Used by AuthContext logout function and UserMenuPopup component. Raises UnauthorizedError (401) if user is not authenticated.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/auth/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/authService.ts",
+  "service_methods": [
+    "logout"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation Logout { auth { logout } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

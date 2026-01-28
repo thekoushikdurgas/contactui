@@ -1,0 +1,765 @@
+{% load static %}
+{% with graph_subtab=graph_subtab|default:'overview' %}
+
+<style>
+/* Graph sub-tab button styles */
+.graph-subtab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+.graph-subtab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+.graph-subtab-button.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+.dark .graph-subtab-button {
+    color: #9ca3af;
+}
+.dark .graph-subtab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+.dark .graph-subtab-button.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+}
+.graph-subtab-content {
+    display: none;
+}
+.graph-subtab-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-in;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<div class="space-y-6">
+    <!-- Graph Tab Navigation -->
+    <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+            <a href="?tab=graph&graph_tab=overview" class="graph-subtab-button group {% if graph_subtab == 'overview' %}active{% endif %}" data-subtab="overview" role="tab">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Overview</span>
+            </a>
+            <a href="?tab=graph&graph_tab=network" class="graph-subtab-button group {% if graph_subtab == 'network' %}active{% endif %}" data-subtab="network" role="tab">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <span>Network View</span>
+            </a>
+            <a href="?tab=graph&graph_tab=nodes" class="graph-subtab-button group {% if graph_subtab == 'nodes' %}active{% endif %}" data-subtab="nodes" role="tab">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span>Nodes</span>
+            </a>
+            <a href="?tab=graph&graph_tab=connections" class="graph-subtab-button group {% if graph_subtab == 'connections' %}active{% endif %}" data-subtab="connections" role="tab">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Connections</span>
+            </a>
+            <a href="?tab=graph&graph_tab=filters" class="graph-subtab-button group {% if graph_subtab == 'filters' %}active{% endif %}" data-subtab="filters" role="tab">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span>Filters</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Overview Tab -->
+    <div class="graph-subtab-content {% if graph_subtab == 'overview' %}active{% endif %}" id="graph-subtab-overview" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Graph Overview</p>
+                        <p class="text-xs text-blue-700 dark:text-blue-300">Visualize the relationships between pages, endpoints, and their connections in an interactive network graph.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Total Nodes</span>
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-900 dark:text-blue-100" id="graph-total-nodes">-</div>
+                    <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">Pages + Endpoints</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg p-6 border border-purple-200 dark:border-purple-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-purple-700 dark:text-purple-300">Connections</span>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-purple-900 dark:text-purple-100" id="graph-total-edges">-</div>
+                    <p class="text-xs text-purple-600 dark:text-purple-400 mt-1">Relationships</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-6 border border-green-200 dark:border-green-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-green-700 dark:text-green-300">Pages</span>
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-green-900 dark:text-green-100" id="graph-pages-count">-</div>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Page Nodes</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-lg p-6 border border-amber-200 dark:border-amber-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-amber-700 dark:text-amber-300">Endpoints</span>
+                        <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-amber-900 dark:text-amber-100" id="graph-endpoints-count">-</div>
+                    <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">Endpoint Nodes</p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="?tab=graph&graph_tab=network" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-gray-100">View Network</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Interactive graph visualization</p>
+                        </div>
+                    </a>
+                    <a href="?tab=graph&graph_tab=nodes" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-gray-100">Browse Nodes</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">List all pages and endpoints</p>
+                        </div>
+                    </a>
+                    <a href="?tab=graph&graph_tab=connections" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-gray-100">View Connections</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Explore relationships</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network View Tab -->
+    <div class="graph-subtab-content {% if graph_subtab == 'network' %}active{% endif %}" id="graph-subtab-network" role="tabpanel">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Interactive Network Graph</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Visualize relationships between pages and endpoints</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="graph-refresh-btn" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Refresh
+                        </span>
+                    </button>
+                    <button id="graph-reset-zoom-btn" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                            Reset Zoom
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div id="relationship-graph-container" class="graph-container bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 relative" style="height: 700px; min-height: 700px;">
+                {% include 'components/loading-state.html' with type='spinner' size='lg' message='Loading graph visualization...' %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Nodes Tab -->
+    <div class="graph-subtab-content {% if graph_subtab == 'nodes' %}active{% endif %}" id="graph-subtab-nodes" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-1">Graph Nodes</p>
+                        <p class="text-xs text-purple-700 dark:text-purple-300">All pages and endpoints that are part of the relationship graph.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Pages Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Pages
+                        <span class="ml-2 px-2 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full" id="pages-nodes-count">0</span>
+                    </h3>
+                    <div id="pages-nodes-list" class="space-y-3 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                            <p>Loading pages...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endpoints Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Endpoints
+                        <span class="ml-2 px-2 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full" id="endpoints-nodes-count">0</span>
+                    </h3>
+                    <div id="endpoints-nodes-list" class="space-y-3 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                            <p>Loading endpoints...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connections Tab -->
+    <div class="graph-subtab-content {% if graph_subtab == 'connections' %}active{% endif %}" id="graph-subtab-connections" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-green-800 dark:text-green-200 font-medium mb-1">Graph Connections</p>
+                        <p class="text-xs text-green-700 dark:text-green-300">All relationships connecting pages to endpoints in the graph.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Connections</h3>
+                    <div class="flex items-center gap-2">
+                        <select id="connection-type-filter" class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                            <option value="">All Types</option>
+                            <option value="primary">Primary</option>
+                            <option value="secondary">Secondary</option>
+                            <option value="conditional">Conditional</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="connections-list" class="space-y-3">
+                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <p>Loading connections...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Tab -->
+    <div class="graph-subtab-content {% if graph_subtab == 'filters' %}active{% endif %}" id="graph-subtab-filters" role="tabpanel">
+        <div class="space-y-6">
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm text-amber-800 dark:text-amber-200 font-medium mb-1">Graph Filters</p>
+                        <p class="text-xs text-amber-700 dark:text-amber-300">Filter the graph visualization by type, state, or other criteria.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Node Filters</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Node Type</label>
+                            <select id="filter-node-type" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                                <option value="">All Types</option>
+                                <option value="page">Pages Only</option>
+                                <option value="endpoint">Endpoints Only</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Page Type</label>
+                            <select id="filter-page-type" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                                <option value="">All Page Types</option>
+                                <option value="docs">Docs</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="api">API</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Endpoint Method</label>
+                            <select id="filter-endpoint-method" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                                <option value="">All Methods</option>
+                                <option value="QUERY">QUERY</option>
+                                <option value="MUTATION">MUTATION</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Connection Filters</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usage Type</label>
+                            <select id="filter-usage-type" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                                <option value="">All Usage Types</option>
+                                <option value="primary">Primary</option>
+                                <option value="secondary">Secondary</option>
+                                <option value="conditional">Conditional</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usage Context</label>
+                            <select id="filter-usage-context" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm">
+                                <option value="">All Contexts</option>
+                                <option value="data_fetching">Data Fetching</option>
+                                <option value="data_mutation">Data Mutation</option>
+                                <option value="authentication">Authentication</option>
+                            </select>
+                        </div>
+                        <div class="pt-4">
+                            <button id="apply-filters-btn" class="w-full px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                                Apply Filters
+                            </button>
+                            <button id="clear-filters-btn" class="w-full mt-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                                Clear Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const graphSubtabButtons = document.querySelectorAll('.graph-subtab-button');
+    const graphSubtabContents = document.querySelectorAll('.graph-subtab-content');
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeSubtab = urlParams.get('graph_tab') || 'overview';
+    
+    // Set initial active state
+    graphSubtabButtons.forEach(button => {
+        const subtabId = button.getAttribute('data-subtab');
+        if (subtabId === activeSubtab) {
+            button.classList.add('active');
+        }
+    });
+    
+    graphSubtabContents.forEach(content => {
+        const contentId = content.id.replace('graph-subtab-', '');
+        if (contentId === activeSubtab) {
+            content.classList.add('active');
+        }
+    });
+    
+    // Handle subtab clicks
+    graphSubtabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (this.tagName === 'A') {
+                return; // Let link navigate naturally
+            }
+            e.preventDefault();
+            const subtabId = this.getAttribute('data-subtab');
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('graph_tab', subtabId);
+            window.history.pushState({}, '', newUrl);
+            
+            graphSubtabButtons.forEach(btn => btn.classList.remove('active'));
+            graphSubtabContents.forEach(content => content.classList.remove('active'));
+            
+            this.classList.add('active');
+            const targetContent = document.getElementById('graph-subtab-' + subtabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle browser back/forward
+    window.addEventListener('popstate', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeSubtab = urlParams.get('graph_tab') || 'overview';
+        
+        graphSubtabButtons.forEach(button => {
+            const subtabId = button.getAttribute('data-subtab');
+            button.classList.toggle('active', subtabId === activeSubtab);
+        });
+        
+        graphSubtabContents.forEach(content => {
+            const contentId = content.id.replace('graph-subtab-', '');
+            content.classList.toggle('active', contentId === activeSubtab);
+        });
+    });
+    
+    // Load graph data
+    loadGraphData();
+    
+    function loadGraphData() {
+        fetch("{% url 'documentation:api_dashboard_graph' %}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    const graphData = data.data;
+                    const stats = graphData.statistics || {};
+                    
+                    // Update overview stats
+                    document.getElementById('graph-total-nodes').textContent = stats.total_nodes || 0;
+                    document.getElementById('graph-total-edges').textContent = stats.total_edges || 0;
+                    document.getElementById('graph-pages-count').textContent = stats.pages_count || 0;
+                    document.getElementById('graph-endpoints-count').textContent = stats.endpoints_count || 0;
+                    
+                    // Render nodes lists
+                    renderNodesLists(graphData.nodes || []);
+                    
+                    // Render connections list
+                    renderConnectionsList(graphData.edges || []);
+                    
+                    // Initialize graph visualization if on network tab
+                    if (activeSubtab === 'network') {
+                        initializeGraphVisualization(graphData);
+                    } else if (activeSubtab === 'overview' && typeof RelationshipGraphViewer !== 'undefined') {
+                        // Pre-load graph viewer for faster switching
+                        window.graphDataCache = graphData;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error loading graph data:', error);
+            });
+    }
+    
+    function renderNodesLists(nodes) {
+        const pagesNodes = nodes.filter(n => n.type === 'page');
+        const endpointsNodes = nodes.filter(n => n.type === 'endpoint');
+        
+        document.getElementById('pages-nodes-count').textContent = pagesNodes.length;
+        document.getElementById('endpoints-nodes-count').textContent = endpointsNodes.length;
+        
+        const pagesList = document.getElementById('pages-nodes-list');
+        const endpointsList = document.getElementById('endpoints-nodes-list');
+        
+        if (pagesNodes.length > 0) {
+                    pagesList.innerHTML = pagesNodes.map(node => {
+                        const pageUrl = `/docs/pages/${node.data.page_id}/`;
+                        return `
+                <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <a href="${pageUrl}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400">
+                            ${node.label}
+                        </a>
+                        <span class="px-2 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">Page</span>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">${node.data.page_id}</p>
+                </div>
+            `;
+                    }).join('');
+        } else {
+            pagesList.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>No pages found</p></div>';
+        }
+        
+        if (endpointsNodes.length > 0) {
+                    endpointsList.innerHTML = endpointsNodes.map(node => {
+                        const endpointUrl = `/docs/endpoints/${node.data.endpoint_id}/`;
+                        return `
+                <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <a href="${endpointUrl}" class="font-medium text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400">
+                            ${node.label}
+                        </a>
+                        <span class="px-2 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">${node.data.method || 'QUERY'}</span>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">${node.data.endpoint_id}</p>
+                </div>
+            `;
+                    }).join('');
+        } else {
+            endpointsList.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>No endpoints found</p></div>';
+        }
+    }
+    
+    function renderConnectionsList(edges) {
+        const connectionsList = document.getElementById('connections-list');
+        
+        if (edges.length > 0) {
+            connectionsList.innerHTML = edges.map(edge => {
+                const sourceLabel = edge.source.replace('page_', '').replace('endpoint_', '');
+                const targetLabel = edge.target.replace('page_', '').replace('endpoint_', '');
+                return `
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">${sourceLabel}</span>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">${targetLabel}</span>
+                            </div>
+                            <span class="px-2 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded">${edge.type || 'primary'}</span>
+                        </div>
+                        ${edge.data.usage_context ? `<p class="text-xs text-gray-500 dark:text-gray-400">Context: ${edge.data.usage_context}</p>` : ''}
+                    </div>
+                `;
+            }).join('');
+        } else {
+            connectionsList.innerHTML = '<div class="text-center py-8 text-gray-500 dark:text-gray-400"><p>No connections found</p></div>';
+        }
+    }
+    
+    function initializeGraphVisualization(graphData) {
+        const container = document.getElementById('relationship-graph-container');
+        if (!container) return;
+        
+        // Remove loading indicator
+        const loading = container.querySelector('.loading-state-wrapper, .graph-loading');
+        if (loading) loading.remove();
+        
+        // Check if RelationshipGraphViewer is available
+        if (typeof RelationshipGraphViewer !== 'undefined') {
+            // Use advanced D3.js graph viewer
+            if (window.graphViewer) {
+                // Destroy existing viewer
+                window.graphViewer = null;
+            }
+            
+            // Normalize graph data format for RelationshipGraphViewer
+            const normalizedData = {
+                nodes: (graphData.nodes || []).map(node => ({
+                    id: node.id,
+                    label: node.label || node.id,
+                    type: node.type,
+                    data: node.data || {}
+                })),
+                edges: (graphData.edges || []).map(edge => ({
+                    source: typeof edge.source === 'object' ? edge.source.id : edge.source,
+                    target: typeof edge.target === 'object' ? edge.target.id : edge.target,
+                    type: edge.type || 'primary',
+                    data: edge.data || {}
+                }))
+            };
+            
+            // Create new graph viewer instance
+            window.graphViewer = new RelationshipGraphViewer('relationship-graph-container', {
+                apiUrl: "{% url 'documentation:api_dashboard_graph' %}",
+                width: container.clientWidth || 800,
+                height: container.clientHeight || 700
+            });
+            
+            // Load data directly
+            window.graphViewer.data = normalizedData;
+            window.graphViewer.createGraph();
+        } else {
+            // Fallback to simple SVG visualization
+            const nodes = graphData.nodes || [];
+            const edges = graphData.edges || [];
+            
+            if (nodes.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Graph Data</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">No relationships found. Create relationships between pages and endpoints to visualize the graph.</p>
+                        <a href="{% url 'documentation:relationship_create' %}" class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors text-sm font-medium">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create First Relationship
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Simple circular layout for visualization
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.setAttribute('viewBox', '0 0 800 600');
+            container.appendChild(svg);
+            
+            const centerX = 400;
+            const centerY = 300;
+            const radius = Math.min(250, 200 + nodes.length * 5);
+            
+            nodes.forEach((node, index) => {
+                const angle = (2 * Math.PI * index) / nodes.length;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', node.type === 'page' ? 12 : 10);
+                circle.setAttribute('fill', node.type === 'page' ? '#3b82f6' : '#8b5cf6');
+                circle.setAttribute('stroke', 'white');
+                circle.setAttribute('stroke-width', '2');
+                svg.appendChild(circle);
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', x);
+                text.setAttribute('y', y + 25);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '10');
+                text.setAttribute('fill', '#374151');
+                text.textContent = (node.label || node.id).length > 15 ? (node.label || node.id).substring(0, 15) + '...' : (node.label || node.id);
+                svg.appendChild(text);
+            });
+            
+            edges.forEach(edge => {
+                const sourceNode = nodes.find(n => n.id === edge.source);
+                const targetNode = nodes.find(n => n.id === edge.target);
+                if (!sourceNode || !targetNode) return;
+                
+                const sourceIndex = nodes.indexOf(sourceNode);
+                const targetIndex = nodes.indexOf(targetNode);
+                const sourceAngle = (2 * Math.PI * sourceIndex) / nodes.length;
+                const targetAngle = (2 * Math.PI * targetIndex) / nodes.length;
+                const sourceX = centerX + radius * Math.cos(sourceAngle);
+                const sourceY = centerY + radius * Math.sin(sourceAngle);
+                const targetX = centerX + radius * Math.cos(targetAngle);
+                const targetY = centerY + radius * Math.sin(targetAngle);
+                
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', sourceX);
+                line.setAttribute('y1', sourceY);
+                line.setAttribute('x2', targetX);
+                line.setAttribute('y2', targetY);
+                line.setAttribute('stroke', edge.type === 'primary' ? '#22c55e' : '#f59e0b');
+                line.setAttribute('stroke-width', '1.5');
+                line.setAttribute('stroke-opacity', '0.4');
+                svg.insertBefore(line, svg.firstChild);
+            });
+        }
+    }
+    
+    // Refresh button handler
+    const refreshBtn = document.getElementById('graph-refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            loadGraphData();
+        });
+    }
+    
+    // Reset zoom button handler
+    const resetZoomBtn = document.getElementById('graph-reset-zoom-btn');
+    if (resetZoomBtn) {
+        resetZoomBtn.addEventListener('click', function() {
+            if (window.graphViewer && typeof window.graphViewer.resetZoom === 'function') {
+                window.graphViewer.resetZoom();
+            } else {
+                const container = document.getElementById('relationship-graph-container');
+                if (container) {
+                    const svg = container.querySelector('svg');
+                    if (svg) {
+                        svg.setAttribute('viewBox', '0 0 800 600');
+                    }
+                }
+            }
+        });
+    }
+    
+    // Handle tab switching to initialize graph viewer when network tab is activated
+    graphSubtabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const subtabId = this.getAttribute('data-subtab');
+            if (subtabId === 'network' && window.graphDataCache && typeof RelationshipGraphViewer !== 'undefined') {
+                // Small delay to ensure tab content is visible
+                setTimeout(() => {
+                    if (!window.graphViewer) {
+                        initializeGraphVisualization(window.graphDataCache);
+                    }
+                }, 100);
+            }
+        });
+    });
+    
+    // Apply filters button
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', function() {
+            // Filter logic would be implemented here
+            loadGraphData();
+        });
+    }
+    
+    // Clear filters button
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            document.getElementById('filter-node-type').value = '';
+            document.getElementById('filter-page-type').value = '';
+            document.getElementById('filter-endpoint-method').value = '';
+            document.getElementById('filter-usage-type').value = '';
+            document.getElementById('filter-usage-context').value = '';
+            loadGraphData();
+        });
+    }
+});
+</script>
+
+{% endwith %}

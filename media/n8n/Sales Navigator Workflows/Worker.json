@@ -1,0 +1,802 @@
+{
+  "name": "Worker",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "contact_uuid_array",
+              "type": "array"
+            },
+            {
+              "name": "request_id"
+            },
+            {
+              "name": "sales_navigator_url"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        48,
+        -80
+      ],
+      "id": "906d8285-086c-4948-b994-082114b883e6",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "contacts",
+          "mode": "list",
+          "cachedResultName": "contacts"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{ $json.contact_uuid_array }}",
+            "status": "0"
+          },
+          "matchingColumns": [
+            "uuid"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "uuid",
+              "displayName": "uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "departments",
+              "displayName": "departments",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mobile_phone",
+              "displayName": "mobile_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email_status",
+              "displayName": "email_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "text_search",
+              "displayName": "text_search",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "seniority",
+              "displayName": "seniority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        816,
+        384
+      ],
+      "id": "9c46ebcc-658f-42b3-a0e9-00d0cfe3ecff",
+      "name": "Update as in_progress",
+      "credentials": {
+        "postgres": {
+          "id": "g85UbejkLtkUlrao",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT UUID FROM public.contacts\nWHERE status = '_'\nOFFSET {{ $json.offset }}\nLIMIT {{ $json.limit }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        16,
+        288
+      ],
+      "id": "9dbab5d2-f8d9-4244-b906-ed92098ed7be",
+      "name": "contact",
+      "credentials": {
+        "postgres": {
+          "id": "g85UbejkLtkUlrao",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        128,
+        384
+      ],
+      "id": "2e5cb633-3236-4146-a00c-6fbec4896a8a",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        592,
+        384
+      ],
+      "id": "340a0f40-c31a-41bf-a0c6-8492a20c7df3",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "uuid"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        272,
+        384
+      ],
+      "id": "4cae3df4-06a8-44b1-b036-d2ad03897439",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "url": "http://54.87.173.234:8000/api/v1/contacts/count/uuids",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjQxOThmNy01OWM4LTQwMzktYTEzYy0zZWFlMGIwMTUxMmUiLCJleHAiOjE3NjQ4NDYxNzcsInR5cGUiOiJhY2Nlc3MifQ.C8WtxElD3pp7CiyapiRsngIYDmgC91C3JfoeewyT8_o"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -128,
+        368
+      ],
+      "id": "7d1d174a-669d-4d85-a15e-a8f50932facb",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "batchSize": 25,
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "d92ffef1-9973-453e-8967-978b621e1ebc",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "batch_id"
+      },
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -64
+      ],
+      "id": "98a16c2b-026a-4bad-93f1-ce53da88dc47",
+      "name": "Crypto",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "contact_uuid_array",
+              "renameField": true,
+              "outputFieldName": "uuids"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -64
+      ],
+      "id": "2b5f2688-a101-4624-9b86-7095683f152a",
+      "name": "Aggregate1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "sales_navigator_batch",
+          "mode": "list",
+          "cachedResultName": "sales_navigator_batch"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "batch_id": "={{ $json.batch_id }}",
+            "request_id": "={{ $('When Executed by Another Workflow').item.json.request_id }}",
+            "contact_uuid": "={{ $json.uuid }}",
+            "contact_count": "={{ Array.isArray($json.uuid) ? $json.uuid.length : 0 }}",
+            "sales_navigator_url": "={{ $('When Executed by Another Workflow').item.json.sales_navigator_url }}"
+          },
+          "matchingColumns": [
+            "batch_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "request_id",
+              "displayName": "request_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "contact_uuid",
+              "displayName": "contact_uuid",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "contact_count",
+              "displayName": "contact_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "sales_navigator_url",
+              "displayName": "sales_navigator_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1552,
+        -64
+      ],
+      "id": "274617a4-cc95-4885-abeb-d8b20fe64bf0",
+      "name": "Insert or update rows in a table",
+      "executeOnce": true,
+      "credentials": {
+        "postgres": {
+          "id": "g85UbejkLtkUlrao",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "contact_uuid_array",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -80
+      ],
+      "id": "513fc8bb-b7f1-420e-b4c6-3136ba322e3c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://54.87.173.234:8000/api/v3/cleanup/contact/batch",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjQxOThmNy01OWM4LTQwMzktYTEzYy0zZWFlMGIwMTUxMmUiLCJleHAiOjE3NjQ4NDYxNzcsInR5cGUiOiJhY2Nlc3MifQ.C8WtxElD3pp7CiyapiRsngIYDmgC91C3JfoeewyT8_o"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"uuids\": [\n   {{ $json.uuids }}\n  ]\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1072,
+        -64
+      ],
+      "id": "f7e19bb9-adfe-4cc2-a388-3b392066e935",
+      "name": "Cleaning"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "contact_uuid_array": [
+            "f1074e42-8d6f-5dc1-8128-9b4de30d26ae",
+            "4331831e-bd5b-50ac-a380-7aca3ef2322c",
+            "c6e94c20-2b8b-522f-af9c-2e5a2246aeb8",
+            "3fd9e5bb-ac71-5102-a088-a5022bf70823",
+            "42056867-71e5-573f-924e-76fd069341e0",
+            "a0327a01-67f6-5638-964f-3ae09ccc82e7",
+            "cc2b34e6-069c-57ac-8c17-8eebe1d0477b",
+            "ad454359-3e3f-5b66-ae3d-2f4a01760912",
+            "fdc3a854-1edd-55db-83f9-bc512f64ed59",
+            "6b8fdd97-8a72-5e55-ba53-8cca93905baf",
+            "013b85b7-0686-5d7d-90fb-d183de8637a0",
+            "b18ff3b6-9296-5bcd-ac04-c0cad9381ea7",
+            "aae76aac-fe01-5355-8164-d125de13fe64",
+            "fbfc635d-8d74-5c1d-ae13-324764235a06",
+            "a45033a4-3473-5f7e-b439-e5ebacd0ba18",
+            "6cb71df5-2590-55a0-9310-5a010a9b3450",
+            "51c949ce-a788-5d3b-bc6a-dabfb75bdda9",
+            "e5d0ea74-4733-5dcd-aade-f4081fc84a6a",
+            "de8083a4-4ee0-5b48-bf21-c99cb26dfbd7",
+            "45582bc3-5536-50a0-8b1f-c2e54cc2cae7",
+            "fb12ae1f-f2f1-5656-b465-433d7936e22b",
+            "6e6ebef0-4e53-5ad7-9e7a-55c7e5735d21",
+            "79fed3fa-64b8-5b69-8db8-8d40ce8accf3",
+            "ffb3a97d-7171-5060-b280-fce55d7fae26",
+            "46a2153c-7fb1-597d-afce-862a823529a9",
+            "8bd749f7-1c9e-5247-8b87-0261aa19cf75",
+            "bc2a016b-028d-563f-8c9c-f425cee6b4f4",
+            "4ea787f4-1d3a-5d33-b028-7945493862a8",
+            "eaf30f57-724d-54ec-aabe-a7e1ad710715",
+            "bd37d648-7d3c-5322-be92-72f3e24a490f",
+            "fe06f15c-198d-5ada-b3ae-4fecb64f2584",
+            "1a34ba25-1f44-5d74-8167-efa332e37fc8",
+            "d8d98f8e-498d-5150-9c7c-432069880bf4",
+            "9f8559e2-8267-59e8-bde4-b78874a4816a",
+            "e71b1c8e-9dcc-51e7-baea-6e344eeb3f33",
+            "b92f12a4-8a3a-5cbb-9ac0-59879a565fc6",
+            "735ba2a7-3a8d-541e-bb74-09d4a31ae6f3",
+            "acde5864-7380-51a6-b3e3-59890ce301da",
+            "05e1e373-b604-51c4-84d2-26930f1ad763",
+            "b37230e9-7c1b-5e9d-b714-988a0b5c6d3c",
+            "73b485ba-a313-5d4c-abf0-807d34998fd0",
+            "d48d293f-c2ea-5eca-bd9c-98680ceb6bfd",
+            "3bbbb74f-376d-59f3-ad6b-6c79cf76608b",
+            "ea197c3f-c14c-5db0-b817-7b13e7fbcf1e",
+            "b6d34140-0964-5270-93d3-5c9ee1eddcf3",
+            "5116e8c5-4efe-5933-b451-721860e2666d",
+            "6f69827d-9ebf-550f-b2ac-edc111148236",
+            "2ae5b956-4a0f-5aff-868f-d23b7aaf5a12",
+            "8a6afe16-96ef-5a67-ae26-f70d2a2026aa",
+            "8f546e18-de18-594a-af56-3f3b955612ce",
+            "cf1f7401-ada7-5299-833b-61f212e1c4ad",
+            "110317c2-93c8-581b-85fc-4560ca5e57c9",
+            "2f4d8b5a-aa22-5e5a-9b14-63f16ffe5ce3",
+            "d76621cb-3fc5-505a-a2f7-a23a9f004522",
+            "43379e1d-3cf5-54fd-969b-1b6d384f9bb9",
+            "a8bcc023-e9aa-591d-9495-f838ca01559f",
+            "901ef9e4-ce45-53b1-be2c-c175774a27ff",
+            "b2a7b4b2-bb33-50b3-8afe-e11e12c00180",
+            "d3806333-5637-5a5b-a70d-2cb157cda447",
+            "4322316c-a6aa-55f9-9707-ba78080dae73",
+            "796327ff-805d-5349-aed5-a0392051673f",
+            "96b6d2a6-bb17-5057-8be5-e689a456351d",
+            "47c2a053-2c8e-5162-91a2-d02917c2aa76",
+            "24e739c8-ea9c-58e0-a97d-b3c91c8f834c",
+            "b4174ac0-00ee-558c-bbfd-f2d910515105",
+            "03e935ef-ad34-514b-acb3-865fb664c796",
+            "3201f479-24b1-5326-b96b-841ed13ef66c",
+            "1e5da931-c24e-599e-ae3b-4aedb0694e46",
+            "4b07ff2d-0010-5bb5-8253-624e50bd6a0a",
+            "5ba2812e-ba03-57fb-a794-633fcf17d8b3",
+            "9352b6b7-2e24-513f-ba98-0ce734e6b825",
+            "4f88faa9-dfcb-59f3-9ce6-a0f7fbcd1ce6",
+            "05ef961f-cb47-5bcf-bc7d-d02a60a8b22d",
+            "36f2823b-4797-5d45-8ec6-0c3e47fde390",
+            "09bea0b2-89b4-5f1a-bd5a-039f4398f393",
+            "e5d87956-796e-5944-b7bd-ff17cd89f5af",
+            "7fb4d715-8eee-523d-838f-a378ce11423c",
+            "948e983d-7aac-5373-8fd3-a487416a1a9d",
+            "116b9c14-1885-5e49-9cca-63295aa35614",
+            "d12706ac-4109-5717-863f-36f8b8b4a0fe",
+            "ebb02ba4-0f97-5295-bbf3-9d5172814701",
+            "6f72c71d-311d-5cce-bdfd-172a449d7217",
+            "6954df3b-595f-5470-8ecc-cebde5b063b6",
+            "4c266613-7b51-5ed7-90e4-9994e55bc73e",
+            "35f4cccd-01c0-5519-8d5a-1ef52ece42bc",
+            "d7cef783-de67-57a9-99f2-ca9d7124c80e",
+            "f24eaf8b-a545-5256-8aaa-0ca101120321",
+            "bb4473e5-0934-56bc-8c1c-0370a1bfcaeb",
+            "bf14db3d-cd42-5a60-94d7-5ded7adb2170",
+            "a4fc4349-66be-51a0-a0ef-90578d461652",
+            "ac631c1a-4718-502d-943b-f9f9703b1478",
+            "48323708-0f5c-5fc2-b4b5-6afc11331191",
+            "5bb63584-b8fc-5c25-ae44-124eb8bb01a1",
+            "0cfd8044-cfc5-5130-9d5e-69c64d97cff1",
+            "3155ae9e-0109-5758-8f94-51e0bdeba35b",
+            "434682d6-e6df-57aa-9f7c-1e506257c6c7",
+            "a1d5b8d1-022a-50de-b73b-21261ad39f14",
+            "15f72f11-f3a4-560b-a65e-ce0a3d766b9e",
+            "0b27702d-6535-50dd-a328-aee93ff54e5b",
+            "050c6d36-92d7-522f-92cc-c5100007fc38",
+            "1d6345f5-1421-5042-a9f0-23cb9a07b4b1",
+            "3207a209-3725-5127-9af9-39b6564cdd7e",
+            "688d092b-8664-5c60-b20c-2431d7e045cf",
+            "488ddbd5-d1cc-56e0-93f7-3d881e273aa4",
+            "d91b76e2-4dbd-5618-8590-38ffe78c168a",
+            "d9f2b5ad-70c9-5f09-a5b8-6571329ae6e7",
+            "995c1c04-ab9e-5025-945a-a182321b1472",
+            "2903c720-c290-5caa-b87f-9dd979994351",
+            "40d94b59-1e29-590b-9353-9982ef18b5fa",
+            "9d892b4b-12d1-566e-8d5d-38e2d70215ce",
+            "1ee2de9a-50b4-56af-bb21-236a20d808fd",
+            "b5369391-5f63-551b-9dde-2650cc75997d",
+            "7f526006-b988-5720-a5a6-e147294a2ad2",
+            "8eda2834-b4d4-523e-a901-f7ab5a9ee9b5",
+            "7eaa2928-1d4c-5ebd-8d0a-44469702120c",
+            "d02bf6ec-0494-5a8a-837c-baab4aecfd15",
+            "fd7b1106-3586-5bdd-8250-ebc4d3a54d1e",
+            "2f695a2b-8302-562d-bcf8-fa29a42bb3e2",
+            "05ec9f59-f4bc-569b-a08a-624590f528dd",
+            "90525757-9814-566e-9871-00898b947407",
+            "816c2dca-ee76-5de3-a154-44f27008f97b",
+            "1aeb5429-803a-5b83-b3f1-566d3f2cd1f0",
+            "cbfed248-17f9-5f2b-8af1-fb10a9107577",
+            "a30834e7-1fad-56d5-b33d-722194433c23",
+            "78b16315-8ee9-54de-b279-1ca6d203fac6"
+          ],
+          "request_id": "b8f6b1c7-70a5-45b8-a18c-d4e3e4c6bfb9",
+          "sales_navigator_url": "www.example.com"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contact": {
+      "main": [
+        []
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Update as in_progress": {
+      "main": [
+        []
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Insert or update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert or update rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5c9fd4cc-ae02-412d-aed6-9b49f6a1fa8d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edce98a1672701afdb4509156bf76146eada53c7f0b3f7573f4df91a299fc8ba"
+  },
+  "id": "02M7wwoJIe1sUfGh",
+  "tags": [],
+  "workflow_id": "Worker"
+}

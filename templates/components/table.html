@@ -1,0 +1,173 @@
+{% comment %}
+Table Component
+
+Usage:
+{% include 'components/table.html' with columns=columns rows=rows %}
+
+Parameters:
+- columns: List of column definitions [{'key': 'name', 'label': 'Name', 'sortable': True, 'width': '200px'}]
+- rows: List of row data [{'id': 1, 'name': 'John', 'email': 'john@example.com'}]
+- id: Optional table ID
+- striped: Boolean - alternate row colors (default: false)
+- hoverable: Boolean - highlight rows on hover (default: true)
+- bordered: Boolean - add borders (default: false)
+- compact: Boolean - compact rows (default: false)
+- selectable: Boolean - show checkboxes for selection (default: false)
+- empty_message: Message when no rows (default: 'No data available')
+- sort_column: Current sort column key
+- sort_direction: Current sort direction (asc, desc)
+{% endcomment %}
+
+<div id="{{ id|default:'table' }}" class="table-container overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+    <table class="w-full text-sm text-left">
+        <!-- Table Header -->
+        <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+            <tr>
+                {% if selectable %}
+                <th scope="col" class="w-12 px-4 py-3">
+                    <input 
+                        type="checkbox" 
+                        class="table-select-all w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                        onchange="toggleTableSelectAll(this)"
+                    />
+                </th>
+                {% endif %}
+                
+                {% for column in columns %}
+                <th 
+                    scope="col" 
+                    class="px-4 {% if compact %}py-2{% else %}py-3{% endif %} font-semibold tracking-wider
+                        {% if column.sortable %}cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                    {% if column.width %}style="width: {{ column.width }}"{% endif %}
+                    {% if column.sortable %}onclick="sortTable('{{ id|default:'table' }}', '{{ column.key }}')"{% endif %}
+                >
+                    <div class="flex items-center gap-2">
+                        <span>{{ column.label }}</span>
+                        {% if column.sortable %}
+                        <span class="sort-icons">
+                            {% if sort_column == column.key %}
+                                {% if sort_direction == 'asc' %}
+                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                                {% else %}
+                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                                {% endif %}
+                            {% else %}
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                            </svg>
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        
+        <!-- Table Body -->
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+            {% for row in rows %}
+            <tr class="{% if striped and forloop.counter|divisibleby:2 %}bg-gray-50 dark:bg-gray-700/50{% endif %}
+                       {% if hoverable != False %}hover:bg-gray-50 dark:hover:bg-gray-700/50{% endif %}
+                       {% if bordered %}border-b border-gray-200 dark:border-gray-700{% endif %}
+                       transition-colors"
+                data-row-id="{{ row.id }}"
+            >
+                {% if selectable %}
+                <td class="w-12 px-4 {% if compact %}py-2{% else %}py-3{% endif %}">
+                    <input 
+                        type="checkbox" 
+                        class="table-row-select w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                        value="{{ row.id }}"
+                        onchange="updateTableSelection(this)"
+                    />
+                </td>
+                {% endif %}
+                
+                {% for column in columns %}
+                <td class="px-4 {% if compact %}py-2{% else %}py-3{% endif %} text-gray-700 dark:text-gray-300">
+                    {% if column.key == 'actions' %}
+                        {{ row.actions|safe }}
+                    {% elif column.render %}
+                        {{ column.render }}
+                    {% else %}
+                        {% with cell_value=row|get_item:column.key %}
+                            {% if column.type == 'badge' %}
+                                <span class="px-2 py-1 text-xs font-semibold rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                    {{ cell_value }}
+                                </span>
+                            {% elif column.type == 'date' %}
+                                {{ cell_value|date:"M d, Y" }}
+                            {% elif column.type == 'datetime' %}
+                                {{ cell_value|date:"M d, Y H:i" }}
+                            {% else %}
+                                {{ cell_value }}
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if selectable %}{{ columns|length|add:1 }}{% else %}{{ columns|length }}{% endif %}" class="px-4 py-8 text-center">
+                    <div class="flex flex-col items-center justify-center">
+                        <svg class="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                        </svg>
+                        <p class="text-gray-500 dark:text-gray-400">{{ empty_message|default:'No data available' }}</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function toggleTableSelectAll(checkbox) {
+    const table = checkbox.closest('.table-container');
+    const rowCheckboxes = table.querySelectorAll('.table-row-select');
+    rowCheckboxes.forEach(cb => {
+        cb.checked = checkbox.checked;
+    });
+    updateTableSelectionState(table);
+}
+
+function updateTableSelection(checkbox) {
+    const table = checkbox.closest('.table-container');
+    const allCheckbox = table.querySelector('.table-select-all');
+    const rowCheckboxes = table.querySelectorAll('.table-row-select');
+    const checkedCount = table.querySelectorAll('.table-row-select:checked').length;
+    
+    if (allCheckbox) {
+        allCheckbox.checked = checkedCount === rowCheckboxes.length;
+        allCheckbox.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
+    }
+    
+    updateTableSelectionState(table);
+}
+
+function updateTableSelectionState(table) {
+    const selected = Array.from(table.querySelectorAll('.table-row-select:checked'))
+        .map(cb => cb.value);
+    
+    table.dispatchEvent(new CustomEvent('selectionchange', {
+        detail: { selected },
+        bubbles: true
+    }));
+}
+
+function sortTable(tableId, columnKey) {
+    // Dispatch sort event for parent to handle
+    const table = document.getElementById(tableId);
+    table.dispatchEvent(new CustomEvent('sort', {
+        detail: { column: columnKey },
+        bubbles: true
+    }));
+}
+</script>

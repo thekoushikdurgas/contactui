@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_admin_plans_graphql-001",
+  "endpoint_id": "query_get_admin_plans_graphql",
+  "endpoint_path": "graphql/GetAdminPlans",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get all subscription plans for admin management. Accepts optional includeInactive (Boolean, default: false). Returns array of SubscriptionPlan with tier, name, category (STARTER, PROFESSIONAL, BUSINESS, ENTERPRISE), and periods (monthly, quarterly, yearly) each with period, credits, ratePerCredit, price, and savings (amount, percentage). SuperAdmin only. Tries to get plans from database first, falls back to hardcoded SUBSCRIPTION_PLANS if database fails.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/billingService.ts",
+  "service_methods": [
+    "getAdminPlans"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/billing",
+      "page_title": "Billing Page",
+      "via_service": "billingService",
+      "via_hook": "useBilling",
+      "usage_type": "conditional",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}
