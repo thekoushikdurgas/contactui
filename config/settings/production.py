@@ -53,7 +53,11 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
         'CacheControl': 'max-age=86400',
     }
     AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = 'public-read'
+    # Many modern S3 buckets have Object Ownership = "Bucket owner enforced",
+    # which disables ACLs entirely. Setting AWS_DEFAULT_ACL would cause:
+    #   AccessControlListNotSupported: The bucket does not allow ACLs
+    # Use bucket policy/IAM for access instead of ACLs.
+    AWS_DEFAULT_ACL = None
     STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/static/'
 else:
     # Fallback to WhiteNoise

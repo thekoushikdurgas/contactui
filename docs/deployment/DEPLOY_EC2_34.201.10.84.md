@@ -9,7 +9,7 @@ Step-by-step deployment for **DocsAI** on **EC2 Ubuntu** at **34.201.10.84**. Us
 | Item | Value |
 |------|--------|
 | **EC2 IP** | 34.201.10.84 |
-| **App dir** | `/var/www/docsai` |
+| **App dir** | `/var/www/docsai` (recommended) |
 | **Env file** | `/var/www/docsai/.env.prod` |
 | **Health** | `curl http://34.201.10.84/api/v1/health/` |
 | **Logs** | `sudo journalctl -u gunicorn -f`, `tail -f /var/log/nginx/docsai_error.log` |
@@ -115,16 +115,21 @@ Set at least:
 
 ## 7. Migrate, static, superuser
 
+If you see `bash: cd: /var/www/docsai: No such file or directory`, you deployed the code to a different path
+(e.g. `/home/ubuntu/contactui`). In that case, run the commands from your actual project directory.
+
 ```bash
 cd /var/www/docsai
 source venv/bin/activate
-# Ensure production settings are used for all management commands
 export DJANGO_ENV=production
-
 python manage.py migrate --noinput
 python manage.py createsuperuser
 python manage.py validate_env
 python manage.py check --deploy
+
+# If you enabled S3 static/media in production, collectstatic will upload to S3.
+# NOTE: Buckets with Object Ownership = "Bucket owner enforced" do not allow ACLs.
+# This repo sets AWS_DEFAULT_ACL=None; ensure your bucket policy/IAM grants access.
 python manage.py collectstatic --noinput
 mkdir -p logs
 ```
