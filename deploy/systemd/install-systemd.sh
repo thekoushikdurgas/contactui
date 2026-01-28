@@ -25,6 +25,13 @@ mkdir -p /var/log/django
 chown ubuntu:www-data /var/log/django
 chmod 755 /var/log/django
 
+# Fix .env.prod permissions if it exists (must be readable by ubuntu user)
+if [ -f "$PROJECT_DIR/.env.prod" ]; then
+    chown ubuntu:ubuntu "$PROJECT_DIR/.env.prod"
+    chmod 600 "$PROJECT_DIR/.env.prod"
+    echo "Fixed permissions for .env.prod"
+fi
+
 # Copy socket file
 cp deploy/systemd/gunicorn.socket $SYSTEMD_DIR/
 chmod 644 $SYSTEMD_DIR/gunicorn.socket

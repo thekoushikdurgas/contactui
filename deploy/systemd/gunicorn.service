@@ -12,7 +12,8 @@ WorkingDirectory=/home/ubuntu/docsai
 # Environment variables
 EnvironmentFile=/home/ubuntu/docsai/.env.prod
 Environment="DJANGO_ENV=production"
-Environment="PATH=/home/ubuntu/docsai/venv/bin"
+Environment="PATH=/home/ubuntu/docsai/venv/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/home/ubuntu/docsai"
 
 # Gunicorn command
 ExecStart=/home/ubuntu/docsai/venv/bin/gunicorn \
