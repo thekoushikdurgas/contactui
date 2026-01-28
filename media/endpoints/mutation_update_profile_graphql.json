@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_update_profile_graphql-001",
+  "endpoint_id": "mutation_update_profile_graphql",
+  "endpoint_path": "graphql/UpdateProfile",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update current user's profile. Accepts UpdateProfileInput with jobTitle (optional, max 255 characters), bio (optional, max 1000 characters), timezone (optional, max 100 characters), and notifications (optional, valid JSON object). Returns updated UserProfile with userId, jobTitle, bio, timezone, role, credits, subscriptionPlan, subscriptionStatus, avatarUrl, createdAt, updatedAt. Profile updates are atomic with transaction rollback on failure. Raises ValidationError (422) if field validation fails.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/users/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usersService.ts",
+  "service_methods": [
+    "updateProfile"
+  ],
+  "repository_methods": [
+    "update_profile"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "usersService",
+      "via_hook": "useUserProfile",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation UpdateProfile($input: UpdateProfileInput!) { users { updateProfile(input: $input) { userId jobTitle bio timezone role credits } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

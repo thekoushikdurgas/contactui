@@ -1,0 +1,38 @@
+{
+  "_id": "list_users_graphql-001",
+  "endpoint_id": "list_users_graphql",
+  "endpoint_path": "graphql/ListUsers",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List all users with filtering and pagination. Accepts optional UserFilterInput with email (String, partial match), role (enum: FreeUser, ProUser, Admin, SuperAdmin), isActive (Boolean), limit (Int, default 100), offset (Int, default 0). Returns UserConnection with items (array of User with id, email, firstName, lastName, role, isActive, createdAt), total, limit, offset, hasNext, hasPrevious. Raises ForbiddenError (403) if not SuperAdmin.",
+  "created_at": "2026-01-19T12:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/admin/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "users"
+  ],
+  "repository_methods": [
+    "get_all_users"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/users",
+      "page_title": "Admin Users Page",
+      "via_service": "adminService",
+      "via_hook": "useAdminUsers",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": "50 requests/minute",
+  "graphql_operation": "query ListUsers($input: UserFilterInput) { admin { users(input: $input) { items { id email firstName lastName role isActive } total hasNext } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

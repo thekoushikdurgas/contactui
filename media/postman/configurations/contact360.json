@@ -1,0 +1,4122 @@
+{
+  "_id": "contact360",
+  "config_id": "contact360",
+  "name": "Contact360",
+  "description": "Generated wrapper for Postman assets in docs_ai_agent/media/postman",
+  "state": "development",
+  "collection": {
+    "info": {
+      "name": "Contact360 API",
+      "description": "Postman collection for the Contact360 FastAPI backend. Core business logic (Authentication, Users, Contacts, Companies, Billing, Usage) is now handled by Connectra service. This collection includes v1 endpoints (Imports, Bulk), v2 endpoints (AI Chat, Apollo, Email, Email Patterns, LinkedIn, Exports, Gemini REST endpoint, Activities), v3 endpoints (S3 Files, Cleanup, Email Pattern, Analysis, Validation), and v4 endpoints (Sales Navigator scraping). Note: For GraphQL API, Gemini operations are now available through the AI Chats module. All endpoints require Bearer token authentication via Connectra. Sample parameters align with docs/api/ai_chat.md, docs/api/apollo.md, docs/api/email.md, docs/api/pattern.md, docs/api/linkdin.md, docs/api/export.md, docs/api/insert.md, docs/api/scrape.md, docs/api/s3.md, docs/api/cleanup.md, docs/api/email_pattern.md, docs/api/analysis.md, docs/api/validation.md, and docs/api/activities.md.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "version": null
+    },
+    "item": [
+      {
+        "id": null,
+        "name": "System",
+        "description": null,
+        "request": null,
+        "response": null,
+        "event": null,
+        "item": [
+          {
+            "id": null,
+            "name": "Root Metadata",
+            "description": null,
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Accept",
+                  "value": "application/json",
+                  "description": "Expected response content type.",
+                  "disabled": false
+                }
+              ],
+              "body": null,
+              "url": {
+                "raw": "{{baseUrl}}/",
+                "protocol": null,
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  ""
+                ],
+                "query": null,
+                "variable": null
+              },
+              "auth": null,
+              "description": "Return API metadata such as project name, version, and documentation URL."
+            },
+            "response": [],
+            "event": null,
+            "item": null
+          },
+          {
+            "id": null,
+            "name": "API Health",
+            "description": null,
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Accept",
+                  "value": "application/json",
+                  "description": null,
+                  "disabled": false
+                }
+              ],
+              "body": null,
+              "url": {
+                "raw": "{{baseUrl}}/health/",
+                "protocol": null,
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "health",
+                  ""
+                ],
+                "query": null,
+                "variable": null
+              },
+              "auth": null,
+              "description": "Health probe served under the versioned API prefix."
+            },
+            "response": [],
+            "event": null,
+            "item": null
+          },
+          {
+            "id": null,
+            "name": "Application Health",
+            "description": null,
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Accept",
+                  "value": "application/json",
+                  "description": null,
+                  "disabled": false
+                }
+              ],
+              "body": null,
+              "url": {
+                "raw": "{{baseHost}}/health",
+                "protocol": null,
+                "host": [
+                  "{{baseHost}}"
+                ],
+                "path": [
+                  "health"
+                ],
+                "query": null,
+                "variable": null
+              },
+              "auth": null,
+              "description": "Unversioned health check defined in app/main.py."
+            },
+            "response": [],
+            "event": null,
+            "item": null
+          },
+          {
+            "id": null,
+            "name": "Database Health",
+            "description": null,
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Accept",
+                  "value": "application/json",
+                  "description": null,
+                  "disabled": false
+                }
+              ],
+              "body": null,
+              "url": {
+                "raw": "{{baseHost}}/health/db",
+                "protocol": null,
+                "host": [
+                  "{{baseHost}}"
+                ],
+                "path": [
+                  "health",
+                  "db"
+                ],
+                "query": null,
+                "variable": null
+              },
+              "auth": null,
+              "description": "Database connection pool health check endpoint."
+            },
+            "response": [],
+            "event": null,
+            "item": null
+          }
+        ]
+      },
+      {
+        "id": null,
+        "name": "v1 API",
+        "description": "API v1 endpoints for contacts, companies, imports, and bulk operations.",
+        "request": null,
+        "response": null,
+        "event": null,
+        "item": [
+          {
+            "id": null,
+            "name": "Contacts",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Contacts",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": "JWT Bearer token for authentication.",
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/contacts/?limit=50&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "contacts",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "50",
+                        "description": "Maximum number of results per page",
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": "Starting offset for results",
+                        "disabled": false
+                      },
+                      {
+                        "key": "title",
+                        "value": "",
+                        "description": "Filter by contact title",
+                        "disabled": true
+                      },
+                      {
+                        "key": "view",
+                        "value": "simple",
+                        "description": "View mode: 'simple' or 'full'",
+                        "disabled": true
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List contacts with filtering, pagination, and sorting. Supports comprehensive filtering by title, seniority, department, location, email status, and more."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Contact by UUID",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/contacts/{{sampleContactUuid}}/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "contacts",
+                      "{{sampleContactUuid}}",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get detailed information about a specific contact by UUID."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Count Contacts",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/contacts/count/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "contacts",
+                      "count",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get count of contacts matching filter criteria."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Stream Contacts",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/contacts/stream/?format=jsonl",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "contacts",
+                      "stream",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "format",
+                        "value": "jsonl",
+                        "description": "Response format: 'jsonl' or 'csv'",
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Stream contacts in JSONL or CSV format for large datasets."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create Contact",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"title\": \"Software Engineer\",\n  \"email\": \"john.doe@example.com\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrl}}/contacts/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "contacts",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a new contact. Requires authentication."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Companies",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Companies",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/companies/?limit=50&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "companies",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "50",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List companies with filtering, pagination, and sorting."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Company by UUID",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/companies/{{sampleCompanyUuid}}/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "companies",
+                      "{{sampleCompanyUuid}}",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get detailed information about a specific company by UUID."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Count Companies",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/companies/count/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "companies",
+                      "count",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get count of companies matching filter criteria."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Stream Companies",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/companies/stream/?format=jsonl",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "companies",
+                      "stream",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "format",
+                        "value": "jsonl",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Stream companies in JSONL or CSV format for large datasets."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create Company",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Acme Corporation\",\n  \"website\": \"https://acme.com\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrl}}/companies/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "companies",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a new company. Requires authentication."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Imports",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Import Contacts from CSV",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "formdata",
+                    "raw": null,
+                    "urlencoded": null,
+                    "formdata": [
+                      {
+                        "key": "file",
+                        "value": null,
+                        "type": "file",
+                        "src": "{{importFilePath}}",
+                        "disabled": false,
+                        "description": "CSV file to import"
+                      }
+                    ],
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrl}}/imports/contacts/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "imports",
+                      "contacts",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Import contacts from CSV file. Returns job_id for status tracking."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Import Job Status",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrl}}/imports/jobs/{{sampleImportJobId}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "imports",
+                      "jobs",
+                      "{{sampleImportJobId}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get status of an import job by job_id."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Bulk Operations",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Bulk Create Contacts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contacts\": [\n    {\n      \"first_name\": \"John\",\n      \"last_name\": \"Doe\",\n      \"email\": \"john@example.com\"\n    },\n    {\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\",\n      \"email\": \"jane@example.com\"\n    }\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrl}}/bulk/contacts/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "bulk",
+                      "contacts",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create multiple contacts in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Bulk Update Contacts",
+                "description": null,
+                "request": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contacts\": [\n    {\n      \"uuid\": \"{{sampleContactUuid}}\",\n      \"title\": \"Updated Title\"\n    }\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrl}}/bulk/contacts/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrl}}"
+                    ],
+                    "path": [
+                      "bulk",
+                      "contacts",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Update multiple contacts in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": null,
+        "name": "v2 API",
+        "description": "API v2 endpoints for authentication, users, AI chat, Apollo integration, exports, LinkedIn, email services, and more.",
+        "request": null,
+        "response": null,
+        "event": null,
+        "item": [
+          {
+            "id": null,
+            "name": "Authentication",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Register User",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/auth/register/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "auth",
+                      "register",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Register a new user account and receive access tokens. Tokens are automatically saved to collection variables."
+                },
+                "response": [],
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": null,
+                      "type": "text/javascript",
+                      "exec": [
+                        "if (pm.response.code === 201) {",
+                        "    const response = pm.response.json();",
+                        "    if (response.access_token) {",
+                        "        pm.collectionVariables.set('accessToken', response.access_token);",
+                        "    }",
+                        "    if (response.refresh_token) {",
+                        "        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+                        "    }",
+                        "}"
+                      ]
+                    }
+                  }
+                ],
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Login User",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/auth/login/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "auth",
+                      "login",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Authenticate a user and receive access tokens. Tokens are automatically saved to collection variables."
+                },
+                "response": [],
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": null,
+                      "type": "text/javascript",
+                      "exec": [
+                        "if (pm.response.code === 200) {",
+                        "    const response = pm.response.json();",
+                        "    if (response.access_token) {",
+                        "        pm.collectionVariables.set('accessToken', response.access_token);",
+                        "    }",
+                        "    if (response.refresh_token) {",
+                        "        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+                        "    }",
+                        "}"
+                      ]
+                    }
+                  }
+                ],
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Refresh Token",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/auth/refresh/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "auth",
+                      "refresh",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get new access token using refresh token. Tokens are automatically updated in collection variables."
+                },
+                "response": [],
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": null,
+                      "type": "text/javascript",
+                      "exec": [
+                        "if (pm.response.code === 200) {",
+                        "    const response = pm.response.json();",
+                        "    if (response.access_token) {",
+                        "        pm.collectionVariables.set('accessToken', response.access_token);",
+                        "    }",
+                        "    if (response.refresh_token) {",
+                        "        pm.collectionVariables.set('refreshToken', response.refresh_token);",
+                        "    }",
+                        "}"
+                      ]
+                    }
+                  }
+                ],
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Current User",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/auth/me",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "auth",
+                      "me"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get current authenticated user details."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Users",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Users",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/users/?limit=25&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "users",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "25",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List all users (admin only)."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get User Profile",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/users/profile/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "users",
+                      "profile",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get current user's profile information."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Update User Profile",
+                "description": null,
+                "request": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/users/profile/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "users",
+                      "profile",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Update current user's profile."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Delete User",
+                "description": null,
+                "request": {
+                  "method": "DELETE",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/users/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "users",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Delete a user account (admin only)."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "AI Chat",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List AI Chats",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/?limit=25&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "25",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List user's AI chat conversations."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create AI Chat",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"title\": \"New Chat\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a new AI chat conversation. Chat ID is automatically saved to collection variable."
+                },
+                "response": [],
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": null,
+                      "type": "text/javascript",
+                      "exec": [
+                        "if (pm.response.code === 201) {",
+                        "    const response = pm.response.json();",
+                        "    if (response.uuid) {",
+                        "        pm.collectionVariables.set('sampleChatId', response.uuid);",
+                        "    }",
+                        "}"
+                      ]
+                    }
+                  }
+                ],
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get AI Chat",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      "{{sampleChatId}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get AI chat details and messages."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Send Message",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"message\": \"Hello, how can you help me?\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}/messages",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      "{{sampleChatId}}",
+                      "messages"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Send a message to AI chat and get response."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Update AI Chat",
+                "description": null,
+                "request": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"title\": \"Updated Chat Title\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      "{{sampleChatId}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Update an AI chat conversation."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Delete AI Chat",
+                "description": null,
+                "request": {
+                  "method": "DELETE",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/ai-chats/{{sampleChatId}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "ai-chats",
+                      "{{sampleChatId}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Delete an AI chat conversation."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Apollo",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Analyze Apollo URL",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personLocations[]=california&personTitles[]=CEO&organizationNumEmployeesRanges[]=11,50&page=1\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/apollo/analyze",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "apollo",
+                      "analyze"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze an Apollo.io URL and return structured parameter breakdown."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Analyze Apollo URL with Counts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/apollo/analyze/count",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "apollo",
+                      "analyze",
+                      "count"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze Apollo URL and return parameter breakdown with contact counts."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Search Contacts from Apollo URL",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/apollo/contacts?limit=50&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "apollo",
+                      "contacts"
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "50",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Search contacts using Apollo.io URL parameters."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Count Contacts from Apollo URL",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"url\": \"https://app.apollo.io/#/people?contactEmailStatusV2[]=verified&personTitles[]=CEO\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/apollo/contacts/count",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "apollo",
+                      "contacts",
+                      "count"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Count contacts matching Apollo.io URL parameters."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Exports",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Exports",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/exports/?limit=25&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "exports",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "25",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List user's export jobs."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create Contact Export",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"filters\": {},\n  \"format\": \"csv\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/exports/contacts",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "exports",
+                      "contacts"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a contact export job. Export ID and download URL are automatically saved."
+                },
+                "response": [],
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": null,
+                      "type": "text/javascript",
+                      "exec": [
+                        "if (pm.response.code === 201) {",
+                        "    const response = pm.response.json();",
+                        "    if (response.export_id) {",
+                        "        pm.collectionVariables.set('sampleExportId', response.export_id);",
+                        "    }",
+                        "    if (response.download_url) {",
+                        "        pm.collectionVariables.set('sampleExportDownloadUrl', response.download_url);",
+                        "    }",
+                        "}"
+                      ]
+                    }
+                  }
+                ],
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create Company Export",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"filters\": {},\n  \"format\": \"csv\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/exports/companies",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "exports",
+                      "companies"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a company export job."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Export Status",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/exports/{{sampleExportId}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "exports",
+                      "{{sampleExportId}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get status of an export job."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Download Export",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/exports/{{sampleExportId}}/download",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "exports",
+                      "{{sampleExportId}}",
+                      "download"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Download completed export file."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "LinkedIn",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Lookup LinkedIn Profile",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"linkedin_url\": \"https://www.linkedin.com/in/johndoe\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/linkedin/lookup",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "linkedin",
+                      "lookup"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Look up LinkedIn profile information."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Email",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Export Emails to CSV",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contacts\": [\n    {\n      \"first_name\": \"John\",\n      \"last_name\": \"Doe\",\n      \"website\": \"https://example.com\"\n    }\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email/export",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email",
+                      "export"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Process CSV and find/verify emails. Creates/updates contacts and companies."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Email Patterns",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Email Patterns",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email-patterns/?limit=25&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email-patterns",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "25",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List all email patterns."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Create Email Pattern",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"pattern\": \"{first_name}.{last_name}@example.com\",\n  \"company_uuid\": \"{{sampleCompanyUuid}}\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email-patterns/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email-patterns",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Create a new email pattern."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Email Pattern",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email-patterns",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get email pattern details by ID."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Update Email Pattern",
+                "description": null,
+                "request": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"pattern\": \"{first_name}.{last_name}@example.com\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email-patterns",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Update an existing email pattern."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Delete Email Pattern",
+                "description": null,
+                "request": {
+                  "method": "DELETE",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/email-patterns/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "email-patterns",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Delete an email pattern."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Gemini",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Gemini Chat",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"message\": \"Hello, how can you help?\"\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/gemini/chat",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "gemini",
+                      "chat"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Send message to Google Gemini AI."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Billing",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Get Billing Info",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/billing/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "billing",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get user's billing information."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Update Billing",
+                "description": null,
+                "request": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV2}}/billing/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "billing",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Update billing details."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Usage",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Get Usage Statistics",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/usage/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "usage",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get user's API usage statistics."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Activities",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List Activities",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/activities/?limit=25&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "activities",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "25",
+                        "description": null,
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List user activities."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get IP Geolocation",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV2}}/activities/ip-geo/?ip=8.8.8.8",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV2}}"
+                    ],
+                    "path": [
+                      "activities",
+                      "ip-geo",
+                      ""
+                    ],
+                    "query": [
+                      {
+                        "key": "ip",
+                        "value": "8.8.8.8",
+                        "description": null,
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get geolocation data for an IP address."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": null,
+        "name": "v3 API",
+        "description": "API v3 endpoints for S3 file operations, data cleanup, email pattern retrieval, data analysis, and data validation.",
+        "request": null,
+        "response": null,
+        "event": null,
+        "item": [
+          {
+            "id": null,
+            "name": "S3 Files",
+            "description": "S3 file operations for listing, retrieving metadata, and reading CSV files from S3 buckets.",
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "List CSV Files",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/s3/files",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "s3",
+                      "files"
+                    ],
+                    "query": [
+                      {
+                        "key": "prefix",
+                        "value": "",
+                        "description": "Optional prefix to filter files",
+                        "disabled": true
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "List all CSV files in the S3 bucket with their metadata."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get CSV File Info",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/s3/files/apollo_sample_5000_cleaned.csv",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "s3",
+                      "files",
+                      "apollo_sample_5000_cleaned.csv"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get metadata/information about a specific CSV file in S3. The file_id parameter must be the full S3 object key."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Paginated CSV Data",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/s3/files/apollo_sample_5000_cleaned.csv?limit=100&offset=0",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "s3",
+                      "files",
+                      "apollo_sample_5000_cleaned.csv"
+                    ],
+                    "query": [
+                      {
+                        "key": "limit",
+                        "value": "100",
+                        "description": "Maximum number of rows to return (1-1000)",
+                        "disabled": false
+                      },
+                      {
+                        "key": "offset",
+                        "value": "0",
+                        "description": "Number of rows to skip",
+                        "disabled": false
+                      }
+                    ],
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get paginated CSV file data from S3. Returns rows as dictionaries."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Cleanup",
+            "description": "Data cleanup operations for cleaning and normalizing contact and company data.",
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Clean Single Contact",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/cleanup/contact/single/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "cleanup",
+                      "contact",
+                      "single",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Clean and normalize a single contact and its metadata."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Clean Batch of Contacts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/cleanup/contact/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "cleanup",
+                      "contact",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Clean and normalize multiple contacts in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Clean Single Company",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/cleanup/company/single/{{sampleCompanyUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "cleanup",
+                      "company",
+                      "single",
+                      "{{sampleCompanyUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Clean and normalize a single company and its metadata."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Clean Batch of Companies",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/cleanup/company/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "cleanup",
+                      "company",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Clean and normalize multiple companies in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Email Pattern",
+            "description": "Email pattern operations for retrieving email patterns associated with contacts.",
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Get Email Pattern for Contact",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/email_pattern/contact/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "email_pattern",
+                      "contact",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get email pattern information for a single contact."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Get Email Patterns for Batch of Contacts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/email_pattern/contact/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "email_pattern",
+                      "contact",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Get email pattern information for multiple contacts."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Analysis",
+            "description": "Data analysis operations for analyzing data quality of contacts and companies.",
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Analyze Single Contact",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/analysis/contact/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "analysis",
+                      "contact",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze a single contact's data quality."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Analyze Batch of Contacts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/analysis/contact/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "analysis",
+                      "contact",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze multiple contacts in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Analyze Single Company",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/analysis/company/{{sampleCompanyUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "analysis",
+                      "company",
+                      "{{sampleCompanyUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze a single company's data quality."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Analyze Batch of Companies",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/analysis/company/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "analysis",
+                      "company",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Analyze multiple companies in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          },
+          {
+            "id": null,
+            "name": "Validation",
+            "description": "Data validation operations for validating contact and company data quality.",
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Validate Single Contact",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/validation/contact/{{sampleContactUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "validation",
+                      "contact",
+                      "{{sampleContactUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Validate a single contact's data quality."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Validate Batch of Contacts",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleContactUuid}}\",\n    \"contact-uuid-2\",\n    \"contact-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/validation/contact/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "validation",
+                      "contact",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Validate multiple contacts in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Validate Single Company",
+                "description": null,
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": null,
+                  "url": {
+                    "raw": "{{baseUrlV3}}/validation/company/{{sampleCompanyUuid}}",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "validation",
+                      "company",
+                      "{{sampleCompanyUuid}}"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Validate a single company's data quality."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              },
+              {
+                "id": null,
+                "name": "Validate Batch of Companies",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"uuids\": [\n    \"{{sampleCompanyUuid}}\",\n    \"company-uuid-2\",\n    \"company-uuid-3\"\n  ]\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV3}}/validation/company/batch/",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV3}}"
+                    ],
+                    "path": [
+                      "validation",
+                      "company",
+                      "batch",
+                      ""
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Validate multiple companies in a single request."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": null,
+        "name": "v4 API",
+        "description": "API v4 endpoints for Sales Navigator HTML scraping.",
+        "request": null,
+        "response": null,
+        "event": null,
+        "item": [
+          {
+            "id": null,
+            "name": "Sales Navigator",
+            "description": null,
+            "request": null,
+            "response": null,
+            "event": null,
+            "item": [
+              {
+                "id": null,
+                "name": "Scrape Sales Navigator HTML",
+                "description": null,
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "Bearer {{accessToken}}",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    },
+                    {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "description": null,
+                      "disabled": false
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"html\": \"<html><body><div data-x-search-result='LEAD'>...</div></body></html>\",\n  \"save\": false\n}",
+                    "urlencoded": null,
+                    "formdata": null,
+                    "graphql": null,
+                    "options": null
+                  },
+                  "url": {
+                    "raw": "{{baseUrlV4}}/sales-navigator/scrape",
+                    "protocol": null,
+                    "host": [
+                      "{{baseUrlV4}}"
+                    ],
+                    "path": [
+                      "sales-navigator",
+                      "scrape"
+                    ],
+                    "query": null,
+                    "variable": null
+                  },
+                  "auth": null,
+                  "description": "Scrape Sales Navigator HTML content and extract all profile data into a structured JSON format."
+                },
+                "response": [],
+                "event": null,
+                "item": null
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "auth": null,
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "id": null,
+          "type": "text/javascript",
+          "exec": [
+            "// Collection-level pre-request script",
+            "// Add any common pre-request logic here",
+            ""
+          ]
+        }
+      },
+      {
+        "listen": "test",
+        "script": {
+          "id": null,
+          "type": "text/javascript",
+          "exec": [
+            "// Collection-level test script",
+            "// Add any common test logic here",
+            "",
+            "// Log response time",
+            "if (pm.response.responseTime) {",
+            "    console.log('Response time: ' + pm.response.responseTime + 'ms');",
+            "}",
+            "",
+            "// Basic response validation",
+            "if (pm.response.code >= 400) {",
+            "    console.error('Error response:', pm.response.code, pm.response.text());",
+            "}"
+          ]
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseHost",
+        "value": "http://127.0.0.1:8000",
+        "enabled": true,
+        "type": "default",
+        "description": "Default FastAPI server origin."
+      },
+      {
+        "key": "baseUrl",
+        "value": "{{baseHost}}/api/v1",
+        "enabled": true,
+        "type": "default",
+        "description": "Versioned API base path for v1 endpoints."
+      },
+      {
+        "key": "baseUrlV2",
+        "value": "{{baseHost}}/api/v2",
+        "enabled": true,
+        "type": "default",
+        "description": "Versioned API base path for v2 endpoints (Authentication, Users, AI Chat)."
+      },
+      {
+        "key": "baseUrlV3",
+        "value": "{{baseHost}}/api/v3",
+        "enabled": true,
+        "type": "default",
+        "description": "Versioned API base path for v3 endpoints (S3 Files, Cleanup, Email Pattern, Analysis, Validation)."
+      },
+      {
+        "key": "baseUrlV4",
+        "value": "{{baseHost}}/api/v4",
+        "enabled": true,
+        "type": "default",
+        "description": "Versioned API base path for v4 endpoints (Sales Navigator scraping)."
+      },
+      {
+        "key": "accessToken",
+        "value": "",
+        "enabled": true,
+        "type": "default",
+        "description": "JWT access token obtained from login or register endpoints. Automatically set by test scripts."
+      },
+      {
+        "key": "refreshToken",
+        "value": "",
+        "enabled": true,
+        "type": "default",
+        "description": "JWT refresh token obtained from login or register endpoints. Automatically set by test scripts."
+      },
+      {
+        "key": "sampleContactUuid",
+        "value": "abc123-def456-ghi789",
+        "enabled": true,
+        "type": "default",
+        "description": "Example contact UUID for detail routes."
+      },
+      {
+        "key": "sampleCompanyUuid",
+        "value": "398cce44-233d-5f7c-aea1-e4a6a79df10c",
+        "enabled": true,
+        "type": "default",
+        "description": "Placeholder company UUID used for exclusion filters."
+      },
+      {
+        "key": "sampleImportJobId",
+        "value": "demo-job-id",
+        "enabled": true,
+        "type": "default",
+        "description": "Placeholder job identifier for import status checks."
+      },
+      {
+        "key": "sampleChatId",
+        "value": "",
+        "enabled": true,
+        "type": "default",
+        "description": "Chat UUID identifier. Automatically set by the Create Chat endpoint test script."
+      },
+      {
+        "key": "sampleExportId",
+        "value": "",
+        "enabled": true,
+        "type": "default",
+        "description": "Export UUID identifier. Automatically set by the Create Contact Export endpoint test script."
+      },
+      {
+        "key": "sampleExportDownloadUrl",
+        "value": "",
+        "enabled": true,
+        "type": "default",
+        "description": "Signed download URL for export file. Automatically set by the Create Contact Export endpoint test script."
+      },
+      {
+        "key": "importFilePath",
+        "value": "D:\\code\\ayan\\appoinmentbackend\\data\\data\\apollo_sample_5000_cleaned.csv",
+        "enabled": true,
+        "type": "default",
+        "description": "Local CSV file path used for import requests. Update this to point to your CSV file location."
+      }
+    ]
+  },
+  "environments": [
+    {
+      "id": "contact360-local-env",
+      "name": "Contact360 - Local",
+      "values": [
+        {
+          "key": "baseUrl",
+          "value": "http://localhost:8000",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "accessToken",
+          "value": "",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "refreshToken",
+          "value": "",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "userId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "email",
+          "value": "user@example.com",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "password",
+          "value": "password123",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "name",
+          "value": "Test User",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "contactUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "companyUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "exportId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "notificationId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "chatId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "uploadId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "jobUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        }
+      ],
+      "timestamp": null,
+      "is_active": false
+    },
+    {
+      "id": "contact360-production-env",
+      "name": "Contact360 - Production",
+      "values": [
+        {
+          "key": "baseUrl",
+          "value": "https://api.contact360.io",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "accessToken",
+          "value": "",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "refreshToken",
+          "value": "",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "userId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "email",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "password",
+          "value": "",
+          "enabled": true,
+          "type": "secret",
+          "description": null
+        },
+        {
+          "key": "name",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "contactUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "companyUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "exportId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "notificationId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "chatId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "uploadId",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        },
+        {
+          "key": "jobUuid",
+          "value": "",
+          "enabled": true,
+          "type": "default",
+          "description": null
+        }
+      ],
+      "timestamp": null,
+      "is_active": false
+    }
+  ],
+  "endpoint_mappings": [],
+  "test_suites": [],
+  "access_control": null,
+  "metadata": {
+    "created_at": "2026-01-21T13:33:51.999493+00:00",
+    "updated_at": "2026-01-21T13:33:51.999493+00:00",
+    "created_by": null,
+    "last_updated_by": null,
+    "last_synced_at": null,
+    "sync_source": null,
+    "version": "1.0.0",
+    "tags": [],
+    "notes": null
+  }
+}

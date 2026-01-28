@@ -1,0 +1,45 @@
+{
+  "_id": "query_get_dashboard_page_graphql-001",
+  "endpoint_id": "query_get_dashboard_page_graphql",
+  "endpoint_path": "graphql/GetDashboardPage",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get a custom dashboard page by pageId with sections, metadata, and access control information.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/dashboardPagesService.ts",
+  "service_methods": [
+    "getDashboardPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/dashboard-pages/[pageId]",
+      "page_title": "Admin Dashboard Pages Pageid Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useDashboardPageEditor",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/dashboard/[pageId]",
+      "page_title": "Dashboard Pageid Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useDashboardPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 2,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

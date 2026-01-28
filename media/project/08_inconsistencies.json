@@ -1,0 +1,85 @@
+{
+  "validation_date": "2026-01-20",
+  "overall_status": "excellent",
+  "critical_issues": 0,
+  "warnings": 2,
+  "minor_issues": 1,
+  "inconsistencies": [
+    {
+      "severity": "warning",
+      "category": "path_format",
+      "issue": "Path format inconsistency in by-endpoint files",
+      "details": "Some by-endpoint files use endpoint_path without 'graphql/' prefix",
+      "examples": [
+        {
+          "file": "by-endpoint_GetActivities_QUERY.json",
+          "endpoint_path": "GetActivities",
+          "expected": "graphql/GetActivities",
+          "by_page_file": "dashboard.json",
+          "by_page_endpoint_path": "graphql/GetActivities"
+        },
+        {
+          "file": "by-endpoint_ListExports_QUERY.json",
+          "endpoint_path": "ListExports",
+          "expected": "graphql/ListExports",
+          "by_page_file": "dashboard.json",
+          "by_page_endpoint_path": "graphql/ListExports"
+        }
+      ],
+      "affected_files": 10,
+      "recommendation": "Standardize all by-endpoint files to use 'graphql/' prefix"
+    },
+    {
+      "severity": "warning",
+      "category": "index_count",
+      "issue": "Relationship index count discrepancy",
+      "details": "Index shows 80 GraphQL relationships but total is 95",
+      "index_values": {
+        "total": 95,
+        "by_api_version": {
+          "graphql": 80
+        }
+      },
+      "difference": 15,
+      "recommendation": "Verify relationship counting logic"
+    },
+    {
+      "severity": "minor",
+      "category": "naming",
+      "issue": "Service naming variations",
+      "details": "Minor variations in service names (e.g., companyService vs companiesService)",
+      "impact": "very_low",
+      "recommendation": "Document naming conventions"
+    }
+  ],
+  "validation_results": {
+    "cross_collection_references": {
+      "pages_to_endpoints": "pass",
+      "endpoints_to_pages": "pass",
+      "relationships_to_pages": "pass",
+      "relationships_to_endpoints": "pass"
+    },
+    "bidirectional_relationships": {
+      "status": "pass",
+      "tested_relationships": 10,
+      "all_bidirectional": true,
+      "path_format_issues": 2
+    },
+    "index_consistency": {
+      "pages_index": "pass",
+      "endpoints_index": "pass",
+      "relationships_index": "warning"
+    },
+    "data_integrity": {
+      "orphaned_pages": 0,
+      "orphaned_endpoints": 0,
+      "orphaned_relationships": 0,
+      "status": "pass"
+    },
+    "metadata_consistency": {
+      "endpoint_counts": "pass",
+      "page_counts": "pass",
+      "api_versions": "pass"
+    }
+  }
+}

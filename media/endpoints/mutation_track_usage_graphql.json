@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_track_usage_graphql-001",
+  "endpoint_id": "mutation_track_usage_graphql",
+  "endpoint_path": "graphql/TrackUsage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Track feature usage for the current user. Accepts TrackUsageInput with feature (required, non-empty string, max 100 characters, must be valid feature name) and amount (non-negative integer, min: 1, max: 1,000,000, default: 1). Returns TrackUsageResponse with feature, used, limit, and success. Increments usage count for the specified feature. Usage records are auto-created if they don't exist. Limits are updated if user role changed. Usage is capped at the limit (won't exceed limit). Unlimited features (limit is None or 0) keep used count at 0. Role-based limits: Limits are determined by user role (FREE_USER vs PRO_USER). Silently fails for analytics (no toast shown).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/usageService.ts",
+  "service_methods": [
+    "trackUsage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

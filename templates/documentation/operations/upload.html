@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upload to S3 - Operations{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Upload to S3</h1>
+        
+        <div class="space-y-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+                Upload local JSON files from media/ directory to S3.
+            </p>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="upload_pages" checked class="rounded border-gray-300">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload pages/</span>
+                    </label>
+                </div>
+                
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="upload_endpoints" checked class="rounded border-gray-300">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload endpoints/</span>
+                    </label>
+                </div>
+                
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="upload_relationships" checked class="rounded border-gray-300">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload retations/</span>
+                    </label>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button 
+                        type="submit"
+                        class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                    >
+                        Upload to S3
+                    </button>
+                    <a href="{% url 'documentation:operations_dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

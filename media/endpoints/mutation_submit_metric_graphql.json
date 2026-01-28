@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_submit_metric_graphql-001",
+  "endpoint_id": "mutation_submit_metric_graphql",
+  "endpoint_path": "graphql/SubmitMetric",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Submit a single performance metric. Accepts SubmitMetricInput with metricType (required, enum: page_load, api_call, render_time, memory_usage), name (required, String), value (required, Float), unit (optional, String: ms, bytes, etc.), metadata (optional, JSON). Returns SubmitMetricResponse with success (Boolean), message (String). Typically called automatically by frontend performance monitor. Stored via Lambda Logs API for analytics dashboards.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/analytics/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/analyticsService.ts",
+  "service_methods": [
+    "submitMetric"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/analytics",
+      "page_title": "Analytics Page",
+      "via_service": "analyticsService",
+      "via_hook": "useAnalyticsPage",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation SubmitMetric($input: SubmitMetricInput!) { analytics { submitMetric(input: $input) { success message } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_mark_notification_as_read_graphql-001",
+  "endpoint_id": "mutation_mark_notification_as_read_graphql",
+  "endpoint_path": "graphql/MarkNotificationAsRead",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Mark a notification as read. Accepts MarkAsReadInput with notificationId (required, ID/UUID). Updates isRead to true and sets readAt timestamp. Returns updated Notification with id, title, message, type, priority, isRead (true), readAt (DateTime). User isolation enforced - users can only mark their own notifications. Raises NotFoundError (404) if notification not found. Raises ForbiddenError (403) if user doesn't own notification.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/notifications/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/notificationsService.ts",
+  "service_methods": [
+    "markAsRead"
+  ],
+  "repository_methods": [
+    "update_notification"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation MarkNotificationAsRead($input: MarkAsReadInput!) { notifications { markAsRead(input: $input) { id title isRead readAt } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

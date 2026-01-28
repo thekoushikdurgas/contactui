@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Relationships Format Examples - Media Manager{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Relationships Format Examples</h1>
+        <p class="text-gray-600 dark:text-gray-400">JSON examples and payload formats for Relationships API</p>
+    </div>
+
+    {% if error %}
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+        <p class="text-red-800 dark:text-red-200">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    {% if format_data %}
+    <div class="space-y-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Resource Information</h2>
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Resource</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ format_data.resource|default:"relationships" }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">S3 Data Prefix</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ format_data.s3_data_prefix|default:"N/A" }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        {% if examples %}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">JSON Examples</h2>
+            <pre class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto"><code class="text-sm text-gray-800 dark:text-gray-200">{{ examples|safe }}</code></pre>
+        </div>
+        {% endif %}
+
+        {% if analyse_payload_example %}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Analysis Payload Example</h2>
+            <pre class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto"><code class="text-sm text-gray-800 dark:text-gray-200">{{ analyse_payload_example|safe }}</code></pre>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+        <p class="text-gray-500 dark:text-gray-400">No format examples available</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

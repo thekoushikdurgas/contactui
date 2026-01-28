@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Database Schema - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-500">
+    <div class="p-8 border-b border-gray-100 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Database Schema</h1>
+            <p class="text-sm text-gray-500 mt-1">View your database schema and relationships</p>
+        </div>
+        <button id="copy-sql-btn" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors">Copy SQL</button>
+    </div>
+    
+    <div class="p-8">
+        <pre class="bg-gray-900 text-gray-100 rounded-2xl p-6 overflow-x-auto text-sm font-mono" id="sql-schema"><code>-- Database schema will be displayed here
+-- SQL schema content</code></pre>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('copy-sql-btn').addEventListener('click', function() {
+    const sql = document.getElementById('sql-schema').textContent;
+    navigator.clipboard.writeText(sql);
+    alert('SQL schema copied to clipboard!');
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{
+  "_id": "mutation_create_dashboard_page_graphql-001",
+  "endpoint_id": "mutation_create_dashboard_page_graphql",
+  "endpoint_path": "graphql/CreateDashboardPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new custom dashboard page. Accepts CreateDashboardPageInput with pageId (required, String, unique slug), title (required, String), description (optional, String), isPublished (optional, Boolean, default false), accessRoles (optional, array of String), sections (optional, array of SectionInput). Returns DashboardPage with pageId, title, description, isPublished, sections, accessRoles, createdAt, updatedAt. Raises ConflictError (409) if pageId already exists. Raises ForbiddenError (403) if not Admin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/dashboard_pages/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/dashboardPagesService.ts",
+  "service_methods": [
+    "createDashboardPage"
+  ],
+  "repository_methods": [
+    "create_dashboard_page"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/dashboard-pages",
+      "page_title": "Admin Dashboard Pages Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useAdminDashboardPages",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/admin/dashboard-pages/[pageId]",
+      "page_title": "Admin Dashboard Pages Pageid Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useDashboardPageEditor",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateDashboardPage($input: CreateDashboardPageInput!) { dashboardPages { createDashboardPage(input: $input) { pageId title description isPublished createdAt } } }",
+  "sql_file": null,
+  "page_count": 2,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

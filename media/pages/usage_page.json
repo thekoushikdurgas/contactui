@@ -1,0 +1,63 @@
+{
+  "_id": "usage_page-001",
+  "page_id": "usage_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/usage",
+    "file_path": "contact360/dashboard/app/(dashboard)/usage/page.tsx",
+    "purpose": "Usage and limits page displaying feature usage statistics and remaining limits across all features in cards or table view.",
+    "s3_key": "data/pages/usage_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetUsage",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "usageService",
+        "via_hook": "useUsageTracking",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get usage information for all features or a specific feature. Returns used, limit, remaining, and resetAt for each feature."
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "DashboardPageLayout",
+        "file_path": "components/layouts/DashboardPageLayout.tsx"
+      },
+      {
+        "name": "PageHeader",
+        "file_path": "components/patterns/PageHeader.tsx"
+      },
+      {
+        "name": "UsageOverview",
+        "file_path": "components/features/usage/UsageOverview.tsx"
+      },
+      {
+        "name": "UsageLimitsTable",
+        "file_path": "components/features/usage/UsageLimitsTable.tsx"
+      },
+      {
+        "name": "Card3D",
+        "file_path": "components/ui/Card3D.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 1,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

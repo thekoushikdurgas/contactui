@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_update_user_credits_graphql-001",
+  "endpoint_id": "mutation_update_user_credits_graphql",
+  "endpoint_path": "graphql/UpdateUserCredits",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update a user's credit balance. Returns updated user profile with new credit balance.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "updateUserCredits"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/users",
+      "page_title": "Admin Users Page",
+      "via_service": "adminService",
+      "via_hook": "useAdminUsers",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

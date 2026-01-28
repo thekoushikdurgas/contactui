@@ -1,0 +1,47 @@
+<div class="sidebar-link-item-wrapper" data-has-children="{% if item.children %}true{% else %}false{% endif %}">
+    <div class="flex items-center w-full">
+        <a href="{% if item.url_with_return %}{{ item.url_with_return }}{% elif item.url %}{{ item.url }}{% else %}{% url item.app_name|add:':'|add:item.url_name %}{% endif %}" 
+           {% if item.external %}target="_blank" rel="noopener noreferrer"{% endif %} 
+           class="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group 
+                  {% if item.active %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400{% else %}text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100{% endif %}">
+            <div class="transition-colors duration-200 
+                        {% if item.active %}text-blue-600 dark:text-blue-400
+                        {% elif item.page_type == 'static' %}text-green-500 dark:text-green-400
+                        {% elif item.page_type == 'info' %}text-purple-500 dark:text-purple-400
+                        {% else %}text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300{% endif %}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {{ item.icon|safe }}
+                </svg>
+            </div>
+            <span class="font-medium text-sm flex-1">{{ item.label }}</span>
+            {% if item.active %}
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></div>
+            {% endif %}
+            {% if item.external %}
+                <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+            {% endif %}
+        </a>
+        {% if item.children %}
+            <button type="button" 
+                    onclick="toggleNestedChildren(this.closest('.sidebar-link-item-wrapper'))"
+                    class="px-2 py-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    aria-label="Toggle {{ item.label }} submenu">
+                <svg class="w-4 h-4 transition-transform duration-200 chevron {% if item.expanded %}rotate-90{% endif %}" 
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        {% endif %}
+    </div>
+    
+    {% if item.children %}
+        <div class="nested-children mt-1 space-y-0.5 {% if not item.expanded %}hidden{% endif %}" 
+             data-parent-item="{{ item.label|slugify }}">
+            {% for child in item.children %}
+                {% include 'components/sidebar/nested_item.html' with item=child %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

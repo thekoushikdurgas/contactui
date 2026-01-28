@@ -1,0 +1,60 @@
+{% comment %}
+Radio Component
+
+Usage:
+{% include 'components/radio.html' with name='status' label='Active' value='active' checked=True %}
+
+For radio groups, use multiple times with the same name:
+{% include 'components/radio.html' with name='status' label='Active' value='active' %}
+{% include 'components/radio.html' with name='status' label='Inactive' value='inactive' %}
+
+Parameters:
+- name: Radio name (required, must be same for radio group)
+- id: Radio ID (defaults to name-value if not provided)
+- label: Label text (optional)
+- value: Radio value (required)
+- checked: Boolean - default: false
+- disabled: Boolean - default: false
+- required: Boolean - default: false
+- error: Error message (optional)
+- help_text: Help text (optional)
+- class: Additional CSS classes (optional)
+- aria_label: ARIA label (optional)
+- inline: Boolean - display inline with label (default: false)
+{% endcomment %}
+
+{% load static %}
+
+<div class="form-field{% if inline %} form-field-inline{% endif %}">
+    <div class="form-radio-wrapper{% if error %} form-radio-error{% endif %}">
+        <input type="radio"
+               name="{{ name }}"
+               id="{{ id|default:name|add:'-'|add:value }}"
+               value="{{ value }}"
+               class="form-radio {{ class|default:'' }}"
+               {% if checked %}checked{% endif %}
+               {% if disabled %}disabled{% endif %}
+               {% if required %}required{% endif %}
+               {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+               {% if error %}aria-invalid="true" aria-describedby="{{ id|default:name|add:'-'|add:value }}-error"{% endif %}
+               {% if help_text %}aria-describedby="{{ id|default:name|add:'-'|add:value }}-help"{% endif %}>
+        
+        {% if label %}
+        <label for="{{ id|default:name|add:'-'|add:value }}" class="form-radio-label{% if required %} form-label-required{% endif %}">
+            {{ label }}
+        </label>
+        {% endif %}
+    </div>
+    
+    {% if error %}
+    <p id="{{ id|default:name|add:'-'|add:value }}-error" class="form-error" role="alert">
+        {{ error }}
+    </p>
+    {% endif %}
+    
+    {% if help_text and not error %}
+    <p id="{{ id|default:name|add:'-'|add:value }}-help" class="form-help">
+        {{ help_text }}
+    </p>
+    {% endif %}
+</div>

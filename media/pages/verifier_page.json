@@ -1,0 +1,87 @@
+{
+  "_id": "verifier_page-001",
+  "page_id": "verifier_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/verifier",
+    "file_path": "contact360/dashboard/app/(dashboard)/verifier/page.tsx",
+    "purpose": "Email verifier page with bulk verification, single email verification, management, and history tabs.",
+    "s3_key": "data/pages/verifier_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/VerifySingleEmail",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "emailService",
+        "via_hook": "useVerifier",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Verify a single email address for validity and risk"
+      },
+      {
+        "endpoint_path": "graphql/VerifyBulkEmails",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "emailService",
+        "via_hook": "useVerifier",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Verify multiple email addresses in bulk"
+      },
+      {
+        "endpoint_path": "graphql/GetActivities",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "activitiesService",
+        "via_hook": "useVerifier",
+        "usage_type": "secondary",
+        "usage_context": "data_fetching",
+        "description": "Get verification activity history"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "VerifierHeader",
+        "file_path": "components/features/verifier/VerifierHeader.tsx"
+      },
+      {
+        "name": "VerifierTabNavigation",
+        "file_path": "components/features/verifier/VerifierTabNavigation.tsx"
+      },
+      {
+        "name": "VerifierBulkTab",
+        "file_path": "components/features/verifier/VerifierBulkTab.tsx"
+      },
+      {
+        "name": "VerifierEmailTab",
+        "file_path": "components/features/verifier/VerifierEmailTab.tsx"
+      },
+      {
+        "name": "VerifierManagementTab",
+        "file_path": "components/features/verifier/VerifierManagementTab.tsx"
+      },
+      {
+        "name": "VerifierHistoryTab",
+        "file_path": "components/features/verifier/VerifierHistoryTab.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 3,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

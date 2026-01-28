@@ -1,0 +1,936 @@
+{
+  "name": "Key Ingestion Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Comprehensive Data Ingestion Workflow\n\nThis workflow implements the complete ingestion pipeline:\n1. Reads CSV (local or S3)\n2. Classifies CSV type\n3. Cleans data using specialized functions\n4. Generates UUIDs for deduplication\n5. Inserts into PostgreSQL (upsert on conflict)\n6. Logs errors to centralized error CSV and database\n7. Tracks statistics",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "key-ingestion",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.body.source || $json.body.file_path ? 'local' : 's3'}}",
+              "rightValue": "local",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-source-1",
+      "name": "Check Source Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "={{$json.body.file_path}}",
+        "options": {}
+      },
+      "id": "read-local-file-1",
+      "name": "Read Local File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        50,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "bucketName": "={{$env.S3_BUCKET_NAME}}",
+        "fileName": "={{$json.body.object_key}}",
+        "options": {}
+      },
+      "id": "read-s3-file-1",
+      "name": "Read S3 File",
+      "type": "n8n-nodes-base.aws",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ],
+      "credentials": {
+        "aws": {
+          "id": "AWS_CREDENTIALS",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "fromFile": true
+        }
+      },
+      "id": "parse-csv-1",
+      "name": "Parse CSV",
+      "type": "n8n-nodes-base.csv",
+      "typeVersion": 1,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Classify CSV type based on headers\nconst items = $input.all();\nif (items.length === 0) {\n  return { json: { csv_type: 'unknown', headers: [] } };\n}\n\n// Get headers from first item\nconst firstItem = items[0].json;\nconst headers = Object.keys(firstItem).map(h => h.toLowerCase());\n\n// Company hint columns\nconst COMPANY_HINTS = ['company', 'company_linkedin_url', 'employees', 'company_name_for_emails'];\n// Contact hint columns\nconst CONTACT_HINTS = ['first_name', 'last_name', 'email', 'person_linkedin_url'];\n\nconst hasCompanyHints = COMPANY_HINTS.some(hint => headers.includes(hint));\nconst hasContactHints = CONTACT_HINTS.some(hint => headers.includes(hint));\n\nlet csvType = 'unknown';\nif (hasCompanyHints && hasContactHints) {\n  csvType = 'both';\n} else if (hasCompanyHints) {\n  csvType = 'company';\n} else if (hasContactHints) {\n  csvType = 'contact';\n}\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    _csv_type: csvType,\n    _headers: headers\n  }\n}));"
+      },
+      "id": "classify-csv-1",
+      "name": "Classify CSV Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1000,
+        "options": {}
+      },
+      "id": "split-batches-1",
+      "name": "Split in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        590,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean data and generate UUIDs for each row in batch\nconst items = $input.all();\nconst csvType = items[0]?.json?._csv_type || 'unknown';\nconst batchResults = [];\nconst errors = [];\n\n// UUID5 namespace (RFC 4122)\nconst NAMESPACE_URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';\n\n// Simple UUID5 implementation using crypto\nfunction uuid5(namespace, name) {\n  const crypto = require('crypto');\n  \n  // Convert namespace UUID to bytes\n  const nsBytes = namespace.replace(/-/g, '');\n  const nsBuffer = Buffer.from(nsBytes, 'hex');\n  \n  // Create SHA-1 hash of namespace + name\n  const hash = crypto.createHash('sha1');\n  hash.update(nsBuffer);\n  hash.update(name, 'utf8');\n  const hashBytes = hash.digest();\n  \n  // Set version (5) and variant bits\n  hashBytes[6] = (hashBytes[6] & 0x0f) | 0x50; // Version 5\n  hashBytes[8] = (hashBytes[8] & 0x3f) | 0x80; // Variant 10\n  \n  // Convert to UUID string\n  const hex = hashBytes.toString('hex');\n  return [\n    hex.substr(0, 8),\n    hex.substr(8, 4),\n    hex.substr(12, 4),\n    hex.substr(16, 4),\n    hex.substr(20, 12)\n  ].join('-');\n}\n\n// Clean text helper\nfunction cleanText(value) {\n  if (!value || value === '_' || value === '') return null;\n  if (typeof value !== 'string') value = String(value);\n  // Remove special chars, keep alphanumeric, spaces, hyphens, periods\n  const cleaned = value.replace(/[^a-zA-Z0-9\\s\\-\\.]/g, '').trim();\n  return cleaned || null;\n}\n\n// Clean array helper\nfunction cleanArray(arr) {\n  if (!Array.isArray(arr)) return null;\n  const cleaned = arr.map(item => cleanText(item)).filter(Boolean);\n  return cleaned.length > 0 ? cleaned : null;\n}\n\nfor (const item of items) {\n  try {\n    const row = item.json;\n    const result = { ...row };\n    \n    if (csvType === 'company' || csvType === 'both') {\n      // Generate company UUID\n      const companyName = row.company || '_';\n      const linkedinUrl = row.company_linkedin_url || '_';\n      const companyNameForEmails = row.company_name_for_emails || '_';\n      const hashStr = companyName + linkedinUrl + companyNameForEmails;\n      result.company_uuid = uuid5(NAMESPACE_URL, hashStr);\n      \n      // Clean company name (will call API later, for now placeholder)\n      result.cleaned_company_name = row.company || null;\n      \n      // Process arrays\n      result.industries = row.industry ? row.industry.split(',').map(i => i.trim()).filter(Boolean) : null;\n      result.keywords = row.keywords ? row.keywords.split(',').map(k => k.trim()).filter(Boolean) : null;\n      result.technologies = row.technologies ? row.technologies.split(',').map(t => t.trim()).filter(Boolean) : null;\n      \n      // Clean text fields\n      result.company_address = cleanText(row.company_address);\n      result.company_city = cleanText(row.company_city);\n      result.company_state = cleanText(row.company_state);\n      result.company_country = cleanText(row.company_country);\n      \n      // Convert numeric fields\n      result.employees_count = parseInt(row.employees || 0, 10) || 0;\n      result.annual_revenue = parseInt(row.annual_revenue || 0, 10) || 0;\n      result.total_funding = parseInt(row.total_funding || 0, 10) || 0;\n      \n      // Text search field\n      result.text_search = [\n        result.company_address,\n        result.company_city,\n        result.company_state,\n        result.company_country\n      ].filter(Boolean).join(' ');\n      \n      result._record_type = 'company';\n    }\n    \n    if (csvType === 'contact' || csvType === 'both') {\n      // Generate contact UUID\n      const personLinkedinUrl = row.person_linkedin_url || '_';\n      const email = row.email || '_';\n      const hashStr = personLinkedinUrl + email;\n      result.contact_uuid = uuid5(NAMESPACE_URL, hashStr);\n      \n      // Generate company UUID for contact\n      const companyName = row.company || '_';\n      const linkedinUrl = row.company_linkedin_url || '_';\n      const companyNameForEmails = row.company_name_for_emails || '_';\n      const companyHashStr = companyName + linkedinUrl + companyNameForEmails;\n      result.company_uuid = uuid5(NAMESPACE_URL, companyHashStr);\n      \n      // Clean title (will call API later)\n      result.cleaned_title = row.title || null;\n      \n      // Process arrays\n      result.departments = row.departments ? row.departments.split(',').map(d => d.trim()).filter(Boolean) : null;\n      \n      // Clean text fields\n      result.first_name = cleanText(row.first_name) || '_';\n      result.last_name = cleanText(row.last_name) || '_';\n      result.email = row.email || '_';\n      result.mobile_phone = cleanText(row.mobile_phone) || '_';\n      result.city = cleanText(row.city);\n      result.state = cleanText(row.state);\n      result.country = cleanText(row.country);\n      \n      // Text search field\n      result.text_search = [result.city, result.state, result.country].filter(Boolean).join(' ');\n      \n      result._record_type = 'contact';\n    }\n    \n    // Add timestamps\n    result.created_at = new Date().toISOString();\n    result.updated_at = new Date().toISOString();\n    \n    batchResults.push({ json: result });\n  } catch (error) {\n    errors.push({\n      json: {\n        row_data: item.json,\n        error_reason: error.message,\n        error_type: 'processing_error'\n      }\n    });\n  }\n}\n\n// Return processed items and errors separately\nreturn batchResults.concat(errors.map(e => ({ ...e, _is_error: true })));"
+      },
+      "id": "process-batch-1",
+      "name": "Process Batch (UUID + Transform)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        770,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json._is_error}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-errors-1",
+      "name": "Filter Errors",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        950,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/analysis/company/batch/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "uuids",
+              "value": "={{$json.company_uuid ? [$json.company_uuid] : []}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "clean-company-names-1",
+      "name": "Clean Company Names (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1130,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/analysis/contact/batch/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "uuids",
+              "value": "={{$json.contact_uuid ? [$json.contact_uuid] : []}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "clean-titles-1",
+      "name": "Clean Titles (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1130,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge cleaning results back into data\nconst items = $input.all();\nconst cleaningResults = $('Clean Company Names (API)').all() || [];\nconst titleResults = $('Clean Titles (API)').all() || [];\n\n// Create lookup maps\nconst companyCleaningMap = {};\ncleaningResults.forEach(result => {\n  if (result.json.analyses && result.json.analyses.length > 0) {\n    const analysis = result.json.analyses[0];\n    if (analysis.company_uuid) {\n      companyCleaningMap[analysis.company_uuid] = analysis;\n    }\n  }\n});\n\nconst titleCleaningMap = {};\ntitleResults.forEach(result => {\n  if (result.json.analyses && result.json.analyses.length > 0) {\n    const analysis = result.json.analyses[0];\n    if (analysis.contact_uuid) {\n      titleCleaningMap[analysis.contact_uuid] = analysis;\n    }\n  }\n});\n\n// Merge results\nreturn items.map(item => {\n  const row = item.json;\n  \n  // Apply company cleaning results\n  if (row.company_uuid && companyCleaningMap[row.company_uuid]) {\n    const cleaned = companyCleaningMap[row.company_uuid];\n    if (cleaned.name_cleaned) {\n      row.cleaned_company_name = cleaned.name_cleaned;\n    }\n  }\n  \n  // Apply title cleaning results\n  if (row.contact_uuid && titleCleaningMap[row.contact_uuid]) {\n    const cleaned = titleCleaningMap[row.contact_uuid];\n    if (cleaned.title_cleaned) {\n      row.cleaned_title = cleaned.title_cleaned;\n    }\n  }\n  \n  return { json: row };\n});"
+      },
+      "id": "merge-cleaning-1",
+      "name": "Merge Cleaning Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1310,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json._record_type}}",
+              "rightValue": "company",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-companies-1",
+      "name": "Filter Companies",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        1490,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "companies",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{$json.company_uuid}}",
+            "name": "={{$json.cleaned_company_name}}",
+            "employees_count": "={{$json.employees_count}}",
+            "industries": "={{$json.industries}}",
+            "keywords": "={{$json.keywords}}",
+            "address": "={{$json.company_address}}",
+            "annual_revenue": "={{$json.annual_revenue}}",
+            "total_funding": "={{$json.total_funding}}",
+            "technologies": "={{$json.technologies}}",
+            "text_search": "={{$json.text_search}}",
+            "created_at": "={{$json.created_at}}",
+            "updated_at": "={{$json.updated_at}}"
+          },
+          "schema": []
+        },
+        "options": {
+          "skipOnConflict": true
+        }
+      },
+      "id": "insert-companies-1",
+      "name": "Insert Companies",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1670,
+        -100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "companies_metadata",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{$json.company_uuid}}",
+            "linkedin_url": "={{$json.company_linkedin_url || '_'}}",
+            "linkedin_sales_url": "={{$json.company_linkedin_sales_url || '_'}}",
+            "facebook_url": "={{$json.facebook_url || '_'}}",
+            "twitter_url": "={{$json.twitter_url || '_'}}",
+            "website": "={{$json.website || '_'}}",
+            "company_name_for_emails": "={{$json.company_name_for_emails || '_'}}",
+            "phone_number": "={{$json.company_phone || '_'}}",
+            "latest_funding": "={{$json.latest_funding || '_'}}",
+            "latest_funding_amount": "={{parseInt($json.Latest_funding_amount || 0)}}",
+            "last_raised_at": "={{$json.last_raised_at || '_'}}",
+            "city": "={{$json.company_city || '_'}}",
+            "state": "={{$json.company_state || '_'}}",
+            "country": "={{$json.company_country || '_'}}"
+          },
+          "schema": []
+        },
+        "options": {
+          "skipOnConflict": true
+        }
+      },
+      "id": "insert-company-metadata-1",
+      "name": "Insert Company Metadata",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1850,
+        -100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json._record_type}}",
+              "rightValue": "contact",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-contacts-1",
+      "name": "Filter Contacts",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        1490,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "contacts",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{$json.contact_uuid}}",
+            "first_name": "={{$json.first_name}}",
+            "last_name": "={{$json.last_name}}",
+            "company_id": "={{$json.company_uuid}}",
+            "email": "={{$json.email}}",
+            "title": "={{$json.cleaned_title}}",
+            "departments": "={{$json.departments}}",
+            "mobile_phone": "={{$json.mobile_phone || '_'}}",
+            "email_status": "={{$json.email_status || '_'}}",
+            "text_search": "={{$json.text_search}}",
+            "seniority": "={{$json.seniority || '_'}}",
+            "created_at": "={{$json.created_at}}",
+            "updated_at": "={{$json.updated_at}}"
+          },
+          "schema": []
+        },
+        "options": {
+          "skipOnConflict": true
+        }
+      },
+      "id": "insert-contacts-1",
+      "name": "Insert Contacts",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1670,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "contacts_metadata",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "uuid": "={{$json.contact_uuid}}",
+            "linkedin_url": "={{$json.person_linkedin_url || '_'}}",
+            "linkedin_sales_url": "={{$json.person_linkedin_sales_url || '_'}}",
+            "website": "={{$json.website || '_'}}",
+            "work_direct_phone": "={{$json.work_direct_phone || '_'}}",
+            "home_phone": "={{$json.home_phone || '_'}}",
+            "city": "={{$json.city || '_'}}",
+            "state": "={{$json.state || '_'}}",
+            "country": "={{$json.country || '_'}}",
+            "other_phone": "={{$json.other_phone || '_'}}",
+            "stage": "={{$json.stage || '_'}}"
+          },
+          "schema": []
+        },
+        "options": {
+          "skipOnConflict": true
+        }
+      },
+      "id": "insert-contact-metadata-1",
+      "name": "Insert Contact Metadata",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1850,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log errors to CSV format and prepare for database\nconst errors = $input.all();\nconst timestamp = new Date().toISOString();\n\n// Prepare error log entries\nconst errorEntries = errors.map(error => {\n  const rowData = error.json.row_data || error.json;\n  return {\n    json: {\n      timestamp,\n      error_type: error.json.error_type || 'unknown',\n      row_data: JSON.stringify(rowData),\n      error_reason: error.json.error_reason || 'Unknown error',\n      // For CSV file writing\n      _csv_row: [timestamp, error.json.error_type || 'unknown', JSON.stringify(rowData), error.json.error_reason || 'Unknown error']\n    }\n  };\n});\n\nreturn errorEntries;"
+      },
+      "id": "format-errors-1",
+      "name": "Format Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        950,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write errors to CSV file\nconst errors = $input.all();\nif (errors.length === 0) {\n  return [];\n}\n\nconst fs = require('fs');\nconst path = require('path');\n\n// Generate error file path\nconst now = new Date();\nconst filename = `error_${now.getDate().toString().padStart(2, '0')}_${(now.getMonth() + 1).toString().padStart(2, '0')}_${now.getFullYear().toString().slice(-2)}_${now.getHours().toString().padStart(2, '0')}_${now.getMinutes().toString().padStart(2, '0')}_${now.getSeconds().toString().padStart(2, '0')}.csv`;\nconst errorDir = path.join(process.cwd(), 'scripts', 'data', 'error');\n\n// Ensure directory exists\nif (!fs.existsSync(errorDir)) {\n  fs.mkdirSync(errorDir, { recursive: true });\n}\n\nconst filePath = path.join(errorDir, filename);\nconst fileExists = fs.existsSync(filePath);\n\n// Write header if new file\nif (!fileExists) {\n  fs.appendFileSync(filePath, 'timestamp,error_type,row_data,error_reason\\n', 'utf8');\n}\n\n// Append errors\nfor (const error of errors) {\n  const row = error.json._csv_row || [\n    error.json.timestamp,\n    error.json.error_type,\n    error.json.row_data,\n    error.json.error_reason\n  ];\n  const csvRow = row.map(cell => {\n    // Escape quotes and wrap in quotes if contains comma\n    const str = String(cell);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return '\"' + str.replace(/\"/g, '\"\"') + '\"';\n    }\n    return str;\n  }).join(',') + '\\n';\n  \n  fs.appendFileSync(filePath, csvRow, 'utf8');\n}\n\nreturn [{\n  json: {\n    error_file_path: filePath,\n    error_count: errors.length,\n    message: `Logged ${errors.length} errors to ${filePath}`\n  }\n}];"
+      },
+      "id": "write-error-csv-1",
+      "name": "Write Error CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1130,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "error_logs",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "error_type": "={{$json.error_type}}",
+            "error_message": "={{$json.error_reason}}",
+            "context": "={{JSON.parse($json.row_data)}}",
+            "created_at": "={{$json.timestamp}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-errors-db-1",
+      "name": "Log Errors to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1310,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "statistics",
+        "options": {}
+      },
+      "id": "aggregate-stats-1",
+      "name": "Aggregate Statistics",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2030,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate final statistics\nconst stats = $input.item.json.statistics || {};\nconst allItems = $input.all();\n\nlet processed = 0;\nlet companiesInserted = 0;\nlet contactsInserted = 0;\nlet errors = 0;\n\n// Count from all processed items\nfor (const item of allItems) {\n  if (item.json._is_error) {\n    errors++;\n  } else if (item.json._record_type === 'company') {\n    processed++;\n    companiesInserted++;\n  } else if (item.json._record_type === 'contact') {\n    processed++;\n    contactsInserted++;\n  }\n}\n\nreturn {\n  json: {\n    processed,\n    companies_inserted: companiesInserted,\n    contacts_inserted: contactsInserted,\n    errors,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "calculate-stats-1",
+      "name": "Calculate Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2210,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#data-pipeline",
+        "text": "✅ Ingestion Completed\n\nProcessed: {{$json.processed}}\nCompanies Inserted: {{$json.companies_inserted}}\nContacts Inserted: {{$json.contacts_inserted}}\nErrors: {{$json.errors}}",
+        "otherOptions": {}
+      },
+      "id": "slack-notification-1",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2390,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Source Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Source Type": {
+      "main": [
+        [
+          {
+            "node": "Read Local File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read S3 File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Local File": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read S3 File": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV": {
+      "main": [
+        [
+          {
+            "node": "Classify CSV Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify CSV Type": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split in Batches": {
+      "main": [
+        [
+          {
+            "node": "Process Batch (UUID + Transform)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Batch (UUID + Transform)": {
+      "main": [
+        [
+          {
+            "node": "Filter Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Errors": {
+      "main": [
+        [
+          {
+            "node": "Format Errors",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean Company Names (API)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clean Titles (API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Company Names (API)": {
+      "main": [
+        [
+          {
+            "node": "Merge Cleaning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Titles (API)": {
+      "main": [
+        [
+          {
+            "node": "Merge Cleaning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Errors": {
+      "main": [
+        [
+          {
+            "node": "Write Error CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Error CSV": {
+      "main": [
+        [
+          {
+            "node": "Log Errors to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Cleaning Results": {
+      "main": [
+        [
+          {
+            "node": "Filter Companies",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Companies": {
+      "main": [
+        [
+          {
+            "node": "Insert Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Companies": {
+      "main": [
+        [
+          {
+            "node": "Insert Company Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Company Metadata": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Contacts": {
+      "main": [
+        [
+          {
+            "node": "Insert Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Contacts": {
+      "main": [
+        [
+          {
+            "node": "Insert Contact Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Contact Metadata": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Statistics": {
+      "main": [
+        [
+          {
+            "node": "Calculate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Statistics": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "key_ingestion_workflow"
+}

@@ -1,0 +1,33 @@
+{
+  "endpoint_path": "graphql/ListAPIKeys",
+  "method": "QUERY",
+  "pages": [
+    {
+      "_id": "profile_graphql_ListAPIKeys_QUERY",
+      "relationship_id": "profile_graphql_ListAPIKeys_QUERY",
+      "state": "development",
+      "access_control": null,
+      "page_reference": null,
+      "endpoint_reference": null,
+      "connection": null,
+      "files": null,
+      "data_flow": null,
+      "postman_reference": null,
+      "dependencies": null,
+      "performance": null,
+      "metadata": null,
+      "page_path": "/profile",
+      "endpoint_path": "graphql/ListAPIKeys",
+      "method": "QUERY",
+      "api_version": null,
+      "via_service": "profileService",
+      "via_hook": "useProfilePage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "created_at": "2026-01-21T13:33:51.897968+00:00",
+  "updated_at": "2026-01-21T13:33:51.897968+00:00"
+}

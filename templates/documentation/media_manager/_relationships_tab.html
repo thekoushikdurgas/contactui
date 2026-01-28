@@ -1,0 +1,68 @@
+<!-- Relationships Tab Content -->
+<div id="relationships-content" role="tabpanel" aria-labelledby="tab-relationships" class="tab-content active">
+    <!-- View Mode: List -->
+    <div id="relationships-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+        <!-- Tab Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Relationships</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage page-endpoint relationships</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <div id="relationships-filters" class="flex items-center gap-2">
+                    <div class="relative">
+                        <label for="relationship-search" class="sr-only">Search relationships</label>
+                        <input type="text" 
+                               id="relationship-search" 
+                               data-search-input="true"
+                               data-tab="relationships"
+                               placeholder="Search relationships..."
+                               class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors w-64"
+                               aria-label="Search relationships">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <label for="relationship-usage-type-filter" class="sr-only">Filter by usage type</label>
+                    <select id="relationship-usage-type-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                            aria-label="Filter relationships by usage type">
+                        <option value="">All Usage Types</option>
+                        <option value="primary">Primary</option>
+                        <option value="secondary">Secondary</option>
+                        <option value="conditional">Conditional</option>
+                    </select>
+                    <label for="relationship-usage-context-filter" class="sr-only">Filter by usage context</label>
+                    <select id="relationship-usage-context-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                            aria-label="Filter relationships by usage context">
+                        <option value="">All Contexts</option>
+                        <option value="data_fetching">Data Fetching</option>
+                        <option value="data_mutation">Data Mutation</option>
+                        <option value="authentication">Authentication</option>
+                        <option value="analytics">Analytics</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Chips -->
+        <div id="relationships-filter-chips" class="mb-4 filter-chips"></div>
+        
+        <!-- List Container -->
+        <div id="relationships-list" class="space-y-4" role="list" aria-label="Relationships list">
+            {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading relationships...' %}
+        </div>
+        
+        <!-- Pagination -->
+        <div id="relationships-pagination" class="mt-6" aria-label="Relationships pagination"></div>
+    </div>
+    
+    <!-- View Mode: Grid -->
+    <div id="relationships-grid-view" class="view-mode-content {% if view_mode == 'grid' %}active{% else %}hidden{% endif %}">
+        <div id="relationships-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Relationships grid">
+            {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+        </div>
+        <div id="relationships-grid-pagination" class="mt-6" aria-label="Relationships grid pagination"></div>
+    </div>
+</div>

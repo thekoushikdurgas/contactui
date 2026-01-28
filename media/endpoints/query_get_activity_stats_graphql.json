@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_activity_stats_graphql-001",
+  "endpoint_id": "query_get_activity_stats_graphql",
+  "endpoint_path": "graphql/GetActivityStats",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get activity statistics for a time range. Returns counts by service type, action type, and status.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/activitiesService.ts",
+  "service_methods": [
+    "getActivityStats"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/activities",
+      "page_title": "Activities Page",
+      "via_service": "activitiesService",
+      "via_hook": "useActivitiesPage",
+      "usage_type": "primary",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

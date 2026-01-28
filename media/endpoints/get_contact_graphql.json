@@ -1,0 +1,26 @@
+{
+  "_id": "get_contact_graphql-001",
+  "endpoint_id": "get_contact_graphql",
+  "endpoint_path": "graphql/GetContact",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get a single contact by UUID. Accepts uuid (ID!, required, valid UUID format). Returns Contact object with full details including id, firstName, lastName, email, phone, jobTitle, company information (id, name, domain, industry), contact metadata (linkedin_url, twitter_url), and social links. Uses Connectra service for data retrieval. Raises NotFoundError (404) if contact doesn't exist.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/contacts/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/contactsService.ts",
+  "service_methods": [
+    "contact"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "query GetContact($uuid: ID!) { contacts { contact(uuid: $uuid) { id firstName lastName email phone jobTitle company { id name domain } } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

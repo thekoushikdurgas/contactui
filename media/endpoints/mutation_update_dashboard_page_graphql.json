@@ -1,0 +1,45 @@
+{
+  "_id": "mutation_update_dashboard_page_graphql-001",
+  "endpoint_id": "mutation_update_dashboard_page_graphql",
+  "endpoint_path": "graphql/UpdateDashboardPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update a custom dashboard page by pageId. Returns updated page data with sections and access control.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/dashboardPagesService.ts",
+  "service_methods": [
+    "updateDashboardPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/dashboard-pages",
+      "page_title": "Admin Dashboard Pages Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useAdminDashboardPages",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/admin/dashboard-pages/[pageId]",
+      "page_title": "Admin Dashboard Pages Pageid Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useDashboardPageEditor",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 2,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,101 @@
+version: '3.9'
+
+services:
+  # Django Application (uses Local Memory Cache by default; no Redis required)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docsai_web
+    command: gunicorn config.wsgi:application --config config.gunicorn.development --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DJANGO_ENV=development
+      - DATABASE_HOST=db
+      # REDIS_HOST=redis  # Uncomment if using Redis (USE_REDIS_CACHE=True)
+    depends_on:
+      - db
+      # - redis  # Uncomment if using Redis
+    networks:
+      - docsai_network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: docsai_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME:-docsai}
+      - POSTGRES_USER=${DATABASE_USER:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    networks:
+      - docsai_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (OPTIONAL - Uncomment to use Redis for cache/Django-Q instead of LocMemCache/ORM)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: docsai_redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - docsai_network
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Django-Q Worker (uses ORM by default; add redis to depends_on if using Redis)
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docsai_worker
+    command: python manage.py qcluster
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    env_file:
+      - .env
+    environment:
+      - DJANGO_ENV=development
+      - DATABASE_HOST=db
+      # - REDIS_HOST=redis  # Uncomment if using Redis
+    depends_on:
+      - db
+      # - redis  # Uncomment if using Redis
+      - web
+    networks:
+      - docsai_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  docsai_network:
+    driver: bridge

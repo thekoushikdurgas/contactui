@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Status - Operations{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Documentation Status</h1>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">System Status</h2>
+        <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-gray-100">Local JSON Files</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Primary data source</p>
+                </div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-gray-100">S3 Storage</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Fallback storage</p>
+                </div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

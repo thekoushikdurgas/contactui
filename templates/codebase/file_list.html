@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Files - Codebase Analysis{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Files</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Analysis: {{ analysis_id }}</p>
+        </div>
+    </div>
+    
+    {% if files %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div class="space-y-2">
+                {% for file in files %}
+                    <a href="{% url 'codebase:file_detail' analysis_id=analysis_id file_path=file.path %}" class="block p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-gray-100">{{ file.name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ file.path }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600 dark:text-gray-300">{{ file.lines }} lines</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ file.language }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        {% include 'components/empty_state.html' with title="No files found" message="Files will appear here after analysis" %}
+    {% endif %}
+</div>
+{% endblock %}

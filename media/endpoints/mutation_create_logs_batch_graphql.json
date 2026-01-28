@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_create_logs_batch_graphql-001",
+  "endpoint_id": "mutation_create_logs_batch_graphql",
+  "endpoint_path": "graphql/CreateLogsBatch",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create multiple log entries in a single batch. Accepts CreateLogsBatchInput with logs (required, array of CreateLogInput, min 1, max 100). Each log follows CreateLogInput validation. Returns array of Log with generated IDs. Uses Lambda Logs API for efficiency - all logs created in single call to MongoDB. Raises ValidationError (422) if logs array is empty or exceeds max. Raises ForbiddenError (403) if not SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/admin/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "createLogsBatch"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateLogsBatch($input: CreateLogsBatchInput!) { admin { createLogsBatch(input: $input) { id level logger message timestamp } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

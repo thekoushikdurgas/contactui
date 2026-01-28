@@ -1,0 +1,111 @@
+{
+  "validation_date": "2026-01-20",
+  "overall_status": "good",
+  "critical_issues": 4,
+  "warnings": 2,
+  "errors": 0,
+  "issues": [
+    {
+      "severity": "critical",
+      "category": "schema_mismatch",
+      "collection": "pages",
+      "issue": "page_type value 'auth' not in schema",
+      "schema_expects": ["docs", "marketing", "dashboard"],
+      "actual_value": "auth",
+      "affected_files": 2,
+      "affected_pages": ["login_page", "register_page"],
+      "recommendation": "Update schema to include 'auth' or reclassify pages"
+    },
+    {
+      "severity": "critical",
+      "category": "schema_mismatch",
+      "collection": "endpoints",
+      "issue": "endpoint_path format mismatch - schema expects REST, actual is GraphQL",
+      "schema_expects": "/api/v4/companies (starts with /api/)",
+      "actual_value": "graphql/QueryCompanies (starts with graphql/)",
+      "affected_files": 145,
+      "recommendation": "Update schema to support GraphQL format"
+    },
+    {
+      "severity": "critical",
+      "category": "schema_mismatch",
+      "collection": "endpoints",
+      "issue": "method value mismatch - schema expects REST, actual is GraphQL",
+      "schema_expects": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      "actual_value": ["QUERY", "MUTATION"],
+      "affected_files": 145,
+      "recommendation": "Update schema to support GraphQL methods"
+    },
+    {
+      "severity": "critical",
+      "category": "schema_mismatch",
+      "collection": "endpoints",
+      "issue": "api_version format mismatch - schema expects versioned, actual is 'graphql'",
+      "schema_expects": "v1, v4 (starts with v)",
+      "actual_value": "graphql",
+      "affected_files": 145,
+      "recommendation": "Update schema to support 'graphql' as valid api_version"
+    },
+    {
+      "severity": "warning",
+      "category": "consistency",
+      "collection": "relationships",
+      "issue": "Relationship index count discrepancy",
+      "details": "Index shows 80 GraphQL relationships but total is 95",
+      "recommendation": "Verify relationship counting logic"
+    },
+    {
+      "severity": "warning",
+      "category": "format_inconsistency",
+      "collection": "relationships",
+      "issue": "Path format inconsistency in by-endpoint files",
+      "details": "Some files use 'QueryCompanies', others use 'graphql/QueryCompanies'",
+      "recommendation": "Standardize to always include 'graphql/' prefix"
+    }
+  ],
+  "validation_results": {
+    "pages": {
+      "total": 48,
+      "valid": 48,
+      "invalid": 0,
+      "schema_mismatches": 1,
+      "missing_fields": 0,
+      "orphaned": 0
+    },
+    "endpoints": {
+      "total": 145,
+      "valid": 145,
+      "invalid": 0,
+      "schema_mismatches": 3,
+      "missing_fields": 0,
+      "orphaned": 0
+    },
+    "relationships": {
+      "total": 95,
+      "valid": 95,
+      "invalid": 0,
+      "schema_mismatches": 2,
+      "missing_fields": 0,
+      "orphaned": 0,
+      "bidirectional_consistency": "perfect"
+    }
+  },
+  "recommendations": {
+    "immediate": [
+      "Update schema documentation to support GraphQL format",
+      "Add 'auth' to page_type enum in schema",
+      "Add 'conditional' to usage_type enum in schema",
+      "Standardize endpoint_path format to always include 'graphql/' prefix"
+    ],
+    "short_term": [
+      "Verify relationship counting logic",
+      "Standardize service naming conventions",
+      "Create validation automation scripts"
+    ],
+    "long_term": [
+      "Implement schema versioning",
+      "Add CI/CD validation checks",
+      "Create migration path for schema updates"
+    ]
+  }
+}

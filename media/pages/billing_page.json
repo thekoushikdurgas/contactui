@@ -1,0 +1,159 @@
+{
+  "_id": "billing_page-001",
+  "page_id": "billing_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/billing",
+    "file_path": "contact360/dashboard/app/(dashboard)/billing/page.tsx",
+    "purpose": "Billing and subscription management page with current subscription, plans, addons, payment methods, invoices, and admin billing management.",
+    "s3_key": "data/pages/billing_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetBilling",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBillingPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get current user billing information. Batched with plans, addons, and invoices in useBillingPage hook."
+      },
+      {
+        "endpoint_path": "graphql/GetPlans",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBillingPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get available subscription plans. Batched with billing info, addons, and invoices in useBillingPage hook."
+      },
+      {
+        "endpoint_path": "graphql/GetAddons",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBillingPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get available addon packages. Batched with billing info, plans, and invoices in useBillingPage hook."
+      },
+      {
+        "endpoint_path": "graphql/GetInvoices",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBillingPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get user invoices with pagination. Batched with billing info, plans, and addons in useBillingPage hook."
+      },
+      {
+        "endpoint_path": "graphql/Subscribe",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBilling",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Subscribe to a subscription plan"
+      },
+      {
+        "endpoint_path": "graphql/PurchaseAddon",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBilling",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Purchase an addon package"
+      },
+      {
+        "endpoint_path": "graphql/CancelSubscription",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBilling",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Cancel current subscription"
+      },
+      {
+        "endpoint_path": "graphql/GetAdminPlans",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBilling",
+        "usage_type": "conditional",
+        "usage_context": "data_fetching",
+        "description": "Get all plans including inactive ones (admin only)"
+      },
+      {
+        "endpoint_path": "graphql/GetAdminAddons",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "billingService",
+        "via_hook": "useBilling",
+        "usage_type": "conditional",
+        "usage_context": "data_fetching",
+        "description": "Get all addons including inactive ones (admin only)"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "DashboardPageLayout",
+        "file_path": "components/layouts/DashboardPageLayout.tsx"
+      },
+      {
+        "name": "PageHeader",
+        "file_path": "components/patterns/PageHeader.tsx"
+      },
+      {
+        "name": "CurrentSubscription",
+        "file_path": "components/features/billing/CurrentSubscription.tsx"
+      },
+      {
+        "name": "SubscriptionPlans",
+        "file_path": "components/features/billing/SubscriptionPlans.tsx"
+      },
+      {
+        "name": "AddonPackages",
+        "file_path": "components/features/billing/AddonPackages.tsx"
+      },
+      {
+        "name": "AdminBillingView",
+        "file_path": "components/features/billing/AdminBillingView.tsx"
+      },
+      {
+        "name": "PaymentMethodCard",
+        "file_path": "components/features/billing/PaymentMethodCard.tsx"
+      },
+      {
+        "name": "InvoiceHistory",
+        "file_path": "components/features/billing/InvoiceHistory.tsx"
+      },
+      {
+        "name": "PaymentModal",
+        "file_path": "components/features/billing/PaymentModal.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 9,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

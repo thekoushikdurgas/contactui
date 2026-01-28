@@ -1,0 +1,124 @@
+{% comment %}
+Detail View Layout - Unified layout for detail pages.
+
+Usage:
+{% extends 'layouts/detail-view.html' %}
+{% block detail_header %}
+  <!-- Custom header content -->
+{% endblock %}
+{% block detail_tabs %}
+  <!-- Tab navigation -->
+{% endblock %}
+{% block detail_content %}
+  <!-- Tab content -->
+{% endblock %}
+
+Parameters (passed via context):
+- page_title: Page title
+- breadcrumbs: List of breadcrumb items [{text, url}]
+- resource_type: Resource type (pages, endpoints, relationships, postman)
+- actions: List of action buttons [{text, url, variant, icon}]
+- tabs: List of tabs [{id, label, icon, active, badge}]
+- active_tab: Active tab ID
+{% endcomment %}
+
+{% load static %}
+
+<div class="w-full max-w-6xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    {% if breadcrumbs %}
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4" aria-label="Breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            {% if not forloop.last %}
+                <a href="{{ breadcrumb.url }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    {{ breadcrumb.text }}
+                </a>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            {% else %}
+                <span class="text-gray-700 dark:text-gray-300 font-medium truncate max-w-xs">{{ breadcrumb.text }}</span>
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            {% block detail_header %}
+            <div class="flex items-start justify-between">
+                <div class="flex items-start space-x-4">
+                    {% if resource_type %}
+                    <div class="p-3 rounded-lg
+                        {% if resource_type == 'pages' %}bg-blue-100 dark:bg-blue-900/30
+                        {% elif resource_type == 'endpoints' %}bg-purple-100 dark:bg-purple-900/30
+                        {% elif resource_type == 'relationships' %}bg-green-100 dark:bg-green-900/30
+                        {% elif resource_type == 'postman' %}bg-amber-100 dark:bg-amber-900/30
+                        {% else %}bg-gray-100 dark:bg-gray-800{% endif %}">
+                        {% if resource_type == 'pages' %}
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        {% elif resource_type == 'endpoints' %}
+                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        {% elif resource_type == 'relationships' %}
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        {% elif resource_type == 'postman' %}
+                            <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ page_title|default:'Detail' }}</h1>
+                        {% block detail_subtitle %}{% endblock %}
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    {% if actions %}
+                        {% for action in actions %}
+                            {% include 'components/button.html' with text=action.text href=action.url variant=action.variant|default:'primary' icon=action.icon size='sm' %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+        
+        <!-- Tab Navigation -->
+        {% if tabs %}
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist">
+                {% for tab in tabs %}
+                <a href="?tab={{ tab.id }}" 
+                   class="tab-button group {% if tab.active or active_tab == tab.id %}active{% endif %}" 
+                   data-tab="{{ tab.id }}" 
+                   role="tab"
+                   aria-selected="{% if tab.active or active_tab == tab.id %}true{% else %}false{% endif %}">
+                    {% if tab.icon %}
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <use href="#icon-{{ tab.icon }}"></use>
+                    </svg>
+                    {% endif %}
+                    <span>{{ tab.label }}</span>
+                    {% if tab.badge %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full">{{ tab.badge }}</span>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </nav>
+        </div>
+        {% endif %}
+        
+        <!-- Content Area -->
+        <div class="p-6">
+            {% block detail_content %}{% endblock %}
+        </div>
+    </div>
+</div>

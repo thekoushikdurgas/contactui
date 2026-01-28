@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Operations Hub - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm p-8">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Operations Hub</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Doc-specific operations (analyze, validate, generate, upload, workflow) live under <a href="{% url 'documentation:operations_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:underline">Documentation → Operations</a>.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {% include 'components/stat_card.html' with label='Documented Pages' value=stats.total_pages|default:0 color='bg-blue-50 text-blue-600' icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>' %}
+            {% include 'components/stat_card.html' with label='API Endpoints' value=stats.total_endpoints|default:0 color='bg-purple-50 text-purple-600' icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' %}
+            {% include 'components/stat_card.html' with label='Uptime' value=stats.uptime|default:"—" color='bg-green-50 text-green-600' icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>' %}
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="{% url 'documentation:operations_analyze' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Analyze</span>
+            </a>
+            <a href="{% url 'documentation:operations_validate' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Validate</span>
+            </a>
+            <a href="{% url 'documentation:operations_generate_json' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Generate JSON</span>
+            </a>
+            <a href="{% url 'documentation:operations_upload' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Upload</span>
+            </a>
+            <a href="{% url 'documentation:operations_workflow' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Workflow</span>
+            </a>
+            <a href="{% url 'documentation:operations_status' %}" class="p-4 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all text-center">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100">Status</span>
+            </a>
+        </div>
+        
+        <div class="mt-8 space-y-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Active Operations</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No active operations.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

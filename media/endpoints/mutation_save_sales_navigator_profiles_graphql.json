@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_save_sales_navigator_profiles_graphql-001",
+  "endpoint_id": "mutation_save_sales_navigator_profiles_graphql",
+  "endpoint_path": "graphql/SaveSalesNavigatorProfiles",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Save Sales Navigator profiles to database via bulk upsert. Accepts SaveProfilesInput with profiles (required, array of JSON objects, max 1000 per request). Each profile should contain firstName, lastName, company, headline, location, profileUrl. Creates or updates contacts and companies via ConnectraClient.bulk_upsert. Returns SaveProfilesResponse with success (Boolean), totalProfiles (Int), savedCount (Int, contacts created + updated), errors (array of String). Errors collected and returned without raising exceptions. Activity logged (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/sales_navigator/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/salesNavigatorService.ts",
+  "service_methods": [
+    "saveProfiles"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation SaveSalesNavigatorProfiles($input: SaveProfilesInput!) { salesNavigator { saveProfiles(input: $input) { success totalProfiles savedCount errors } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

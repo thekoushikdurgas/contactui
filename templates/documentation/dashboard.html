@@ -1,0 +1,999 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Documentation Dashboard - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Media Manager Dashboard</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Manage documentation, files, and sync status in one unified interface</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:page_create' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Page
+            </a>
+            <a href="/api/docs/" class="inline-flex items-center px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                API Reference
+            </a>
+            <a href="{% url 'documentation:operations_dashboard' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                Operations
+            </a>
+        </div>
+    </div>
+    
+    <!-- System Status Cards -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">System Status</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <a href="{% url 'documentation:dashboard' %}" class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Local Files</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">Active</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard' %}?tab=pages" class="flex items-center gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-all cursor-pointer border border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700">
+                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Pages</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.total_pages|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard' %}?tab=endpoints" class="flex items-center gap-3 p-4 rounded-xl bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 transition-all cursor-pointer border border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700">
+                <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Endpoints</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.total_endpoints|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard' %}?tab=relationships" class="flex items-center gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-900/10 hover:bg-green-100 dark:hover:bg-green-900/20 transition-all cursor-pointer border border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700">
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Relationships</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.total_relationships|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard' %}?tab=postman" class="flex items-center gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-all cursor-pointer border border-amber-200 dark:border-amber-800 hover:border-amber-300 dark:hover:border-amber-700">
+                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Postman</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.total_postman|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Statistics Section (Collapsible) -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden">
+        <button type="button" 
+                id="stats-toggle-btn" 
+                class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                aria-expanded="true"
+                aria-controls="stats-panels">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Statistics</h2>
+            <div class="flex items-center gap-2">
+                <span id="stats-toggle-text" class="text-sm text-gray-500 dark:text-gray-400">Hide</span>
+                <svg id="stats-toggle-icon" class="w-5 h-5 text-gray-500 dark:text-gray-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </button>
+        
+        <div id="stats-panels" class="px-6 pb-6 space-y-6">
+            <!-- Pages Stats Panel -->
+            <div id="pages-stats-panel" class="hidden">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pages Statistics</span>
+                </div>
+                <!-- Content loaded by StatsLoader -->
+            </div>
+            
+            <!-- Endpoints Stats Panel -->
+            <div id="endpoints-stats-panel" class="hidden">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Endpoints Statistics</span>
+                </div>
+                <!-- Content loaded by StatsLoader -->
+            </div>
+            
+            <!-- Relationships Stats Panel -->
+            <div id="relationships-stats-panel" class="hidden">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Relationships Statistics</span>
+                </div>
+                <!-- Content loaded by StatsLoader -->
+            </div>
+            
+            <!-- Postman Stats Panel -->
+            <div id="postman-stats-panel" class="hidden">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Postman Statistics</span>
+                </div>
+                <!-- Content loaded by StatsLoader -->
+            </div>
+            
+            <!-- Loading State -->
+            <div id="stats-loading" class="text-center py-8">
+                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading statistics...' %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden">
+        <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist" aria-label="Dashboard tabs">
+                <a href="{% url 'documentation:dashboard' %}?tab=pages&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
+                   class="tab-button group {% if active_tab == 'pages' %}active{% endif %}" 
+                   data-tab="pages"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'pages' %}true{% else %}false{% endif %}"
+                   aria-controls="pages-content"
+                   id="tab-pages"
+                   tabindex="{% if active_tab == 'pages' %}0{% else %}-1{% endif %}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Pages</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full" aria-label="Total pages: {{ overview_stats.total_pages|default:"0" }}">{{ overview_stats.total_pages|default:"0" }}</span>
+                </a>
+                <a href="{% url 'documentation:dashboard' %}?tab=endpoints&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
+                   class="tab-button group {% if active_tab == 'endpoints' %}active{% endif %}" 
+                   data-tab="endpoints"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'endpoints' %}true{% else %}false{% endif %}"
+                   aria-controls="endpoints-content"
+                   id="tab-endpoints"
+                   tabindex="{% if active_tab == 'endpoints' %}0{% else %}-1{% endif %}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Endpoints</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full" aria-label="Total endpoints: {{ overview_stats.total_endpoints|default:"0" }}">{{ overview_stats.total_endpoints|default:"0" }}</span>
+                </a>
+                <a href="{% url 'documentation:dashboard' %}?tab=relationships&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
+                   class="tab-button group {% if active_tab == 'relationships' %}active{% endif %}" 
+                   data-tab="relationships"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'relationships' %}true{% else %}false{% endif %}"
+                   aria-controls="relationships-content"
+                   id="tab-relationships"
+                   tabindex="{% if active_tab == 'relationships' %}0{% else %}-1{% endif %}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Relationships</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full" aria-label="Total relationships: {{ overview_stats.total_relationships|default:"0" }}">{{ overview_stats.total_relationships|default:"0" }}</span>
+                </a>
+                <a href="{% url 'documentation:dashboard' %}?tab=postman&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
+                   class="tab-button group {% if active_tab == 'postman' %}active{% endif %}" 
+                   data-tab="postman"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'postman' %}true{% else %}false{% endif %}"
+                   aria-controls="postman-content"
+                   id="tab-postman"
+                   tabindex="{% if active_tab == 'postman' %}0{% else %}-1{% endif %}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <span>Postman</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-full" aria-label="Total Postman configurations: {{ overview_stats.total_postman|default:"0" }}">{{ overview_stats.total_postman|default:"0" }}</span>
+                </a>
+                <a href="{% url 'documentation:dashboard' %}?tab=graph" 
+                   class="tab-button group {% if active_tab == 'graph' %}active{% endif %}" 
+                   data-tab="graph"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'graph' %}true{% else %}false{% endif %}"
+                   aria-controls="graph-content"
+                   id="tab-graph"
+                   tabindex="{% if active_tab == 'graph' %}0{% else %}-1{% endif %}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Graph</span>
+                </a>
+            </nav>
+        </div>
+        
+        <!-- View Mode Toggle (for non-graph tabs) -->
+        {% if active_tab != 'graph' %}
+        <div class="px-6 pt-4 pb-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">View:</span>
+                    <div class="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1" role="tablist">
+                        <a href="?tab={{ active_tab }}&view=list&page={{ current_page }}&page_size={{ page_size }}" 
+                           class="view-mode-btn px-3 py-1.5 text-sm font-medium rounded-md transition-colors {% if view_mode == 'list' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                           data-view-mode="list"
+                           role="tab">
+                            <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            List View
+                        </a>
+                        <a href="?tab={{ active_tab }}&view=files&page={{ current_page }}&page_size={{ page_size }}" 
+                           class="view-mode-btn px-3 py-1.5 text-sm font-medium rounded-md transition-colors {% if view_mode == 'files' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                           data-view-mode="files"
+                           role="tab">
+                            <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                            </svg>
+                            File Browser
+                        </a>
+                        <a href="?tab={{ active_tab }}&view=sync&page={{ current_page }}&page_size={{ page_size }}" 
+                           class="view-mode-btn px-3 py-1.5 text-sm font-medium rounded-md transition-colors {% if view_mode == 'sync' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                           data-view-mode="sync"
+                           role="tab">
+                            <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                            </svg>
+                            Sync Status
+                        </a>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    {% if view_mode == 'list' %}
+                        Showing list view with cards
+                    {% elif view_mode == 'files' %}
+                        Showing file browser view
+                    {% elif view_mode == 'sync' %}
+                        Showing sync status view
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="p-6">
+            {% if active_tab == 'pages' %}
+                <!-- Pages Tab Content -->
+                <div id="pages-content" role="tabpanel" aria-labelledby="tab-pages" class="tab-content {% if active_tab == 'pages' %}active{% endif %}">
+                    <!-- View Mode: List -->
+                    <div id="pages-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+                        <!-- Tab Header -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Pages</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage documentation pages</p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                            <!-- Quick Actions Dropdown -->
+                            <div class="relative group">
+                                <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                    </svg>
+                                    More Views
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                    <div class="p-2 space-y-1">
+                                        <a href="{% url 'documentation:pages_statistics' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Statistics</a>
+                                        <a href="{% url 'documentation:pages_format' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Format Examples</a>
+                                        <a href="{% url 'documentation:pages_types' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">By Type</a>
+                                        <a href="{% url 'documentation:pages_by_type_docs' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Docs Pages</a>
+                                        <a href="{% url 'documentation:pages_by_type_marketing' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Marketing Pages</a>
+                                        <a href="{% url 'documentation:pages_by_type_dashboard' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Dashboard Pages</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="pages-filters" class="flex items-center gap-2">
+                                <label for="page-type-filter" class="sr-only">Filter by type</label>
+                                <select id="page-type-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        aria-label="Filter pages by type">
+                                    <option value="">All Types</option>
+                                    <option value="docs">Docs</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="dashboard">Dashboard</option>
+                                    <option value="settings">Settings</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <label for="page-state-filter" class="sr-only">Filter by state</label>
+                                <select id="page-state-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        aria-label="Filter pages by state">
+                                    <option value="">All States</option>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
+                            <a href="{% url 'documentation:page_create' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create Page
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Chips (if any active filters) -->
+                    <div id="pages-filter-chips" class="mb-4 filter-chips"></div>
+                    
+                                <!-- List Container -->
+                                <div id="pages-list" class="space-y-4" role="list" aria-label="Pages list">
+                                    {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading pages...' %}
+                                </div>
+                                
+                                <!-- Pagination -->
+                                <div id="pages-pagination" class="mt-6" aria-label="Pages pagination"></div>
+                            </div>
+                            
+                            <!-- View Mode: File Browser -->
+                            <div id="pages-files-view" class="view-mode-content {% if view_mode == 'files' %}active{% else %}hidden{% endif %}">
+                                <div id="pages-file-browser" data-resource-type="pages">
+                                    <!-- File browser will be loaded by JavaScript -->
+                                    {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading files...' %}
+                                </div>
+                            </div>
+                            
+                            <!-- View Mode: Sync Status -->
+                            <div id="pages-sync-view" class="view-mode-content {% if view_mode == 'sync' %}active{% else %}hidden{% endif %}">
+                                <div id="pages-sync-status" data-resource-type="pages">
+                                    <!-- Sync status will be loaded by JavaScript -->
+                                    {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading sync status...' %}
+                                </div>
+                            </div>
+                        </div>
+            {% elif active_tab == 'endpoints' %}
+                <!-- Endpoints Tab Content -->
+                <div id="endpoints-content" role="tabpanel" aria-labelledby="tab-endpoints" class="tab-content {% if active_tab == 'endpoints' %}active{% endif %}">
+                    <!-- View Mode: List -->
+                    <div id="endpoints-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+                        <!-- Tab Header -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Endpoints</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage API endpoints</p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                            <!-- Quick Actions Dropdown -->
+                            <div class="relative group">
+                                <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                    </svg>
+                                    More Views
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                    <div class="p-2 space-y-1">
+                                        <a href="{% url 'documentation:endpoints_statistics' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Statistics</a>
+                                        <a href="{% url 'documentation:endpoints_format' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Format Examples</a>
+                                        <a href="{% url 'documentation:endpoints_api_versions' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">API Versions</a>
+                                        <a href="{% url 'documentation:endpoints_methods' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">By Method</a>
+                                        <a href="{% url 'documentation:endpoints_by_api_version_v1' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">v1 Endpoints</a>
+                                        <a href="{% url 'documentation:endpoints_by_api_version_v4' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">v4 Endpoints</a>
+                                        <a href="{% url 'documentation:endpoints_by_api_version_graphql' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">GraphQL Endpoints</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="endpoints-filters" class="flex items-center gap-2">
+                                <!-- Search Bar -->
+                                <div class="relative">
+                                    <label for="endpoint-search" class="sr-only">Search endpoints</label>
+                                    <input type="text" 
+                                           id="endpoint-search" 
+                                           data-search-input="true"
+                                           data-tab="endpoints"
+                                           placeholder="Search endpoints..."
+                                           class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors w-64"
+                                           aria-label="Search endpoints">
+                                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <label for="endpoint-api-version-filter" class="sr-only">Filter by API version</label>
+                                <select id="endpoint-api-version-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                        aria-label="Filter endpoints by API version">
+                                    <option value="">All Versions</option>
+                                    <option value="v1">v1</option>
+                                    <option value="v2">v2</option>
+                                    <option value="v3">v3</option>
+                                    <option value="v4">v4</option>
+                                    <option value="graphql">GraphQL</option>
+                                </select>
+                                <label for="endpoint-method-filter" class="sr-only">Filter by method</label>
+                                <select id="endpoint-method-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                        aria-label="Filter endpoints by method">
+                                    <option value="">All Methods</option>
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="DELETE">DELETE</option>
+                                    <option value="QUERY">QUERY</option>
+                                    <option value="MUTATION">MUTATION</option>
+                                </select>
+                            </div>
+                            <a href="{% url 'documentation:endpoint_create' %}" class="inline-flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create Endpoint
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Chips -->
+                    <div id="endpoints-filter-chips" class="mb-4 filter-chips"></div>
+                    
+                    <!-- Grid Container -->
+                    <div id="endpoints-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Endpoints list">
+                        {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+                    </div>
+                    
+                            <!-- Pagination -->
+                            <div id="endpoints-pagination" class="mt-6" aria-label="Endpoints pagination"></div>
+                        </div>
+                        
+                        <!-- View Mode: File Browser -->
+                        <div id="endpoints-files-view" class="view-mode-content {% if view_mode == 'files' %}active{% else %}hidden{% endif %}">
+                            <div id="endpoints-file-browser" data-resource-type="endpoints">
+                                <!-- File browser will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading files...' %}
+                            </div>
+                        </div>
+                        
+                        <!-- View Mode: Sync Status -->
+                        <div id="endpoints-sync-view" class="view-mode-content {% if view_mode == 'sync' %}active{% else %}hidden{% endif %}">
+                            <div id="endpoints-sync-status" data-resource-type="endpoints">
+                                <!-- Sync status will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading sync status...' %}
+                            </div>
+                        </div>
+                    </div>
+            {% elif active_tab == 'relationships' %}
+                <!-- Relationships Tab Content -->
+                <div id="relationships-content" role="tabpanel" aria-labelledby="tab-relationships" class="tab-content {% if active_tab == 'relationships' %}active{% endif %}">
+                    <!-- View Mode: List -->
+                    <div id="relationships-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+                        <!-- Tab Header -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Relationships</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage page-endpoint relationships</p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                            <!-- Quick Actions Dropdown -->
+                            <div class="relative group">
+                                <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                    </svg>
+                                    More Views
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                    <div class="p-2 space-y-1">
+                                        <a href="{% url 'documentation:relationships_statistics' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Statistics</a>
+                                        <a href="{% url 'documentation:relationships_graph' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Graph View</a>
+                                        <a href="{% url 'documentation:relationships_format' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Format Examples</a>
+                                        <a href="{% url 'documentation:relationships_usage_types' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Usage Types</a>
+                                        <a href="{% url 'documentation:relationships_usage_contexts' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Usage Contexts</a>
+                                        <a href="{% url 'documentation:relationships_by_usage_type_primary' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Primary Relationships</a>
+                                        <a href="{% url 'documentation:relationships_performance_slow' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Slow Performance</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="relationships-filters" class="flex items-center gap-2">
+                                <!-- Search Bar -->
+                                <div class="relative">
+                                    <label for="relationship-search" class="sr-only">Search relationships</label>
+                                    <input type="text" 
+                                           id="relationship-search" 
+                                           data-search-input="true"
+                                           data-tab="relationships"
+                                           placeholder="Search relationships..."
+                                           class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors w-64"
+                                           aria-label="Search relationships">
+                                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <label for="relationship-usage-type-filter" class="sr-only">Filter by usage type</label>
+                                <select id="relationship-usage-type-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                                        aria-label="Filter relationships by usage type">
+                                    <option value="">All Usage Types</option>
+                                    <option value="primary">Primary</option>
+                                    <option value="secondary">Secondary</option>
+                                    <option value="reference">Reference</option>
+                                </select>
+                                <label for="relationship-usage-context-filter" class="sr-only">Filter by usage context</label>
+                                <select id="relationship-usage-context-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                                        aria-label="Filter relationships by usage context">
+                                    <option value="">All Contexts</option>
+                                    <option value="page_load">Page Load</option>
+                                    <option value="user_action">User Action</option>
+                                    <option value="background">Background</option>
+                                </select>
+                            </div>
+                            <a href="{% url 'documentation:relationship_create' %}" class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create Relationship
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Chips -->
+                    <div id="relationships-filter-chips" class="mb-4 filter-chips"></div>
+                    
+                    <!-- Grid Container -->
+                    <div id="relationships-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Relationships list">
+                        {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+                    </div>
+                    
+                            <!-- Pagination -->
+                            <div id="relationships-pagination" class="mt-6" aria-label="Relationships pagination"></div>
+                        </div>
+                        
+                        <!-- View Mode: File Browser -->
+                        <div id="relationships-files-view" class="view-mode-content {% if view_mode == 'files' %}active{% else %}hidden{% endif %}">
+                            <div id="relationships-file-browser" data-resource-type="relationships">
+                                <!-- File browser will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading files...' %}
+                            </div>
+                        </div>
+                        
+                        <!-- View Mode: Sync Status -->
+                        <div id="relationships-sync-view" class="view-mode-content {% if view_mode == 'sync' %}active{% else %}hidden{% endif %}">
+                            <div id="relationships-sync-status" data-resource-type="relationships">
+                                <!-- Sync status will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading sync status...' %}
+                            </div>
+                        </div>
+                    </div>
+            {% elif active_tab == 'postman' %}
+                <!-- Postman Tab Content -->
+                <div id="postman-content" role="tabpanel" aria-labelledby="tab-postman" class="tab-content {% if active_tab == 'postman' %}active{% endif %}">
+                    <!-- View Mode: List -->
+                    <div id="postman-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+                        <!-- Tab Header -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Postman Configurations</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage Postman API collections and environments</p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                            <!-- Quick Actions Dropdown -->
+                            <div class="relative group">
+                                <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                    </svg>
+                                    More Views
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                    <div class="p-2 space-y-1">
+                                        <a href="{% url 'documentation:postman_statistics' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Statistics</a>
+                                        <a href="{% url 'documentation:postman_format' %}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Format Examples</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="postman-filters" class="flex items-center gap-2">
+                                <!-- Search Bar -->
+                                <div class="relative">
+                                    <label for="postman-search" class="sr-only">Search Postman configurations</label>
+                                    <input type="text" 
+                                           id="postman-search" 
+                                           data-search-input="true"
+                                           data-tab="postman"
+                                           placeholder="Search Postman..."
+                                           class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors w-64"
+                                           aria-label="Search Postman configurations">
+                                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <label for="postman-state-filter" class="sr-only">Filter by state</label>
+                                <select id="postman-state-filter" 
+                                        class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                                        aria-label="Filter Postman by state">
+                                    <option value="">All States</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+                            <a href="{% url 'documentation:postman_create' %}" class="inline-flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create Postman Config
+                            </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Chips -->
+                        <div id="postman-filter-chips" class="mb-4 filter-chips"></div>
+                        
+                        <!-- Grid Container -->
+                        <div id="postman-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Postman configurations list">
+                            {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="postman-pagination" class="mt-6" aria-label="Postman pagination"></div>
+                    </div>
+                        
+                        <!-- View Mode: File Browser -->
+                        <div id="postman-files-view" class="view-mode-content {% if view_mode == 'files' %}active{% else %}hidden{% endif %}">
+                            <div id="postman-file-browser" data-resource-type="postman">
+                                <!-- File browser will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading files...' %}
+                            </div>
+                        </div>
+                        
+                        <!-- View Mode: Sync Status -->
+                        <div id="postman-sync-view" class="view-mode-content {% if view_mode == 'sync' %}active{% else %}hidden{% endif %}">
+                            <div id="postman-sync-status" data-resource-type="postman">
+                                <!-- Sync status will be loaded by JavaScript -->
+                                {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading sync status...' %}
+                            </div>
+                        </div>
+                    </div>
+            {% elif active_tab == 'graph' %}
+                <!-- Graph Tab Content -->
+                <div id="graph-content" role="tabpanel" aria-labelledby="tab-graph" class="tab-content {% if active_tab == 'graph' %}active{% endif %}">
+                    {% include 'documentation/graph/graph_tabs.html' %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Add tab button styles -->
+<style>
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+
+.tab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+
+.tab-button.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+.dark .tab-button {
+    color: #9ca3af;
+}
+
+.dark .tab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+
+.dark .tab-button.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+    // Store initial data and URLs for backward compatibility
+    const initialData = {{ initial_data|safe }};
+    window.pageDetailUrlBase = "{% url 'documentation:page_detail' page_id='__PID__' %}";
+    
+    // Initialize Dashboard Controller
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Stats Loader
+        if (typeof StatsLoader !== 'undefined') {
+            window.statsLoader = new StatsLoader({
+                apiBase: '/docs/api/statistics'
+            });
+            
+            // Load statistics and hide loading indicator when done
+            window.statsLoader.init().then(function() {
+                const loadingEl = document.getElementById('stats-loading');
+                if (loadingEl) loadingEl.classList.add('hidden');
+            }).catch(function(error) {
+                console.error('Failed to load stats:', error);
+                const loadingEl = document.getElementById('stats-loading');
+                if (loadingEl) {
+                    loadingEl.innerHTML = '<p class="text-sm text-red-500 dark:text-red-400">Failed to load statistics</p>';
+                }
+            });
+            
+            // Stats panel toggle functionality
+            const toggleBtn = document.getElementById('stats-toggle-btn');
+            const statsPanel = document.getElementById('stats-panels');
+            const toggleText = document.getElementById('stats-toggle-text');
+            const toggleIcon = document.getElementById('stats-toggle-icon');
+            
+            if (toggleBtn && statsPanel) {
+                toggleBtn.addEventListener('click', function() {
+                    const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                    const newExpanded = !isExpanded;
+                    
+                    if (newExpanded) {
+                        statsPanel.style.display = 'block';
+                        toggleIcon.classList.remove('rotate-180');
+                    } else {
+                        statsPanel.style.display = 'none';
+                        toggleIcon.classList.add('rotate-180');
+                    }
+                    
+                    toggleBtn.setAttribute('aria-expanded', newExpanded);
+                    toggleText.textContent = newExpanded ? 'Hide' : 'Show';
+                });
+            }
+        }
+        
+        // Graph tab is now handled by the included graph_tabs.html template
+        
+        // Initialize unified dashboard controller
+        if (typeof UnifiedDashboardController !== 'undefined') {
+            window.unifiedDashboardController = new UnifiedDashboardController({
+                activeTab: '{{ active_tab }}',
+                viewMode: '{{ view_mode }}',
+                pagesApiUrl: "{% url 'documentation:api_dashboard_pages' %}",
+                endpointsApiUrl: "{% url 'documentation:api_dashboard_endpoints' %}",
+                relationshipsApiUrl: "{% url 'documentation:api_dashboard_relationships' %}",
+                postmanApiUrl: "{% url 'documentation:api_dashboard_postman' %}",
+                mediaListFilesUrl: "{% url 'documentation:api_media_files' %}",
+                mediaBulkSyncUrl: "{% url 'documentation:api_media_bulk_sync' %}",
+                mediaSyncStatusUrl: "{% url 'documentation:api_media_sync_status' %}",
+                previewBase: '/docs/media/preview/',
+                viewerBase: '/docs/media/viewer/',
+                formEditBase: '/docs/media/form/edit/',
+                deleteBase: '/docs/media/delete/'
+            });
+            
+            // Keep backward compatibility with old controller if needed
+            if (typeof DashboardController !== 'undefined') {
+                window.dashboardController = window.unifiedDashboardController;
+            }
+        } else if (typeof DashboardController !== 'undefined') {
+            // Fallback to old controller if unified not available
+            window.dashboardController = new DashboardController({
+                activeTab: '{{ active_tab }}',
+                pagesApiUrl: "{% url 'documentation:api_dashboard_pages' %}",
+                endpointsApiUrl: "{% url 'documentation:api_dashboard_endpoints' %}",
+                relationshipsApiUrl: "{% url 'documentation:api_dashboard_relationships' %}",
+                postmanApiUrl: "{% url 'documentation:api_dashboard_postman' %}"
+            });
+        } else {
+            // Fallback to old rendering if controller not loaded
+            console.warn('DashboardController not loaded, using fallback rendering');
+            if ('{{ active_tab }}' === 'pages') {
+                renderPagesList(initialData.pages || []);
+            } else if ('{{ active_tab }}' === 'endpoints') {
+                renderEndpointsList(initialData.endpoints || []);
+            } else if ('{{ active_tab }}' === 'relationships') {
+                renderRelationshipsList(initialData.relationships || []);
+            } else if ('{{ active_tab }}' === 'postman') {
+                renderPostmanList(initialData.postman || []);
+            }
+        }
+    });
+    
+    function statusClass(s) {
+        if (!s) return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+        if (['published','active','completed'].includes(s)) return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
+        if (['draft','pending'].includes(s)) return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400';
+        if (['failed','cancelled'].includes(s)) return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+    }
+    
+    function renderPagesList(pages) {
+        const container = document.getElementById('pages-list');
+        if (!container) return;
+        if (!pages || pages.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <p class="text-gray-500 dark:text-gray-400">No pages found</p>
+                    <a href="{% url 'documentation:page_create' %}" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                        Create First Page
+                    </a>
+                </div>
+            `;
+            return;
+        }
+        container.innerHTML = pages.map(page => {
+            const pid = (page.page_id || '').toString();
+            const status = (page.metadata && page.metadata.status) || 'draft';
+            const href = pageDetailUrlBase.replace('__PID__', encodeURIComponent(pid));
+            return `
+            <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 dark:text-gray-100">${(page.page_id || 'Unknown').replace(/</g, '&lt;')}</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${((page.metadata && page.metadata.route) || '/').replace(/</g, '&lt;')}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass(status)}">${(status + '').replace(/</g, '&lt;')}</span>
+                        <a href="${href}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+    
+    function renderEndpointsList(endpoints) {
+        const container = document.getElementById('endpoints-list');
+        if (!container) return;
+        if (!endpoints || endpoints.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-12">No endpoints found</p>';
+            return;
+        }
+        const method = (m) => (m && (m + '').toUpperCase()) || 'QUERY';
+        container.innerHTML = endpoints.map(endpoint => `
+            <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-1 rounded text-xs font-bold ${method(endpoint.method) === 'MUTATION' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'}">${method(endpoint.method)}</span>
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">${(endpoint.endpoint_id || 'Unknown').replace(/</g, '&lt;')}</h4>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${((endpoint.endpoint_path || '')).replace(/</g, '&lt;')}</p>
+                    </div>
+                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function renderRelationshipsList(relationships) {
+        const container = document.getElementById('relationships-list');
+        if (!container) return;
+        if (!relationships || relationships.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-12">No relationships found</p>';
+            return;
+        }
+        
+        container.innerHTML = relationships.map(rel => {
+            const pagePath = rel.page_path || rel.page_id || 'Unknown';
+            const endpointPath = rel.endpoint_path || rel.endpoint_id || 'Unknown';
+            const usageType = rel.usage_type || 'primary';
+            const usageContext = rel.usage_context || 'data_fetching';
+            const method = (rel.method || 'QUERY').toUpperCase();
+            
+            return `
+            <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-1 rounded text-xs font-bold ${method === 'MUTATION' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'}">${method}</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${usageType}</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${usageContext}</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                <span class="text-gray-500 dark:text-gray-400">Page:</span> ${pagePath.replace(/</g, '&lt;')}
+                            </p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                <span class="text-gray-500 dark:text-gray-400">Endpoint:</span> ${endpointPath.replace(/</g, '&lt;')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+    
+    function renderPostmanList(postmanConfigs) {
+        const container = document.getElementById('postman-list');
+        if (!container) return;
+        if (!postmanConfigs || postmanConfigs.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-12">No Postman configurations found</p>';
+            return;
+        }
+        
+        function stateClass(s) {
+            if (!s) return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+            if (['published', 'active'].includes(s)) return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
+            if (['draft', 'development'].includes(s)) return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400';
+            if (['test'].includes(s)) return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400';
+            return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+        }
+        
+        container.innerHTML = postmanConfigs.map(config => {
+            const configId = config.config_id || config.id || 'Unknown';
+            const name = config.name || configId;
+            const state = config.state || 'draft';
+            const collectionCount = config.collection ? (config.collection.item ? config.collection.item.length : 0) : 0;
+            const environmentCount = config.environments ? config.environments.length : 0;
+            
+            return `
+            <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 dark:text-gray-100">${name.replace(/</g, '&lt;')}</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${configId.replace(/</g, '&lt;')}</p>
+                        <div class="flex items-center gap-3 mt-2">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${stateClass(state)}">${state.replace(/</g, '&lt;')}</span>
+                            ${collectionCount > 0 ? `<span class="text-xs text-gray-500 dark:text-gray-400">${collectionCount} collection${collectionCount !== 1 ? 's' : ''}</span>` : ''}
+                            ${environmentCount > 0 ? `<span class="text-xs text-gray-500 dark:text-gray-400">${environmentCount} environment${environmentCount !== 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+</script>
+{% endblock %}

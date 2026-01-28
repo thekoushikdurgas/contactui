@@ -1,0 +1,356 @@
+{
+  "name": "Scheduled Bulk Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Scheduled Bulk Ingestion from Local Files\n\nThis workflow:\n1. Lists all CSV files in local data/data/ directory\n2. Filters by type (companies/contacts)\n3. Processes each file sequentially\n4. Sends email digest with statistics\n5. Stores results in PostgreSQL audit table",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT file_path, CASE WHEN file_path LIKE '%company%' OR file_path LIKE '%companies%' THEN 'companies' WHEN file_path LIKE '%contact%' OR file_path LIKE '%contacts%' THEN 'contacts' ELSE 'unknown' END as data_type FROM (VALUES ('data/data/companies_2024.csv'), ('data/data/contacts_2024.csv')) AS files(file_path) WHERE file_path LIKE '%.csv'",
+        "options": {}
+      },
+      "id": "list-files-1",
+      "name": "List Local CSV Files",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        -130,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.data_type}}",
+              "rightValue": "unknown",
+              "operator": {
+                "type": "string",
+                "operation": "notEqual"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-1",
+      "name": "Filter Valid Types",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determine endpoint based on data type\nconst dataType = $input.item.json.data_type;\nlet endpoint = '';\n\nif (dataType === 'companies') {\n  endpoint = '/v3/data-pipeline/ingest/companies/local';\n} else if (dataType === 'contacts') {\n  endpoint = '/v3/data-pipeline/ingest/contacts/local';\n}\n\nreturn {\n  json: {\n    ...$input.item.json,\n    endpoint\n  }\n};"
+      },
+      "id": "determine-endpoint-1",
+      "name": "Determine Endpoint",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}{{$json.endpoint}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_path",
+              "value": "={{$json.file_path}}"
+            },
+            {
+              "name": "batch_size",
+              "value": "1000"
+            },
+            {
+              "name": "max_threads",
+              "value": "3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Trigger Ingestion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/job/{{$json.job_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-status-1",
+      "name": "Check Job Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        590,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "ingestion_audit",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "file_path": "={{$('Determine Endpoint').item.json.file_path}}",
+            "data_type": "={{$('Determine Endpoint').item.json.data_type}}",
+            "job_id": "={{$json.job_id}}",
+            "status": "={{$json.status}}",
+            "error_count": "={{$json.error_count || 0}}",
+            "created_at": "={{$now}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-postgres-1",
+      "name": "Log to PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        770,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "results",
+        "options": {}
+      },
+      "id": "aggregate-1",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        950,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$env.EMAIL_TO}}",
+        "subject": "Daily Bulk Ingestion Report - {{$now.toFormat('yyyy-MM-dd')}}",
+        "emailType": "html",
+        "message": "<h2>Daily Bulk Ingestion Report</h2><p>Date: {{$now.toFormat('yyyy-MM-dd HH:mm:ss')}}</p><h3>Summary:</h3><pre>{{JSON.stringify($json.results, null, 2)}}</pre>",
+        "options": {}
+      },
+      "id": "send-email-1",
+      "name": "Send Email Digest",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1130,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "List Local CSV Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Local CSV Files": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Types",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Types": {
+      "main": [
+        [
+          {
+            "node": "Determine Endpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determine Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Trigger Ingestion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Ingestion": {
+      "main": [
+        [
+          {
+            "node": "Check Job Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Job Status": {
+      "main": [
+        [
+          {
+            "node": "Log to PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to PostgreSQL": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "Send Email Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "scheduled_bulk_ingestion"
+}

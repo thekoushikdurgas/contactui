@@ -1,0 +1,99 @@
+{
+  "_id": "linkedin_page-001",
+  "page_id": "linkedin_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/linkedin",
+    "file_path": "contact360/dashboard/app/(dashboard)/linkedin/page.tsx",
+    "purpose": "LinkedIn data extraction page with search, CSV upload, and URL paste functionality for enriching contact data.",
+    "s3_key": "data/pages/linkedin_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/SearchLinkedIn",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "linkedinService",
+        "via_hook": "useLinkedIn",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Search LinkedIn profiles and extract contact data"
+      },
+      {
+        "endpoint_path": "graphql/UpsertByLinkedInUrl",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "linkedinService",
+        "via_hook": "useLinkedIn",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Extract and upsert contact data from LinkedIn URLs"
+      },
+      {
+        "endpoint_path": "graphql/ExportLinkedIn",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "linkedinService",
+        "via_hook": "useLinkedIn",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Export LinkedIn extracted data"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "ToolPageLayout",
+        "file_path": "components/layouts/ToolPageLayout.tsx"
+      },
+      {
+        "name": "PageHeader",
+        "file_path": "components/patterns/PageHeader.tsx"
+      },
+      {
+        "name": "UsageCounter",
+        "file_path": "components/shared/UsageCounter.tsx"
+      },
+      {
+        "name": "LinkedInSearchTab",
+        "file_path": "components/features/linkedin/LinkedInSearchTab.tsx"
+      },
+      {
+        "name": "LinkedInUploadTab",
+        "file_path": "components/features/linkedin/LinkedInUploadTab.tsx"
+      },
+      {
+        "name": "LinkedInPasteTab",
+        "file_path": "components/features/linkedin/LinkedInPasteTab.tsx"
+      },
+      {
+        "name": "LinkedInHeader",
+        "file_path": "components/features/linkedin/LinkedInHeader.tsx"
+      },
+      {
+        "name": "LinkedInTabNavigation",
+        "file_path": "components/features/linkedin/LinkedInTabNavigation.tsx"
+      },
+      {
+        "name": "LinkedInCsvMappingModal",
+        "file_path": "components/features/linkedin/LinkedInCsvMappingModal.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 3,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

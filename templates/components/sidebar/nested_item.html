@@ -1,0 +1,39 @@
+{% comment %}
+Nested Item Component - For rendering child items under parent navigation items
+Supports:
+- Nested indentation
+- Active state highlighting
+- Badge indicators
+- Return URL support
+- Page type styling
+{% endcomment %}
+
+<a href="{% if item.url_with_return %}{{ item.url_with_return }}{% elif item.url %}{{ item.url }}{% else %}{% url item.app_name|add:':'|add:item.url_name %}{% endif %}" 
+   {% if item.external %}target="_blank" rel="noopener noreferrer"{% endif %} 
+   class="w-full flex items-center gap-3 px-4 py-2.5 ml-8 rounded-lg transition-all duration-200 group 
+          {% if item.active %}bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-l-2 border-blue-600 dark:border-blue-400
+          {% else %}text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100{% endif %}">
+    <div class="transition-colors duration-200 
+                {% if item.active %}text-blue-600 dark:text-blue-400
+                {% elif item.page_type == 'static' %}text-green-500 dark:text-green-400
+                {% elif item.page_type == 'info' %}text-purple-500 dark:text-purple-400
+                {% else %}text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300{% endif %}">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {{ item.icon|safe }}
+        </svg>
+    </div>
+    <span class="font-medium text-xs flex-1">{{ item.label }}</span>
+    {% if item.badge %}
+        <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+            {{ item.badge }}
+        </span>
+    {% endif %}
+    {% if item.active %}
+        <div class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></div>
+    {% endif %}
+    {% if item.external %}
+        <svg class="w-3 h-3 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+    {% endif %}
+</a>

@@ -1,0 +1,50 @@
+{
+  "_id": "ui_page-001",
+  "page_id": "ui_page",
+  "page_type": "marketing",
+  "metadata": {
+    "route": "/ui",
+    "file_path": "contact360/marketing/app/(marketing)/ui/page.tsx",
+    "purpose": "UI showcase page displaying component library, interactive demos, and code examples for all reusable components.",
+    "s3_key": "data/pages/ui_page.json",
+    "status": "published",
+    "authentication": "Not required (public page)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [],
+    "ui_components": [
+      {
+        "name": "ShowcaseLayout",
+        "file_path": "components/showcase/ShowcaseLayout.tsx"
+      },
+      {
+        "name": "FoundationDemos",
+        "file_path": "components/showcase/demos/FoundationDemos.tsx"
+      },
+      {
+        "name": "LayoutDemos",
+        "file_path": "components/showcase/demos/LayoutDemos.tsx"
+      },
+      {
+        "name": "CompositeDemos",
+        "file_path": "components/showcase/demos/CompositeDemos.tsx"
+      },
+      {
+        "name": "AdvancedDemos",
+        "file_path": "components/showcase/demos/AdvancedDemos.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 0,
+    "api_versions": [],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

@@ -1,0 +1,29 @@
+{
+  "_id": "data_search_page-001",
+  "page_id": "data_search_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/data-search",
+    "file_path": "contact360/dashboard/app/(dashboard)/data-search/page.tsx",
+    "purpose": "Unified data search interface for searching across contacts, companies, and other data entities with advanced filtering and query capabilities.",
+    "s3_key": "data/pages/data_search_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [],
+    "ui_components": [],
+    "versions": [],
+    "endpoint_count": 0,
+    "api_versions": [],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

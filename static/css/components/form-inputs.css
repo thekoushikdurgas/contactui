@@ -1,0 +1,249 @@
+/**
+ * Form Input Components Styles
+ * 
+ * Styles for form input components (input, select, textarea)
+ */
+
+/* Form Field Container */
+.form-field {
+    margin-bottom: var(--spacing-4);
+}
+
+/* Form Label */
+.form-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+}
+
+.form-label-required::after {
+    content: ' *';
+    color: var(--color-error-500);
+}
+
+/* Form Input Wrapper */
+.form-input-wrapper,
+.form-select-wrapper,
+.form-textarea-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input-wrapper.form-input-with-icon {
+    position: relative;
+}
+
+/* Form Input */
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: var(--input-padding-y) var(--input-padding-x);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base) var(--transition-ease);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-500);
+    ring: 2px;
+    ring-color: var(--color-primary-500);
+    ring-offset: 2px;
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-bg-secondary);
+}
+
+.form-input:readonly,
+.form-textarea:readonly {
+    background-color: var(--color-bg-secondary);
+    cursor: default;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+/* Input Sizes */
+.form-input-sm,
+.form-select-sm,
+.form-textarea-sm {
+    padding: calc(var(--input-padding-y) * 0.75) calc(var(--input-padding-x) * 0.75);
+    font-size: var(--font-size-xs);
+    min-height: var(--input-height-sm);
+}
+
+.form-input-md,
+.form-select-md,
+.form-textarea-md {
+    padding: var(--input-padding-y) var(--input-padding-x);
+    font-size: var(--font-size-sm);
+    min-height: var(--input-height-md);
+}
+
+.form-input-lg,
+.form-select-lg,
+.form-textarea-lg {
+    padding: calc(var(--input-padding-y) * 1.25) calc(var(--input-padding-x) * 1.25);
+    font-size: var(--font-size-base);
+    min-height: var(--input-height-lg);
+}
+
+/* Input with Icon */
+.form-input-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.form-input-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.form-input-icon-left {
+    left: var(--spacing-3);
+}
+
+.form-input-icon-right {
+    right: var(--spacing-3);
+}
+
+.form-input-wrapper.form-input-with-icon .form-input {
+    padding-left: calc(var(--input-padding-x) + 1.5rem + var(--spacing-2));
+}
+
+.form-input-wrapper.form-input-with-icon .form-input-icon-right ~ .form-input {
+    padding-left: var(--input-padding-x);
+    padding-right: calc(var(--input-padding-x) + 1.5rem + var(--spacing-2));
+}
+
+/* Error State */
+.form-input-error .form-input,
+.form-input-error .form-select,
+.form-input-error .form-textarea,
+.form-select-error .form-select,
+.form-textarea-error .form-textarea {
+    border-color: var(--color-error-500);
+}
+
+.form-input-error .form-input:focus,
+.form-input-error .form-select:focus,
+.form-input-error .form-textarea:focus,
+.form-select-error .form-select:focus,
+.form-textarea-error .form-textarea:focus {
+    border-color: var(--color-error-500);
+    ring-color: var(--color-error-500);
+}
+
+/* Error Message */
+.form-error {
+    margin-top: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--color-error-500);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.form-error::before {
+    content: '⚠';
+    font-size: var(--font-size-sm);
+}
+
+/* Help Text */
+.form-help {
+    margin-top: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+/* Select Specific */
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right var(--spacing-3) center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: calc(var(--input-padding-x) + 1.5rem + var(--spacing-2));
+}
+
+.form-select[multiple] {
+    background-image: none;
+    padding-right: var(--input-padding-x);
+    min-height: calc(var(--input-height-md) * 2);
+}
+
+/* Textarea Specific */
+.form-textarea {
+    resize: vertical;
+    min-height: calc(var(--input-height-md) * 2);
+    font-family: inherit;
+}
+
+.form-textarea-sm {
+    min-height: calc(var(--input-height-sm) * 2);
+}
+
+.form-textarea-lg {
+    min-height: calc(var(--input-height-lg) * 2);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+    background-color: var(--color-bg-primary);
+}
+
+[data-theme="dark"] .form-input:readonly,
+[data-theme="dark"] .form-textarea:readonly {
+    background-color: var(--color-bg-tertiary);
+}
+
+[data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: var(--font-size-base); /* Prevent zoom on iOS */
+    }
+    
+    .form-input-sm,
+    .form-select-sm,
+    .form-textarea-sm {
+        font-size: var(--font-size-sm);
+    }
+}

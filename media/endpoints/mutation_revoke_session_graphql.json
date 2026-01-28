@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_revoke_session_graphql-001",
+  "endpoint_id": "mutation_revoke_session_graphql",
+  "endpoint_path": "graphql/RevokeSession",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Revoke a session by its ID. Accepts RevokeSessionInput with sessionId (required, UUID). Adds session token to blacklist, invalidating it. Returns Boolean indicating success (true if revoked). User isolation enforced - users can only revoke their own sessions. Raises NotFoundError (404) if session not found. Raises ForbiddenError (403) if session belongs to another user.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/profile/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/profileService.ts",
+  "service_methods": [
+    "revokeSession"
+  ],
+  "repository_methods": [
+    "blacklist_token"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "profileService",
+      "via_hook": "useSessions",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation RevokeSession($input: RevokeSessionInput!) { profile { revokeSession(input: $input) } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

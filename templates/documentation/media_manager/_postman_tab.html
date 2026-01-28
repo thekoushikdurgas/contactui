@@ -1,0 +1,58 @@
+<!-- Postman Tab Content -->
+<div id="postman-content" role="tabpanel" aria-labelledby="tab-postman" class="tab-content active">
+    <!-- View Mode: List -->
+    <div id="postman-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+        <!-- Tab Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Postman Configurations</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage Postman API collections and environments</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <div id="postman-filters" class="flex items-center gap-2">
+                    <div class="relative">
+                        <label for="postman-search" class="sr-only">Search Postman configurations</label>
+                        <input type="text" 
+                               id="postman-search" 
+                               data-search-input="true"
+                               data-tab="postman"
+                               placeholder="Search Postman..."
+                               class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors w-64"
+                               aria-label="Search Postman configurations">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <label for="postman-state-filter" class="sr-only">Filter by state</label>
+                    <select id="postman-state-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                            aria-label="Filter Postman by state">
+                        <option value="">All States</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Chips -->
+        <div id="postman-filter-chips" class="mb-4 filter-chips"></div>
+        
+        <!-- List Container -->
+        <div id="postman-list" class="space-y-4" role="list" aria-label="Postman configurations list">
+            {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading Postman configurations...' %}
+        </div>
+        
+        <!-- Pagination -->
+        <div id="postman-pagination" class="mt-6" aria-label="Postman pagination"></div>
+    </div>
+    
+    <!-- View Mode: Grid -->
+    <div id="postman-grid-view" class="view-mode-content {% if view_mode == 'grid' %}active{% else %}hidden{% endif %}">
+        <div id="postman-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Postman grid">
+            {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+        </div>
+        <div id="postman-grid-pagination" class="mt-6" aria-label="Postman grid pagination"></div>
+    </div>
+</div>

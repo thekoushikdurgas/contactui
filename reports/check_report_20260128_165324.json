@@ -1,0 +1,1581 @@
+{
+  "timestamp": "2026-01-28T16:53:24.030694",
+  "project_root": "D:\\code\\ayan\\contact\\contact360\\docsai",
+  "summary": {
+    "total_points": 94,
+    "passed": 92,
+    "failed": 2,
+    "score": 97.87
+  },
+  "categories": {
+    "Project Structure": {
+      "total": 10,
+      "passed": 9,
+      "failed": 1,
+      "results": [
+        {
+          "point_number": 1,
+          "category": "Project Structure",
+          "description": "Uses apps/ folder for all first-party apps",
+          "passed": true,
+          "message": "apps/ directory exists",
+          "severity": "info"
+        },
+        {
+          "point_number": 2,
+          "category": "Project Structure",
+          "description": "Settings split into config/settings/ (base.py, dev.py, prod.py)",
+          "passed": true,
+          "message": "Settings split: True, old settings: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 3,
+          "category": "Project Structure",
+          "description": "pyproject.toml or requirements/ for dependency management",
+          "passed": true,
+          "message": "pyproject.toml: True, requirements: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 4,
+          "category": "Project Structure",
+          "description": "Global templates/ and static/ with app-scoped subfolders",
+          "passed": true,
+          "message": "templates: True, static: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 5,
+          "category": "Project Structure",
+          "description": "Separate media/ folder configured correctly",
+          "passed": true,
+          "message": "Media directory or settings configured",
+          "severity": "info"
+        },
+        {
+          "point_number": 6,
+          "category": "Project Structure",
+          "description": "docker/ or infra/ for deployment configs",
+          "passed": true,
+          "message": "Dockerfile: True, docker-compose: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 7,
+          "category": "Project Structure",
+          "description": "scripts/ for management/maintenance scripts",
+          "passed": true,
+          "message": "scripts/ directory exists",
+          "severity": "info"
+        },
+        {
+          "point_number": 8,
+          "category": "Project Structure",
+          "description": ".env.example for environment variables (no secrets committed)",
+          "passed": true,
+          "message": ".env.example exists",
+          "severity": "info"
+        },
+        {
+          "point_number": 9,
+          "category": "Project Structure",
+          "description": ".gitignore excludes media/, __pycache__, .env, .pytest_cache",
+          "passed": false,
+          "message": "media: False, __pycache__: True, .env: True, pytest: False",
+          "severity": "info"
+        },
+        {
+          "point_number": 10,
+          "category": "Project Structure",
+          "description": "Clear README.md with setup, local dev, deployment instructions",
+          "passed": true,
+          "message": "README.md exists with content",
+          "severity": "info"
+        }
+      ]
+    },
+    "Code Organization": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 11,
+          "category": "Code Organization",
+          "description": "Service layer (services.py or services/) for complex business logic",
+          "passed": true,
+          "message": "Found 10 service files/directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 12,
+          "category": "Code Organization",
+          "description": "Selector/query layer (selectors.py) for read operations",
+          "passed": true,
+          "message": "Found 2 selector files/directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 13,
+          "category": "Code Organization",
+          "description": "Custom managers/querysets for reusable query patterns",
+          "passed": true,
+          "message": "Found 1 managers.py files",
+          "severity": "info"
+        },
+        {
+          "point_number": 14,
+          "category": "Code Organization",
+          "description": "Permissions centralized (e.g. permissions.py per app)",
+          "passed": true,
+          "message": "Found 2 permissions.py files",
+          "severity": "info"
+        },
+        {
+          "point_number": 15,
+          "category": "Code Organization",
+          "description": "Signals isolated and documented (in signals.py)",
+          "passed": true,
+          "message": "Found 0 signals.py files",
+          "severity": "info"
+        },
+        {
+          "point_number": 16,
+          "category": "Code Organization",
+          "description": "Custom management commands in management/commands/",
+          "passed": true,
+          "message": "Found 3 management/commands directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 17,
+          "category": "Code Organization",
+          "description": "Middleware in dedicated app (e.g. core/middleware/)",
+          "passed": true,
+          "message": "Found 2 middleware directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 18,
+          "category": "Code Organization",
+          "description": "API versioning (e.g. api/v1/, api/v2/)",
+          "passed": true,
+          "message": "Found 1 API version directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 19,
+          "category": "Code Organization",
+          "description": "Utils/helpers in core/utils/ or app-specific",
+          "passed": true,
+          "message": "Found 6 utils directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 20,
+          "category": "Code Organization",
+          "description": "Enums/choices in utils/enums.py or constants.py",
+          "passed": true,
+          "message": "Found 2 enum/constants files",
+          "severity": "info"
+        },
+        {
+          "point_number": 21,
+          "category": "Code Organization",
+          "description": "One responsibility per app (domain-driven)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 22,
+          "category": "Code Organization",
+          "description": "Forms/serializers centralized (not inline in views)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 23,
+          "category": "Code Organization",
+          "description": "No spaghetti code; clear separation of concerns",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 24,
+          "category": "Code Organization",
+          "description": "Celery tasks in tasks.py per app",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 25,
+          "category": "Code Organization",
+          "description": "Abstract base models for timestamps/audit fields",
+          "passed": true,
+          "message": "Checking for base models",
+          "severity": "info"
+        },
+        {
+          "point_number": 101,
+          "category": "Code Organization",
+          "description": "All import and format statements at top of code files",
+          "passed": true,
+          "message": "All imports at top in 373 files checked",
+          "severity": "info"
+        }
+      ]
+    },
+    "Models & Database": {
+      "total": 15,
+      "passed": 14,
+      "failed": 1,
+      "results": [
+        {
+          "point_number": 26,
+          "category": "Models & Database",
+          "description": "AUTH_USER_MODEL customized if needed",
+          "passed": true,
+          "message": "Custom user model: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 27,
+          "category": "Models & Database",
+          "description": "Abstract base models for timestamps/audit fields",
+          "passed": true,
+          "message": "Base models found: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 28,
+          "category": "Models & Database",
+          "description": "Proper field types (e.g. CharField(max_length=...), DecimalField)",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 29,
+          "category": "Models & Database",
+          "description": "Indexes on frequently queried/filtered fields (db_index=True)",
+          "passed": true,
+          "message": "Models with indexes: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 30,
+          "category": "Models & Database",
+          "description": "UniqueConstraint for multi-column uniqueness",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 31,
+          "category": "Models & Database",
+          "description": "Custom managers for common filters (e.g. PublishedManager)",
+          "passed": true,
+          "message": "Custom managers found: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 32,
+          "category": "Models & Database",
+          "description": "select_related/prefetch_related used to avoid N+1 queries",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 33,
+          "category": "Models & Database",
+          "description": "exists() for existence checks, not count()",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 34,
+          "category": "Models & Database",
+          "description": "Database routing if using multiple DBs",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 35,
+          "category": "Models & Database",
+          "description": "Migrations reviewed and squashed when appropriate",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 36,
+          "category": "Models & Database",
+          "description": "Soft deletes implemented if needed",
+          "passed": false,
+          "message": "Checking for soft delete implementation",
+          "severity": "info"
+        },
+        {
+          "point_number": 37,
+          "category": "Models & Database",
+          "description": "Model __str__() returns meaningful string",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 38,
+          "category": "Models & Database",
+          "description": "get_absolute_url() defined",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 39,
+          "category": "Models & Database",
+          "description": "Model validators used",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 40,
+          "category": "Models & Database",
+          "description": "Raw SQL only when ORM can't optimize",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        }
+      ]
+    },
+    "Views & APIs": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 41,
+          "category": "Views & APIs",
+          "description": "Class-based views or DRF viewsets preferred over FBVs",
+          "passed": true,
+          "message": "Found 30 views.py files",
+          "severity": "info"
+        },
+        {
+          "point_number": 42,
+          "category": "Views & APIs",
+          "description": "Views thin (orchestrate services/selectors, no business logic)",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 43,
+          "category": "Views & APIs",
+          "description": "Proper HTTP status codes (not all 200)",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 44,
+          "category": "Views & APIs",
+          "description": "Pagination on list views/APIs",
+          "passed": true,
+          "message": "Checking for pagination",
+          "severity": "info"
+        },
+        {
+          "point_number": 45,
+          "category": "Views & APIs",
+          "description": "Throttling/rate limiting on APIs",
+          "passed": true,
+          "message": "Checking for throttling",
+          "severity": "info"
+        },
+        {
+          "point_number": 46,
+          "category": "Views & APIs",
+          "description": "Input validation via forms/serializers",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 47,
+          "category": "Views & APIs",
+          "description": "Exception handling centralized",
+          "passed": true,
+          "message": "Checking for exception handling",
+          "severity": "info"
+        },
+        {
+          "point_number": 48,
+          "category": "Views & APIs",
+          "description": "CSRF protection enabled and used",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 49,
+          "category": "Views & APIs",
+          "description": "No direct request.user checks in views (use permissions)",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 50,
+          "category": "Views & APIs",
+          "description": "API responses consistent",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 51,
+          "category": "Views & APIs",
+          "description": "WebSocket support if real-time needed",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 52,
+          "category": "Views & APIs",
+          "description": "No template logic in views",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        }
+      ]
+    },
+    "Security": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 61,
+          "category": "Security",
+          "description": "DEBUG=False in production",
+          "passed": true,
+          "message": "DEBUG setting check: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 62,
+          "category": "Security",
+          "description": "SECRET_KEY from env vars",
+          "passed": true,
+          "message": "SECRET_KEY from env: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 63,
+          "category": "Security",
+          "description": "ALLOWED_HOSTS explicitly set",
+          "passed": true,
+          "message": "ALLOWED_HOSTS configured: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 64,
+          "category": "Security",
+          "description": "SECURE_SSL_REDIRECT=True in HTTPS",
+          "passed": true,
+          "message": "Checking SECURE_SSL_REDIRECT",
+          "severity": "info"
+        },
+        {
+          "point_number": 65,
+          "category": "Security",
+          "description": "SECURE_HSTS_SECONDS enabled",
+          "passed": true,
+          "message": "Checking SECURE_HSTS_SECONDS",
+          "severity": "info"
+        },
+        {
+          "point_number": 66,
+          "category": "Security",
+          "description": "SECURE_CONTENT_TYPE_NOSNIFF=True",
+          "passed": true,
+          "message": "Checking SECURE_CONTENT_TYPE_NOSNIFF",
+          "severity": "info"
+        },
+        {
+          "point_number": 67,
+          "category": "Security",
+          "description": "SECURE_BROWSER_XSS_FILTER=True",
+          "passed": true,
+          "message": "Checking SECURE_BROWSER_XSS_FILTER",
+          "severity": "info"
+        },
+        {
+          "point_number": 68,
+          "category": "Security",
+          "description": "Passwords hashed with PBKDF2 or better",
+          "passed": true,
+          "message": "Django default",
+          "severity": "info"
+        },
+        {
+          "point_number": 69,
+          "category": "Security",
+          "description": "Sensitive data encrypted",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 70,
+          "category": "Security",
+          "description": "Session cookies secure/httponly",
+          "passed": true,
+          "message": "Checking session cookie settings",
+          "severity": "info"
+        },
+        {
+          "point_number": 71,
+          "category": "Security",
+          "description": "Audit logging",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 72,
+          "category": "Security",
+          "description": "CSP headers configured",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        }
+      ]
+    },
+    "Performance": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 73,
+          "category": "Performance",
+          "description": "Caching configured (Redis/Memcached)",
+          "passed": true,
+          "message": "Caching configured: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 74,
+          "category": "Performance",
+          "description": "Static/media via CDN in prod",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 75,
+          "category": "Performance",
+          "description": "Database connection pooling",
+          "passed": true,
+          "message": "Checking connection pooling",
+          "severity": "info"
+        },
+        {
+          "point_number": 76,
+          "category": "Performance",
+          "description": "Gunicorn/uWSGI + Nginx setup",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 77,
+          "category": "Performance",
+          "description": "iterator() for large querysets",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 78,
+          "category": "Performance",
+          "description": "only()/defer() for partial selects",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 79,
+          "category": "Performance",
+          "description": "Query profiling (django-debug-toolbar in dev)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 80,
+          "category": "Performance",
+          "description": "Compression middleware",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 81,
+          "category": "Performance",
+          "description": "Lazy loading for heavy assets",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 82,
+          "category": "Performance",
+          "description": "Celery for background tasks",
+          "passed": true,
+          "message": "Checking for Celery",
+          "severity": "info"
+        }
+      ]
+    },
+    "Testing": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 83,
+          "category": "Testing",
+          "description": "Unit tests for models/services/selectors (>80% coverage)",
+          "passed": true,
+          "message": "Found 8 test directories",
+          "severity": "info"
+        },
+        {
+          "point_number": 84,
+          "category": "Testing",
+          "description": "Integration tests for views/APIs",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 85,
+          "category": "Testing",
+          "description": "E2E tests for critical flows",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 86,
+          "category": "Testing",
+          "description": "Factories (e.g. factory-boy) for test data",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 87,
+          "category": "Testing",
+          "description": "pytest or pytest-django",
+          "passed": true,
+          "message": "Checking for pytest",
+          "severity": "info"
+        },
+        {
+          "point_number": 88,
+          "category": "Testing",
+          "description": "Mocking external services",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 89,
+          "category": "Testing",
+          "description": "Test isolation (transactions, db reset)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 90,
+          "category": "Testing",
+          "description": "CI runs tests on PRs",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 102,
+          "category": "Testing",
+          "description": "All test files follow best practices (naming, structure, organization)",
+          "passed": true,
+          "message": "\u2713 Found 51 test file(s), 9 test directory/ies, 6 conftest.py file(s). All tests follow best practices.",
+          "severity": "info"
+        }
+      ]
+    },
+    "Deployment": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 91,
+          "category": "Deployment",
+          "description": "Dockerized with multi-stage builds",
+          "passed": true,
+          "message": "Dockerfile exists",
+          "severity": "info"
+        },
+        {
+          "point_number": 92,
+          "category": "Deployment",
+          "description": "CI/CD pipeline (GitHub Actions/GitLab CI)",
+          "passed": true,
+          "message": "Checking for CI/CD",
+          "severity": "info"
+        },
+        {
+          "point_number": 93,
+          "category": "Deployment",
+          "description": "Zero-downtime deploys",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 94,
+          "category": "Deployment",
+          "description": "Health checks configured",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 95,
+          "category": "Deployment",
+          "description": "Monitoring (Sentry/New Relic)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        }
+      ]
+    },
+    "Python Power": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "results": [
+        {
+          "point_number": 96,
+          "category": "Python Power",
+          "description": "Type hints throughout (typing, pydantic)",
+          "passed": true,
+          "message": "Type hints found: True",
+          "severity": "info"
+        },
+        {
+          "point_number": 97,
+          "category": "Python Power",
+          "description": "Modern Python 3.12+ features (match/case, etc.)",
+          "passed": true,
+          "message": "Manual code review required",
+          "severity": "info"
+        },
+        {
+          "point_number": 98,
+          "category": "Python Power",
+          "description": "Linting (black, isort, flake8, mypy)",
+          "passed": true,
+          "message": "Checking for linting config",
+          "severity": "info"
+        },
+        {
+          "point_number": 99,
+          "category": "Python Power",
+          "description": "Pre-commit hooks",
+          "passed": true,
+          "message": "Checking for pre-commit",
+          "severity": "info"
+        },
+        {
+          "point_number": 100,
+          "category": "Python Power",
+          "description": "Full Django features used (signals, middleware, custom tags)",
+          "passed": true,
+          "message": "Manual review required",
+          "severity": "info"
+        }
+      ]
+    }
+  },
+  "all_results": [
+    {
+      "point_number": 1,
+      "category": "Project Structure",
+      "description": "Uses apps/ folder for all first-party apps",
+      "passed": true,
+      "message": "apps/ directory exists",
+      "severity": "info"
+    },
+    {
+      "point_number": 2,
+      "category": "Project Structure",
+      "description": "Settings split into config/settings/ (base.py, dev.py, prod.py)",
+      "passed": true,
+      "message": "Settings split: True, old settings: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 3,
+      "category": "Project Structure",
+      "description": "pyproject.toml or requirements/ for dependency management",
+      "passed": true,
+      "message": "pyproject.toml: True, requirements: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 4,
+      "category": "Project Structure",
+      "description": "Global templates/ and static/ with app-scoped subfolders",
+      "passed": true,
+      "message": "templates: True, static: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 5,
+      "category": "Project Structure",
+      "description": "Separate media/ folder configured correctly",
+      "passed": true,
+      "message": "Media directory or settings configured",
+      "severity": "info"
+    },
+    {
+      "point_number": 6,
+      "category": "Project Structure",
+      "description": "docker/ or infra/ for deployment configs",
+      "passed": true,
+      "message": "Dockerfile: True, docker-compose: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 7,
+      "category": "Project Structure",
+      "description": "scripts/ for management/maintenance scripts",
+      "passed": true,
+      "message": "scripts/ directory exists",
+      "severity": "info"
+    },
+    {
+      "point_number": 8,
+      "category": "Project Structure",
+      "description": ".env.example for environment variables (no secrets committed)",
+      "passed": true,
+      "message": ".env.example exists",
+      "severity": "info"
+    },
+    {
+      "point_number": 9,
+      "category": "Project Structure",
+      "description": ".gitignore excludes media/, __pycache__, .env, .pytest_cache",
+      "passed": false,
+      "message": "media: False, __pycache__: True, .env: True, pytest: False",
+      "severity": "info"
+    },
+    {
+      "point_number": 10,
+      "category": "Project Structure",
+      "description": "Clear README.md with setup, local dev, deployment instructions",
+      "passed": true,
+      "message": "README.md exists with content",
+      "severity": "info"
+    },
+    {
+      "point_number": 11,
+      "category": "Code Organization",
+      "description": "Service layer (services.py or services/) for complex business logic",
+      "passed": true,
+      "message": "Found 10 service files/directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 12,
+      "category": "Code Organization",
+      "description": "Selector/query layer (selectors.py) for read operations",
+      "passed": true,
+      "message": "Found 2 selector files/directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 13,
+      "category": "Code Organization",
+      "description": "Custom managers/querysets for reusable query patterns",
+      "passed": true,
+      "message": "Found 1 managers.py files",
+      "severity": "info"
+    },
+    {
+      "point_number": 14,
+      "category": "Code Organization",
+      "description": "Permissions centralized (e.g. permissions.py per app)",
+      "passed": true,
+      "message": "Found 2 permissions.py files",
+      "severity": "info"
+    },
+    {
+      "point_number": 15,
+      "category": "Code Organization",
+      "description": "Signals isolated and documented (in signals.py)",
+      "passed": true,
+      "message": "Found 0 signals.py files",
+      "severity": "info"
+    },
+    {
+      "point_number": 16,
+      "category": "Code Organization",
+      "description": "Custom management commands in management/commands/",
+      "passed": true,
+      "message": "Found 3 management/commands directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 17,
+      "category": "Code Organization",
+      "description": "Middleware in dedicated app (e.g. core/middleware/)",
+      "passed": true,
+      "message": "Found 2 middleware directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 18,
+      "category": "Code Organization",
+      "description": "API versioning (e.g. api/v1/, api/v2/)",
+      "passed": true,
+      "message": "Found 1 API version directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 19,
+      "category": "Code Organization",
+      "description": "Utils/helpers in core/utils/ or app-specific",
+      "passed": true,
+      "message": "Found 6 utils directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 20,
+      "category": "Code Organization",
+      "description": "Enums/choices in utils/enums.py or constants.py",
+      "passed": true,
+      "message": "Found 2 enum/constants files",
+      "severity": "info"
+    },
+    {
+      "point_number": 21,
+      "category": "Code Organization",
+      "description": "One responsibility per app (domain-driven)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 22,
+      "category": "Code Organization",
+      "description": "Forms/serializers centralized (not inline in views)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 23,
+      "category": "Code Organization",
+      "description": "No spaghetti code; clear separation of concerns",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 24,
+      "category": "Code Organization",
+      "description": "Celery tasks in tasks.py per app",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 25,
+      "category": "Code Organization",
+      "description": "Abstract base models for timestamps/audit fields",
+      "passed": true,
+      "message": "Checking for base models",
+      "severity": "info"
+    },
+    {
+      "point_number": 101,
+      "category": "Code Organization",
+      "description": "All import and format statements at top of code files",
+      "passed": true,
+      "message": "All imports at top in 373 files checked",
+      "severity": "info"
+    },
+    {
+      "point_number": 26,
+      "category": "Models & Database",
+      "description": "AUTH_USER_MODEL customized if needed",
+      "passed": true,
+      "message": "Custom user model: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 27,
+      "category": "Models & Database",
+      "description": "Abstract base models for timestamps/audit fields",
+      "passed": true,
+      "message": "Base models found: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 28,
+      "category": "Models & Database",
+      "description": "Proper field types (e.g. CharField(max_length=...), DecimalField)",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 29,
+      "category": "Models & Database",
+      "description": "Indexes on frequently queried/filtered fields (db_index=True)",
+      "passed": true,
+      "message": "Models with indexes: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 30,
+      "category": "Models & Database",
+      "description": "UniqueConstraint for multi-column uniqueness",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 31,
+      "category": "Models & Database",
+      "description": "Custom managers for common filters (e.g. PublishedManager)",
+      "passed": true,
+      "message": "Custom managers found: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 32,
+      "category": "Models & Database",
+      "description": "select_related/prefetch_related used to avoid N+1 queries",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 33,
+      "category": "Models & Database",
+      "description": "exists() for existence checks, not count()",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 34,
+      "category": "Models & Database",
+      "description": "Database routing if using multiple DBs",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 35,
+      "category": "Models & Database",
+      "description": "Migrations reviewed and squashed when appropriate",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 36,
+      "category": "Models & Database",
+      "description": "Soft deletes implemented if needed",
+      "passed": false,
+      "message": "Checking for soft delete implementation",
+      "severity": "info"
+    },
+    {
+      "point_number": 37,
+      "category": "Models & Database",
+      "description": "Model __str__() returns meaningful string",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 38,
+      "category": "Models & Database",
+      "description": "get_absolute_url() defined",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 39,
+      "category": "Models & Database",
+      "description": "Model validators used",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 40,
+      "category": "Models & Database",
+      "description": "Raw SQL only when ORM can't optimize",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 41,
+      "category": "Views & APIs",
+      "description": "Class-based views or DRF viewsets preferred over FBVs",
+      "passed": true,
+      "message": "Found 30 views.py files",
+      "severity": "info"
+    },
+    {
+      "point_number": 42,
+      "category": "Views & APIs",
+      "description": "Views thin (orchestrate services/selectors, no business logic)",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 43,
+      "category": "Views & APIs",
+      "description": "Proper HTTP status codes (not all 200)",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 44,
+      "category": "Views & APIs",
+      "description": "Pagination on list views/APIs",
+      "passed": true,
+      "message": "Checking for pagination",
+      "severity": "info"
+    },
+    {
+      "point_number": 45,
+      "category": "Views & APIs",
+      "description": "Throttling/rate limiting on APIs",
+      "passed": true,
+      "message": "Checking for throttling",
+      "severity": "info"
+    },
+    {
+      "point_number": 46,
+      "category": "Views & APIs",
+      "description": "Input validation via forms/serializers",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 47,
+      "category": "Views & APIs",
+      "description": "Exception handling centralized",
+      "passed": true,
+      "message": "Checking for exception handling",
+      "severity": "info"
+    },
+    {
+      "point_number": 48,
+      "category": "Views & APIs",
+      "description": "CSRF protection enabled and used",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 49,
+      "category": "Views & APIs",
+      "description": "No direct request.user checks in views (use permissions)",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 50,
+      "category": "Views & APIs",
+      "description": "API responses consistent",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 51,
+      "category": "Views & APIs",
+      "description": "WebSocket support if real-time needed",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 52,
+      "category": "Views & APIs",
+      "description": "No template logic in views",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 61,
+      "category": "Security",
+      "description": "DEBUG=False in production",
+      "passed": true,
+      "message": "DEBUG setting check: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 62,
+      "category": "Security",
+      "description": "SECRET_KEY from env vars",
+      "passed": true,
+      "message": "SECRET_KEY from env: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 63,
+      "category": "Security",
+      "description": "ALLOWED_HOSTS explicitly set",
+      "passed": true,
+      "message": "ALLOWED_HOSTS configured: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 64,
+      "category": "Security",
+      "description": "SECURE_SSL_REDIRECT=True in HTTPS",
+      "passed": true,
+      "message": "Checking SECURE_SSL_REDIRECT",
+      "severity": "info"
+    },
+    {
+      "point_number": 65,
+      "category": "Security",
+      "description": "SECURE_HSTS_SECONDS enabled",
+      "passed": true,
+      "message": "Checking SECURE_HSTS_SECONDS",
+      "severity": "info"
+    },
+    {
+      "point_number": 66,
+      "category": "Security",
+      "description": "SECURE_CONTENT_TYPE_NOSNIFF=True",
+      "passed": true,
+      "message": "Checking SECURE_CONTENT_TYPE_NOSNIFF",
+      "severity": "info"
+    },
+    {
+      "point_number": 67,
+      "category": "Security",
+      "description": "SECURE_BROWSER_XSS_FILTER=True",
+      "passed": true,
+      "message": "Checking SECURE_BROWSER_XSS_FILTER",
+      "severity": "info"
+    },
+    {
+      "point_number": 68,
+      "category": "Security",
+      "description": "Passwords hashed with PBKDF2 or better",
+      "passed": true,
+      "message": "Django default",
+      "severity": "info"
+    },
+    {
+      "point_number": 69,
+      "category": "Security",
+      "description": "Sensitive data encrypted",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 70,
+      "category": "Security",
+      "description": "Session cookies secure/httponly",
+      "passed": true,
+      "message": "Checking session cookie settings",
+      "severity": "info"
+    },
+    {
+      "point_number": 71,
+      "category": "Security",
+      "description": "Audit logging",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 72,
+      "category": "Security",
+      "description": "CSP headers configured",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 73,
+      "category": "Performance",
+      "description": "Caching configured (Redis/Memcached)",
+      "passed": true,
+      "message": "Caching configured: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 74,
+      "category": "Performance",
+      "description": "Static/media via CDN in prod",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 75,
+      "category": "Performance",
+      "description": "Database connection pooling",
+      "passed": true,
+      "message": "Checking connection pooling",
+      "severity": "info"
+    },
+    {
+      "point_number": 76,
+      "category": "Performance",
+      "description": "Gunicorn/uWSGI + Nginx setup",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 77,
+      "category": "Performance",
+      "description": "iterator() for large querysets",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 78,
+      "category": "Performance",
+      "description": "only()/defer() for partial selects",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 79,
+      "category": "Performance",
+      "description": "Query profiling (django-debug-toolbar in dev)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 80,
+      "category": "Performance",
+      "description": "Compression middleware",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 81,
+      "category": "Performance",
+      "description": "Lazy loading for heavy assets",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 82,
+      "category": "Performance",
+      "description": "Celery for background tasks",
+      "passed": true,
+      "message": "Checking for Celery",
+      "severity": "info"
+    },
+    {
+      "point_number": 83,
+      "category": "Testing",
+      "description": "Unit tests for models/services/selectors (>80% coverage)",
+      "passed": true,
+      "message": "Found 8 test directories",
+      "severity": "info"
+    },
+    {
+      "point_number": 84,
+      "category": "Testing",
+      "description": "Integration tests for views/APIs",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 85,
+      "category": "Testing",
+      "description": "E2E tests for critical flows",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 86,
+      "category": "Testing",
+      "description": "Factories (e.g. factory-boy) for test data",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 87,
+      "category": "Testing",
+      "description": "pytest or pytest-django",
+      "passed": true,
+      "message": "Checking for pytest",
+      "severity": "info"
+    },
+    {
+      "point_number": 88,
+      "category": "Testing",
+      "description": "Mocking external services",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 89,
+      "category": "Testing",
+      "description": "Test isolation (transactions, db reset)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 90,
+      "category": "Testing",
+      "description": "CI runs tests on PRs",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 102,
+      "category": "Testing",
+      "description": "All test files follow best practices (naming, structure, organization)",
+      "passed": true,
+      "message": "\u2713 Found 51 test file(s), 9 test directory/ies, 6 conftest.py file(s). All tests follow best practices.",
+      "severity": "info"
+    },
+    {
+      "point_number": 91,
+      "category": "Deployment",
+      "description": "Dockerized with multi-stage builds",
+      "passed": true,
+      "message": "Dockerfile exists",
+      "severity": "info"
+    },
+    {
+      "point_number": 92,
+      "category": "Deployment",
+      "description": "CI/CD pipeline (GitHub Actions/GitLab CI)",
+      "passed": true,
+      "message": "Checking for CI/CD",
+      "severity": "info"
+    },
+    {
+      "point_number": 93,
+      "category": "Deployment",
+      "description": "Zero-downtime deploys",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 94,
+      "category": "Deployment",
+      "description": "Health checks configured",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 95,
+      "category": "Deployment",
+      "description": "Monitoring (Sentry/New Relic)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 96,
+      "category": "Python Power",
+      "description": "Type hints throughout (typing, pydantic)",
+      "passed": true,
+      "message": "Type hints found: True",
+      "severity": "info"
+    },
+    {
+      "point_number": 97,
+      "category": "Python Power",
+      "description": "Modern Python 3.12+ features (match/case, etc.)",
+      "passed": true,
+      "message": "Manual code review required",
+      "severity": "info"
+    },
+    {
+      "point_number": 98,
+      "category": "Python Power",
+      "description": "Linting (black, isort, flake8, mypy)",
+      "passed": true,
+      "message": "Checking for linting config",
+      "severity": "info"
+    },
+    {
+      "point_number": 99,
+      "category": "Python Power",
+      "description": "Pre-commit hooks",
+      "passed": true,
+      "message": "Checking for pre-commit",
+      "severity": "info"
+    },
+    {
+      "point_number": 100,
+      "category": "Python Power",
+      "description": "Full Django features used (signals, middleware, custom tags)",
+      "passed": true,
+      "message": "Manual review required",
+      "severity": "info"
+    }
+  ]
+}

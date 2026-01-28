@@ -1,0 +1,27 @@
+/var/log/django/*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 ubuntu ubuntu
+    sharedscripts
+    postrotate
+        systemctl reload gunicorn > /dev/null 2>&1 || true
+    endscript
+}
+
+/var/log/nginx/docsai_*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 www-data www-data
+    sharedscripts
+    postrotate
+        systemctl reload nginx > /dev/null 2>&1 || true
+    endscript
+}

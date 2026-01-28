@@ -1,0 +1,88 @@
+{
+  "_id": "login_page-001",
+  "page_id": "login_page",
+  "page_type": "docs",
+  "metadata": {
+    "route": "/login",
+    "file_path": "contact360/dashboard/app/(auth)/login/page.tsx",
+    "purpose": "User login page with email/password authentication",
+    "s3_key": "data/pages/login_page.json",
+    "status": "published",
+    "authentication": "Not required (public page)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/Login",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "authService",
+        "via_hook": "useAuth",
+        "usage_type": "primary",
+        "usage_context": "authentication",
+        "description": "Authenticate user with email and password. Returns access token and refresh token."
+      },
+      {
+        "endpoint_path": "graphql/GetSession",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "authService",
+        "via_hook": "useAuth",
+        "usage_type": "secondary",
+        "usage_context": "data_fetching",
+        "description": "Get current session information after login"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "Login",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/auth/Login.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 2,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to access your verified data",
+      "form_fields": [
+        {
+          "label": "Work Email",
+          "type": "email",
+          "placeholder": "you@company.com",
+          "required": true,
+          "icon": "Mail"
+        },
+        {
+          "label": "Password",
+          "type": "password",
+          "placeholder": "••••••••",
+          "required": true,
+          "icon": "Lock"
+        }
+      ],
+      "options": {
+        "remember_me": true,
+        "forgot_password": true
+      },
+      "cta": {
+        "primary": "Sign In",
+        "secondary": {
+          "text": "Don't have an account?",
+          "link_text": "Start for free",
+          "link_page": "register"
+        }
+      }
+    }
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

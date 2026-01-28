@@ -1,0 +1,36 @@
+{
+  "_id": "query_companies_graphql-001",
+  "endpoint_id": "query_companies_graphql",
+  "endpoint_path": "graphql/QueryCompanies",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Query companies using VQL (Vivek Query Language). Accepts VQLQueryInput with filters (optional, nested AND/OR filter logic), sort (optional, array of SortInput with field and direction), pagination (optional, PaginationInput with limit 1-1000, offset, search_after for cursor-based), fields (optional, array of field names to return), include_count (optional, Boolean). Returns CompanyConnection with items (array of Company), total count, limit, offset, hasNext, hasPrevious. Uses Connectra service for data retrieval. Supports complex filter expressions with operators: eq, neq, gt, gte, lt, lte, contains, starts_with, ends_with, in, not_in, is_null, is_not_null.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/companies/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/companiesService.ts",
+  "service_methods": [
+    "companies"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/companies",
+      "page_title": "Companies Page",
+      "via_service": "companiesService",
+      "via_hook": "useCompaniesPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query QueryCompanies($input: VQLQueryInput) { companies { companies(input: $input) { items { id name domain industry } total limit offset hasNext } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

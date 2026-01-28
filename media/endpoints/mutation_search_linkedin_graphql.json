@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_search_linkedin_graphql-001",
+  "endpoint_id": "mutation_search_linkedin_graphql",
+  "endpoint_path": "graphql/SearchLinkedIn",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Search LinkedIn profiles and extract contact data. Accepts SearchLinkedInInput with profileUrl (optional, String, valid LinkedIn URL) OR keywords (optional, String), firstName (optional, String), lastName (optional, String), companyName (optional, String), limit (optional, Int, default 10, max 100). Returns LinkedInSearchResponse with profiles (array of LinkedInProfile with profileUrl, firstName, lastName, headline, company, location, connectionDegree), total count. Credits: 1 credit per search. Activity logged (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/linkedin/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/linkedinService.ts",
+  "service_methods": [
+    "searchLinkedIn"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/linkedin",
+      "page_title": "Linkedin Page",
+      "via_service": "linkedinService",
+      "via_hook": "useLinkedIn",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation SearchLinkedIn($input: SearchLinkedInInput!) { linkedin { searchLinkedIn(input: $input) { profiles { profileUrl firstName lastName headline company } total } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

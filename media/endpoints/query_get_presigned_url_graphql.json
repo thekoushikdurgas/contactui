@@ -1,0 +1,26 @@
+{
+  "_id": "query_get_presigned_url_graphql-001",
+  "endpoint_id": "query_get_presigned_url_graphql",
+  "endpoint_path": "graphql/GetPresignedUrl",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get presigned URL for uploading a specific part in multipart upload. Returns PresignedUrlResponse with presignedUrl (null if part already uploaded), partNumber, alreadyUploaded flag, and etag (if part already uploaded). If part already uploaded, returns existing ETag instead of new URL. Used for direct S3 uploads bypassing server.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/uploadService.ts",
+  "service_methods": [
+    "getPresignedUrl"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

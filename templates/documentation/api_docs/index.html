@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}API Reference - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div id="main-content" class="space-y-6 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">API Reference</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">All {{ total_endpoints }} GET endpoints with usage statistics</p>
+        </div>
+        <div class="flex items-center gap-4 flex-wrap">
+            <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Total requests</span>
+                <span class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ total_requests }}</span>
+            </div>
+            <a href="{% url 'schema' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors font-medium text-sm" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                OpenAPI schema
+            </a>
+        </div>
+    </div>
+
+    <!-- Groups -->
+    {% for group in groups %}
+    <section class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden" aria-labelledby="group-{{ group.id }}">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+            <h2 id="group-{{ group.id }}" class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ group.name }}</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ group.description }} — {{ group.count }} endpoint{{ group.count|pluralize }}</p>
+        </div>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700" role="list">
+            {% for ep in group.endpoints %}
+            <li class="px-6 py-4 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">{{ ep.method }}</span>
+                        <code class="text-sm font-mono text-gray-800 dark:text-gray-200 break-all">{{ ep.path }}</code>
+                    </div>
+                    <h3 class="mt-1.5 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ ep.name }}</h3>
+                    {% if ep.description %}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ ep.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <div class="text-right text-sm text-gray-500 dark:text-gray-400">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ ep.stats.request_count|default:0 }}</span> call{{ ep.stats.request_count|default:0|pluralize }}
+                        <br>
+                        <span aria-label="Last called">Last: {{ ep.last_called_display }}</span>
+                    </div>
+                    <a href="{{ ep.path }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Open in new tab">Try</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}

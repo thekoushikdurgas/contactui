@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_delete_company_graphql-001",
+  "endpoint_id": "mutation_delete_company_graphql",
+  "endpoint_path": "graphql/DeleteCompany",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Delete a company by UUID. Accepts DeleteCompanyInput with companyId (required, UUID). Uses ConnectraClient to delete company from Connectra service. Returns Boolean indicating success (true if deleted). Note: This is a soft delete in Connectra. Raises NotFoundError (404) if company not found. Activity logged (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/companies/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/companiesService.ts",
+  "service_methods": [
+    "deleteCompany"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation DeleteCompany($input: DeleteCompanyInput!) { companies { deleteCompany(input: $input) } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

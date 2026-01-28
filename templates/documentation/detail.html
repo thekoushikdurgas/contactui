@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title|default:page.page_id }} - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'documentation:list' %}" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-black text-gray-900 tracking-tight">{{ page.title|default:page.page_id }}</h1>
+                <div class="flex items-center gap-4 mt-2">
+                    <span class="text-xs text-gray-400 font-medium">Category: {{ page.category|default:"Uncategorized" }}</span>
+                    <span class="text-xs text-gray-400 font-medium">•</span>
+                    <span class="text-xs text-gray-400 font-medium">Last Updated: {{ page.last_updated|default:page.metadata.last_updated|default:"N/A" }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'documentation:update' page.page_id %}" class="px-6 py-2 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all">Edit</a>
+            <a href="{% url 'documentation:delete' page.page_id %}" class="px-6 py-2 bg-red-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-200 hover:bg-red-700 transition-all">Delete</a>
+        </div>
+    </div>
+    
+    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <div class="prose max-w-none">
+            <div class="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">{{ page.content|default:page.metadata.content|default:"No content available."|linebreaks }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

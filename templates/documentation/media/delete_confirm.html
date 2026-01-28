@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete: {{ file_name }} - DocsAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/badges.css' %}?v=20260125">
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto space-y-6">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Media Manager</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Delete File</span>
+    </nav>
+    
+    <!-- Error Message -->
+    {% if error_message %}
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <p class="text-sm text-red-700 dark:text-red-300">{{ error_message }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- Warning Card -->
+    <div class="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-6">
+        <div class="flex items-start gap-4">
+            <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg flex-shrink-0">
+                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-xl font-bold text-red-900 dark:text-red-100 mb-2">Delete Media File</h1>
+                <p class="text-sm text-red-800 dark:text-red-200 mb-4">
+                    You are about to permanently delete this file. This action <strong>cannot be undone</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- File Information -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">File Information</h2>
+        <div class="space-y-3">
+            <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">File Name</span>
+                <span class="text-sm text-gray-900 dark:text-gray-100 font-semibold">{{ file_name }}</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Path</span>
+                <code class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-900 dark:text-gray-100 break-all">{{ file_path }}</code>
+            </div>
+            {% if file_data.size %}
+            <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Size</span>
+                <span class="text-sm text-gray-900 dark:text-gray-100">{{ file_data.size|filesizeformat }}</span>
+            </div>
+            {% endif %}
+            {% if file_data.resource_type %}
+            <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</span>
+                {% include 'components/badge.html' with type='resource' resource_type=file_data.resource_type text=file_data.resource_type %}
+            </div>
+            {% endif %}
+            {% if file_data.modified %}
+            <div class="flex items-center justify-between py-2">
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Modified</span>
+                <span class="text-sm text-gray-900 dark:text-gray-100">{{ file_data.modified }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Form -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <form method="post" id="delete-form" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <input type="checkbox" id="delete_remote" name="delete_remote" class="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400">
+                <label for="delete_remote" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    Also delete from S3 storage
+                </label>
+            </div>
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="{% url 'documentation:dashboard' %}" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                    Cancel
+                </a>
+                <button type="submit" id="delete-btn" class="px-6 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors font-medium text-sm shadow-sm">
+                    Delete File
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Loading State (hidden by default) -->
+    <div id="delete-loading" class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-center gap-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-4 border-gray-200 dark:border-gray-700 border-t-red-500"></div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Deleting File...</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Please wait while we delete the file.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('delete-form')?.addEventListener('submit', function(e) {
+    const form = this;
+    const submitBtn = document.getElementById('delete-btn');
+    const loadingDiv = document.getElementById('delete-loading');
+    
+    if (submitBtn && loadingDiv) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Deleting...';
+        form.style.display = 'none';
+        loadingDiv.classList.remove('hidden');
+    }
+});
+</script>
+{% endblock %}

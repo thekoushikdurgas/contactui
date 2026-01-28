@@ -1,0 +1,139 @@
+{% extends 'durgasman/base.html' %}
+
+{% block durgasman_content %}
+<div class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- Welcome Section -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-6 border border-slate-700">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-white mb-2">Welcome to Durgasman</h1>
+                <p class="text-slate-400">API testing made simple. Import from your documentation and test endpoints instantly.</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-orange-500">{{ collections|length }}</div>
+                    <div class="text-xs text-slate-500">Collections</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-500">{{ recent_history|length }}</div>
+                    <div class="text-xs text-slate-500">Recent Tests</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Collections Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="p-4 border-b border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-white">Collections</h2>
+                        <button class="px-3 py-1 bg-orange-600 hover:bg-orange-500 text-white text-sm rounded transition-colors">
+                            New
+                        </button>
+                    </div>
+                </div>
+                <div class="p-4 space-y-3 max-h-96 overflow-y-auto">
+                    {% for collection in collections %}
+                    <a href="{% url 'durgasman:collection_detail' collection.id %}"
+                       class="block p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-600">
+                        <div class="font-medium text-white">{{ collection.name }}</div>
+                        <div class="text-sm text-slate-400">{{ collection.requests.count }} requests</div>
+                        <div class="text-xs text-slate-500 mt-1">{{ collection.created_at|date:"M j, H:i" }}</div>
+                    </a>
+                    {% empty %}
+                    <div class="text-center py-8 text-slate-500">
+                        <div class="text-4xl mb-2">📁</div>
+                        <div>No collections yet</div>
+                        <div class="text-sm">Import from your documentation</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Request Builder -->
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden" id="request-builder-container">
+                <div class="p-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Request Builder</h2>
+                </div>
+                <div id="request-builder-content" class="p-4">
+                    <div class="text-center py-12 text-slate-500">
+                        <div class="text-4xl mb-4">🚀</div>
+                        <div>Select a collection to start testing</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Viewer -->
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden" id="response-viewer-container">
+                <div class="p-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Response</h2>
+                </div>
+                <div id="response-viewer-content" class="p-4">
+                    <div class="text-center py-12 text-slate-500">
+                        <div class="text-4xl mb-4">📊</div>
+                        <div>Send a request to see the response</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent History -->
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="p-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Recent Tests</h2>
+                </div>
+                <div class="p-4 space-y-3 max-h-64 overflow-y-auto">
+                    {% for item in recent_history %}
+                    <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2 py-1 text-xs font-bold rounded
+                                {% if item.method == 'GET' %}bg-green-500/20 text-green-400
+                                {% elif item.method == 'POST' %}bg-blue-500/20 text-blue-400
+                                {% else %}bg-gray-500/20 text-gray-400{% endif %}">
+                                {{ item.method }}
+                            </span>
+                            <div>
+                                <div class="text-sm font-medium text-white truncate max-w-xs">{{ item.url }}</div>
+                                <div class="text-xs text-slate-500">{{ item.timestamp|date:"M j, H:i:s" }}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs rounded
+                                {% if item.response_status >= 200 and item.response_status < 300 %}bg-green-500/20 text-green-400
+                                {% else %}bg-red-500/20 text-red-400{% endif %}">
+                                {{ item.response_status }}
+                            </span>
+                            <span class="text-xs text-slate-500">{{ item.response_time_ms }}ms</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-8 text-slate-500">
+                        <div class="text-4xl mb-2">📈</div>
+                        <div>No test history yet</div>
+                        <div class="text-sm">Your API tests will appear here</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+// Initialize Durgasman components
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize request builder and response viewer
+    if (window.RequestBuilder && window.ResponseViewer) {
+        window.requestBuilder = new RequestBuilder('request-builder-content');
+        window.responseViewer = new ResponseViewer('response-viewer-content');
+    }
+});
+</script>
+{% endblock %}

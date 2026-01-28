@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Media Manager - DocsAI{% endblock %}
+
+{% block extra_head %}
+{% include 'components/buttons.html' %}
+{% include 'components/cards.html' %}
+{% include 'components/forms.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-7xl mx-auto space-y-6">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Media Manager</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Media Manager</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse and manage pages, endpoints, relationships, and Postman JSON files in <code class="text-xs bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">media/</code></p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ sync_summary.overall.total_files|default:0 }} files</span>
+            <a href="{% url 'documentation:dashboard' %}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="{% url 'documentation:media_file_form' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create
+            </a>
+            <a href="{% url 'documentation:operations_dashboard' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                Operations
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Section (Collapsible) -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Statistics</h2>
+            <button id="stats-toggle-btn"
+                    class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1"
+                    aria-expanded="true"
+                    aria-controls="stats-panels">
+                <span id="stats-toggle-text">Hide</span>
+                <svg id="stats-toggle-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="stats-panels" class="space-y-6">
+            <!-- File Type Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {% for rt, count in file_counts.items %}
+                <div class="flex items-center gap-3 p-4 rounded-2xl {% if rt == 'pages' %}bg-blue-50 dark:bg-blue-900/20{% elif rt == 'endpoints' %}bg-purple-50 dark:bg-purple-900/20{% elif rt == 'relationships' %}bg-green-50 dark:bg-green-900/20{% elif rt == 'postman' %}bg-orange-50 dark:bg-orange-900/20{% elif rt == 'n8n' %}bg-red-50 dark:bg-red-900/20{% else %}bg-gray-50 dark:bg-gray-700/50{% endif %}">
+                    <div class="w-3 h-3 rounded-full {% if rt == 'pages' %}bg-blue-500{% elif rt == 'endpoints' %}bg-purple-500{% elif rt == 'relationships' %}bg-green-500{% elif rt == 'postman' %}bg-orange-500{% elif rt == 'n8n' %}bg-red-500{% else %}bg-gray-400{% endif %}"></div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">{{ rt }}</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ count|default:0 }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Sync Status Overview -->
+            <div class="border-t border-gray-100 dark:border-gray-700 pt-6">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Synchronization Status</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="flex items-center gap-3 p-4 rounded-2xl bg-green-50 dark:bg-green-900/20">
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Synced</p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ sync_summary.overall.total_synced|default:0 }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-2xl bg-yellow-50 dark:bg-yellow-900/20">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Out of Sync</p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ sync_summary.overall.total_out_of_sync|default:0 }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700/50">
+                        <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Not Synced</p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ sync_summary.overall.total_not_synced|default:0 }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/20">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Total Files</p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ sync_summary.overall.total_files|default:0 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="stats-loading" class="hidden text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 dark:border-gray-700 border-t-blue-500"></div>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading statistics...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="border-b border-gray-100 dark:border-gray-700 flex flex-wrap">
+            {% for rt in resource_types %}
+            <button type="button" data-media-tab="{{ rt }}" class="px-6 py-4 text-sm font-medium border-b-2 transition-colors {% if forloop.first %}border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400{% else %}border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100{% endif %}">
+                {{ rt|title }}
+            </button>
+            {% endfor %}
+        </div>
+
+        <!-- Bulk Actions Bar -->
+        <div id="bulk-actions-bar" class="hidden p-4 border-b border-gray-100 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <span id="selected-count">0</span> files selected
+                    </span>
+                    <button type="button" id="select-all-btn" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline">
+                        Select all
+                    </button>
+                    <button type="button" id="clear-selection-btn" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline">
+                        Clear selection
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="bulk-sync-btn" class="btn btn-success btn-sm" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                        </svg>
+                        Sync Selected
+                    </button>
+                    <button type="button" id="bulk-delete-btn" class="btn btn-danger btn-sm" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Delete Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Search and Filters -->
+        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Search Input -->
+                <div class="flex-1 min-w-[200px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <input type="text"
+                               id="file-search"
+                               placeholder="Search files..."
+                               class="form-input pl-10"
+                               autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Filter Dropdowns -->
+                <div class="flex items-center gap-2">
+                    <select id="sync-status-filter" class="form-select form-select-sm">
+                        <option value="">All Sync Status</option>
+                        <option value="synced">Synced</option>
+                        <option value="out_of_sync">Out of Sync</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+
+                    <select id="sort-by-filter" class="form-select form-select-sm">
+                        <option value="name">Sort by Name</option>
+                        <option value="modified">Sort by Modified</option>
+                        <option value="size">Sort by Size</option>
+                    </select>
+
+                    <select id="sort-order-filter" class="form-select form-select-sm">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+
+                    <button type="button" id="media-refresh-btn" class="btn btn-secondary btn-sm">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-900/50">
+                    <tr>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
+                            <input type="checkbox" id="select-all-checkbox" class="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400">
+                        </th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Name</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Modified</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Size</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Sync</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="media-files-tbody" class="hidden"></tbody>
+            </table>
+        </div>
+
+        <div id="media-files-loading" class="p-12 text-center text-gray-500 dark:text-gray-400">
+            <p>Loading files…</p>
+        </div>
+        <div id="media-files-empty" class="hidden">
+            {% include 'components/empty-state.html' with icon='file' title="No files found" message="No files found in this resource type. Create a new file to get started." action_url='documentation:media_file_form' action_text="Create File" %}
+        </div>
+    </div>
+</div>
+
+<script>
+// #region agent log
+fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media_manager.html:config',message:'Setting Media Manager config',data:{activeTab:'{{ resource_types.0|default:"pages" }}',resourceTypes:{{ resource_types|length }},csrfTokenLength:'{{ csrf_token|length }}'},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'template_config'})}).catch(()=>{});
+// #endregion
+
+window.MEDIA_MANAGER_CONFIG = {
+    activeTab: '{{ resource_types.0|default:"pages" }}',
+    urls: {
+        listFiles: '{% url "documentation:api_media_files" %}',
+        previewBase: '/docs/media/preview/',
+        viewerBase: '/docs/media/viewer/',
+        formCreate: '{% url "documentation:media_file_form" %}',
+        formEditBase: '/docs/media/form/edit/',
+        deleteBase: '/docs/media/delete/'
+    },
+    csrfToken: '{{ csrf_token }}'
+};
+</script>
+<script src="{% static 'js/media-manager.js' %}"></script>
+<script>
+document.getElementById('media-refresh-btn')?.addEventListener('click', function() {
+    const btn = this;
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refreshing...';
+
+    if (window.MediaManager && window.MediaManager.loadFiles) {
+        window.MediaManager.loadFiles().finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        });
+    }
+});
+</script>
+{% endblock %}

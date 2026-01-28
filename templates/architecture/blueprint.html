@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Architecture Blueprint - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-500">
+    <div class="p-8 border-b border-gray-100">
+        <h1 class="text-2xl font-bold text-gray-900">Architecture Blueprint</h1>
+        <p class="text-sm text-gray-500 mt-1">Visualize your system architecture</p>
+    </div>
+    
+    <div class="p-8">
+        <div class="h-[600px] bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center">
+            <p class="text-gray-400 text-sm italic">Architecture diagram will be displayed here</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

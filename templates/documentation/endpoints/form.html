@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Create{% endif %} Endpoint - Documentation{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            {% if is_edit %}Edit Endpoint{% else %}Create New Endpoint{% endif %}
+        </h1>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="endpoint_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Endpoint ID
+                </label>
+                <input 
+                    type="text" 
+                    id="endpoint_id" 
+                    name="endpoint_id" 
+                    value="{{ endpoint.endpoint_id|default:'' }}"
+                    required
+                    {% if is_edit %}readonly{% endif %}
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="get_company_graphql"
+                />
+            </div>
+            
+            <div>
+                <label for="endpoint_path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Endpoint Path
+                </label>
+                <input 
+                    type="text" 
+                    id="endpoint_path" 
+                    name="endpoint_path" 
+                    value="{{ endpoint.endpoint_path|default:'' }}"
+                    required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="graphql/GetCompany"
+                />
+            </div>
+            
+            <div>
+                <label for="method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Method
+                </label>
+                <select 
+                    id="method" 
+                    name="method"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                    <option value="QUERY" {% if endpoint.method == 'QUERY' %}selected{% endif %}>QUERY</option>
+                    <option value="MUTATION" {% if endpoint.method == 'MUTATION' %}selected{% endif %}>MUTATION</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Description
+                </label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="4"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Endpoint description..."
+                >{{ endpoint.description|default:'' }}</textarea>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                >
+                    {% if is_edit %}Update Endpoint{% else %}Create Endpoint{% endif %}
+                </button>
+                <a href="{% url 'documentation:endpoints_list' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

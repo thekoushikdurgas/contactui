@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Endpoints Count{% if api_version %}: {{ api_version|upper }}{% elif method %}: {{ method }}{% elif state %}: {{ state|title }}{% elif service_name %}: {{ service_name }}{% endif %} - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Endpoint Count</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">
+                {% if api_version %}{{ api_version|upper }} endpoints{% elif method %}{{ method }} endpoints{% elif state %}{{ state|title }} endpoints{% elif service_name %}{{ service_name }} endpoints{% else %}Endpoints{% endif %}
+            </p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_endpoints' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Endpoints
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Count Display -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-8 text-center">
+        <div class="mb-4">
+            {% if api_version %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">API Version</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ api_version|upper }}</h2>
+            {% elif method %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Method</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ method }}</h2>
+            {% elif state %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">State</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ state|title }}</h2>
+            {% elif service_name %}
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Lambda Service</span>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ service_name }}</h2>
+            {% endif %}
+        </div>
+        <div class="mb-6">
+            <span class="text-6xl font-black text-blue-600 dark:text-blue-400">{{ count }}</span>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">endpoints</p>
+        </div>
+        {% if api_version %}
+            <a href="{% url 'documentation:endpoints_by_api_version' api_version %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ api_version|upper }} Endpoints →
+            </a>
+        {% elif method %}
+            <a href="{% url 'documentation:endpoints_by_method' method %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ method }} Endpoints →
+            </a>
+        {% elif state %}
+            <a href="{% url 'documentation:endpoints_by_state' state %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ state|title }} Endpoints →
+            </a>
+        {% elif service_name %}
+            <a href="{% url 'documentation:endpoints_by_lambda' service_name %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium">
+                View All {{ service_name }} Endpoints →
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

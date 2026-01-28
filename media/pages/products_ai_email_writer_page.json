@@ -1,0 +1,87 @@
+{
+  "_id": "products_ai_email_writer_page-001",
+  "page_id": "products_ai_email_writer_page",
+  "page_type": "marketing",
+  "metadata": {
+    "route": "/products/ai-email-writer",
+    "file_path": "contact360/marketing/app/(marketing)/products/ai-email-writer/page.tsx",
+    "purpose": "AI Email Writer product page displaying features, benefits, workflow, integrations, and social proof.",
+    "s3_key": "data/pages/products_ai_email_writer_page.json",
+    "status": "published",
+    "authentication": "Not required (public page)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetMarketingPage",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "marketingService",
+        "via_hook": "useMarketingPage",
+        "usage_type": "conditional",
+        "usage_context": "data_fetching",
+        "description": "Get marketing page content dynamically. Falls back to static content if API fails."
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "ProductPageLayout",
+        "file_path": "components/landing/shared/ProductPageLayout.tsx"
+      },
+      {
+        "name": "MarketingPageContainer",
+        "file_path": "components/marketing/MarketingPageContainer.tsx"
+      },
+      {
+        "name": "PersonalizationEngineAnimation",
+        "file_path": "components/landing/animations/PersonalizationEngineAnimation.tsx"
+      },
+      {
+        "name": "FunnelImpact",
+        "file_path": "components/landing/sections/ai-writer/FunnelImpact.tsx"
+      },
+      {
+        "name": "WriterWorkflow",
+        "file_path": "components/landing/sections/ai-writer/WriterWorkflow.tsx"
+      },
+      {
+        "name": "BeforeAfterComparison",
+        "file_path": "components/landing/sections/ai-writer/BeforeAfterComparison.tsx"
+      },
+      {
+        "name": "WriterIntegrations",
+        "file_path": "components/landing/sections/ai-writer/WriterIntegrations.tsx"
+      },
+      {
+        "name": "WriterSocialProof",
+        "file_path": "components/landing/sections/ai-writer/WriterSocialProof.tsx"
+      },
+      {
+        "name": "AiBenefits",
+        "file_path": "components/landing/sections/ai-writer/AiBenefits.tsx"
+      },
+      {
+        "name": "WriterFAQ",
+        "file_path": "components/landing/sections/ai-writer/WriterFAQ.tsx"
+      },
+      {
+        "name": "AIWriterCTASection",
+        "file_path": "components/marketing/AIWriterCTASection.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 1,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Service Info - Media Manager{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Service Information</h1>
+        <p class="text-gray-600 dark:text-gray-400">Documentation API Service details</p>
+    </div>
+
+    {% if error %}
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+        <p class="text-red-800 dark:text-red-200">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    {% if service_info %}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div class="space-y-4">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Service Details</h2>
+                <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Service Name</dt>
+                        <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ service_info.service|default:"N/A" }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Version</dt>
+                        <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ service_info.version|default:"N/A" }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                        <dd class="mt-1">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if service_info.status == 'running' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200{% endif %}">
+                                {{ service_info.status|default:"unknown" }}
+                            </span>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
+        <p class="text-gray-500 dark:text-gray-400">No service information available</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

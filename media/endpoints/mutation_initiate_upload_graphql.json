@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_initiate_upload_graphql-001",
+  "endpoint_id": "mutation_initiate_upload_graphql",
+  "endpoint_path": "graphql/InitiateUpload",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Initialize multipart upload session for large files. Accepts InitiateUploadInput with filename (required, String), fileSize (required, Int, max 10GB), contentType (optional, String). Returns InitiateUploadResponse with uploadId (String), fileKey (format: {prefix}{user_uuid}/{timestamp}_{filename}), s3UploadId (String), chunkSize (Int, default 100MB), numParts (Int). Creates upload session in UploadSessionManager for tracking. S3 multipart upload is initiated. Raises BadRequestError (400) if file size exceeds limit. Raises ServiceUnavailableError (503) if S3 is unavailable.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/upload/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/uploadService.ts",
+  "service_methods": [
+    "initiateUpload"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation InitiateUpload($input: InitiateUploadInput!) { upload { initiateUpload(input: $input) { uploadId fileKey s3UploadId chunkSize numParts } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

@@ -1,0 +1,38 @@
+{
+  "_id": "query_get_usage_graphql-001",
+  "endpoint_id": "query_get_usage_graphql",
+  "endpoint_path": "graphql/GetUsage",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get feature usage for current user. Accepts optional featureKey (String) to get specific feature usage. Returns UsageInfo with features (array of FeatureUsage with featureKey, used, limit, remaining, percentage, resetAt, isUnlimited). Limits are role-based: FreeUser (limited), ProUser (higher limits), Admin/SuperAdmin (unlimited). Usage resets monthly. User isolation enforced.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/usage/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usageService.ts",
+  "service_methods": [
+    "usage"
+  ],
+  "repository_methods": [
+    "get_usage_by_user"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/usage",
+      "page_title": "Usage Page",
+      "via_service": "usageService",
+      "via_hook": "useUsageTracking",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetUsage($featureKey: String) { usage { usage(featureKey: $featureKey) { features { featureKey used limit remaining percentage resetAt isUnlimited } } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

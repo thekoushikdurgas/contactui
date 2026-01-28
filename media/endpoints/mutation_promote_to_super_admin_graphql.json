@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_promote_to_super_admin_graphql-001",
+  "endpoint_id": "mutation_promote_to_super_admin_graphql",
+  "endpoint_path": "graphql/PromoteToSuperAdmin",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Promote a user to SuperAdmin role. Accepts PromoteToSuperAdminInput with userId (ID!, required, valid UUID format). Returns User with uuid, email, name, isActive, lastSignInAt, createdAt, updatedAt, and profile (role updated to 'SuperAdmin'). Only SuperAdmin can promote users. Role check via UserProfileRepository. Reloads user after promotion to get updated profile. Raises NotFoundError (404) if target user doesn't exist. Raises ForbiddenError (403) if current user is not SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/users/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usersService.ts",
+  "service_methods": [
+    "promoteToSuperAdmin"
+  ],
+  "repository_methods": [
+    "promote_user_to_super_admin"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation PromoteToSuperAdmin($input: PromoteToSuperAdminInput!) { users { promoteToSuperAdmin(input: $input) { uuid email name profile { role } } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

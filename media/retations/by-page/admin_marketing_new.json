@@ -1,0 +1,32 @@
+{
+  "page_path": "/admin/marketing/new",
+  "endpoints": [
+    {
+      "_id": "admin_marketing_new_graphql_CreateMarketingPage_MUTATION",
+      "relationship_id": "admin_marketing_new_graphql_CreateMarketingPage_MUTATION",
+      "state": "development",
+      "access_control": null,
+      "page_reference": null,
+      "endpoint_reference": null,
+      "connection": null,
+      "files": null,
+      "data_flow": null,
+      "postman_reference": null,
+      "dependencies": null,
+      "performance": null,
+      "metadata": null,
+      "page_path": "/admin/marketing/new",
+      "endpoint_path": "graphql/CreateMarketingPage",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "via_service": "marketingService",
+      "via_hook": "useMarketingPageEditor",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "created_at": "2026-01-20T00:00:00.000000+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "created_at": "2026-01-21T13:33:51.897968+00:00",
+  "updated_at": "2026-01-21T13:33:51.897968+00:00"
+}

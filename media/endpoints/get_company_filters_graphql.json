@@ -1,0 +1,36 @@
+{
+  "_id": "get_company_filters_graphql-001",
+  "endpoint_id": "get_company_filters_graphql",
+  "endpoint_path": "graphql/GetCompanyFilters",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get available filter definitions for companies. No input required. Returns array of FilterDefinition with key (filter field name), type (data type: string, number, boolean, date, enum), label (display label), displayName (human-readable name), operators (supported filter operators), options (for enum types, array of valid values), isDerived (whether filter is computed from other fields), isActive (whether filter is enabled). Used by frontend filter builder UI for companies.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/companies/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/companiesService.ts",
+  "service_methods": [
+    "companyFilters"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/companies",
+      "page_title": "Companies Page",
+      "via_service": "companiesService",
+      "via_hook": "useCompaniesPage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetCompanyFilters { companies { companyFilters { key type label displayName operators options isDerived isActive } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

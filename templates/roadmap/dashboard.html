@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}System Dev Roadmap - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500 pb-20">
+    <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-6">
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-200">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-gray-900 tracking-tight">System Development Roadmap</h2>
+                <p class="text-sm text-gray-500 font-medium">12-Week Strategic Plan for Architecture Improvement</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="text-right mr-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Progress</p>
+                <p class="text-lg font-black text-blue-600">24.5%</p>
+            </div>
+            <button class="px-6 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-black transition-all shadow-lg">Export Roadmap</button>
+        </div>
+    </div>
+    
+    <div class="space-y-4">
+        <!-- Roadmap phases will be displayed here -->
+        <p class="text-sm text-gray-500 text-center py-8">Roadmap phases will be displayed here.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% comment %}
+File Upload Component
+
+Usage:
+{% include 'components/file.html' with name='document' label='Upload Document' accept='.pdf,.doc,.docx' %}
+
+Parameters:
+- name: Input name (required)
+- id: Input ID (defaults to name if not provided)
+- label: Label text (optional)
+- accept: Accepted file types (e.g., '.pdf,.doc' or 'image/*') (optional)
+- multiple: Boolean - allow multiple files (default: false)
+- required: Boolean - default: false
+- disabled: Boolean - default: false
+- size: Input size (sm, md, lg) - default: md
+- error: Error message (optional)
+- help_text: Help text (optional)
+- max_size: Maximum file size in MB (optional, for display only)
+- class: Additional CSS classes (optional)
+- aria_label: ARIA label (optional)
+{% endcomment %}
+
+{% load static %}
+
+<div class="form-field">
+    {% if label %}
+    <label for="{{ id|default:name }}" class="form-label{% if required %} form-label-required{% endif %}">
+        {{ label }}
+    </label>
+    {% endif %}
+    
+    <div class="form-file-wrapper form-file-{{ size|default:'md' }}{% if error %} form-file-error{% endif %}">
+        <input type="file"
+               name="{{ name }}"
+               id="{{ id|default:name }}"
+               class="form-file-input {{ class|default:'' }}"
+               {% if accept %}accept="{{ accept }}"{% endif %}
+               {% if multiple %}multiple{% endif %}
+               {% if required %}required{% endif %}
+               {% if disabled %}disabled{% endif %}
+               {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+               {% if error %}aria-invalid="true" aria-describedby="{{ id|default:name }}-error"{% endif %}
+               {% if help_text %}aria-describedby="{{ id|default:name }}-help"{% endif %}>
+    </div>
+    
+    {% if max_size %}
+    <p class="form-help">
+        Maximum file size: {{ max_size }} MB
+    </p>
+    {% endif %}
+    
+    {% if error %}
+    <p id="{{ id|default:name }}-error" class="form-error" role="alert">
+        {{ error }}
+    </p>
+    {% endif %}
+    
+    {% if help_text and not error %}
+    <p id="{{ id|default:name }}-help" class="form-help">
+        {{ help_text }}
+    </p>
+    {% endif %}
+</div>

@@ -1,0 +1,3133 @@
+{
+  "name": "Web_search Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "execution_status": "web_search_finished",
+            "execution_ended_at": "={{ $now }}",
+            "final_status": "not_found",
+            "execution_id": "={{ $execution.id }}",
+            "tool_used": "web_search"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        656,
+        416
+      ],
+      "id": "863880b1-4d59-4ea4-98c9-acb73b42fb04",
+      "name": "Update as not found",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.scrapingdog.com/google/ai_overview",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "APIKEY"
+            },
+            {
+              "name": "url",
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1328,
+        176
+      ],
+      "id": "cf115265-e802-4489-b454-35c60109b617",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1232,
+        656
+      ],
+      "id": "4f5de67f-499b-4e05-a213-8403843d9850",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "HN6q8u5aBUknuLk1",
+          "name": "Ayan Open AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get raw text from input\nlet rawText = $json.text;\n\n// Ensure input is a string\nif (typeof rawText !== 'string') {\n  throw new Error('Input json.text is not a string');\n}\n\n// Remove Markdown code fences if present\nrawText = rawText\n  .replace(/```json/gi, '')\n  .replace(/```/g, '')\n  .trim();\n\nlet parsedJson;\n\ntry {\n  parsedJson = JSON.parse(rawText);\n} catch (error) {\n  throw new Error(`Invalid JSON after cleanup: ${error.message}`);\n}\n\n// Return clean parsed JSON\nreturn {\n  json: parsedJson\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        448
+      ],
+      "id": "d4c6ee8b-3207-4b16-8214-b09b4373337f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Search Query: {{ $json.search_information.query_displayed }}\n\nSERP Result Array: {{ JSON.stringify($json.organic_results) }}\n",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=<SYSTEM_PROMPT>\n\nYOU ARE A HIGH-PRECISION OSINT & SERP ANALYSIS AGENT.\n\nYOUR TASK IS TO IDENTIFY THE **REAL, FULL, PERSONAL EMAIL ADDRESS** OF A SPECIFIC PERSON FROM GOOGLE SERP DATA.\n\nYOU MUST RETURN **ONLY REAL, COMPLETE, NON-OBFUSCATED EMAILS**.\n\nYOU DO NOT HAVE INTERNET ACCESS.  \nYOU MUST USE ONLY THE PROVIDED INPUT.  \nYOU MUST RETURN **RAW JSON ONLY**.\n\n---\n\n## 🎯 CRITICAL EMAIL VALIDATION RULE (NON-NEGOTIABLE)\n\nAN EMAIL IS CONSIDERED **VALID** ONLY IF:\n\n- THE ENTIRE EMAIL STRING IS FULLY VISIBLE\n- NO PART OF THE EMAIL CONTAINS PLACEHOLDERS OR OBFUSCATION\n- BOTH USERNAME AND DOMAIN ARE COMPLETE\n\n---\n\n## 🚫 EMAILS THAT ARE ALWAYS INVALID (HARD RULE)\n\nIMMEDIATELY REJECT ANY EMAIL THAT CONTAINS:\n\n- `...`\n- `***` or `*****`\n- `xxxxx`\n- `u******`\n- `name@...`\n- PARTIALLY MASKED USERNAMES\n- PARTIALLY MASKED DOMAINS\n- ANY NON-ALPHANUMERIC OBFUSCATION\n\nTHESE EMAILS MUST BE TREATED AS **NOT FOUND**.\n\n---\n\n## 🧠 CHAIN OF THOUGHTS (STRICT)\n\n### 1. COLLECT\n- EXTRACT ALL EMAIL-LIKE STRINGS\n\n### 2. SANITIZE (CRITICAL STEP)\nFOR EACH EMAIL:\n- CHECK FOR:\n  - `*`\n  - `...`\n  - PLACEHOLDER TEXT\n- IF FOUND → DISCARD IMMEDIATELY\n\n### 3. OWNERSHIP VERIFICATION\nACCEPT ONLY IF:\n- EMAIL IS FULLY VISIBLE\n- EMAIL CLEARLY BELONGS TO THE TARGET PERSON\n- EMAIL IS NOT GENERIC (hr@, info@, support@, etc.)\n\n### 4. DOMAIN CHANGE LOGIC\n- IF DOMAIN ≠ ORIGINAL DOMAIN:\n  - REQUIRE EXPLICIT SIGNALS OF COMPANY CHANGE\n  - ELSE DISCARD\n\n### 5. FINAL DECISION\n- IF EXACTLY ONE VALID EMAIL REMAINS → RETURN IT\n- OTHERWISE → RETURN NOT FOUND\n\n\n---\n\n## 🚫 WHAT NOT TO DO (NEGATIVE PROMPT – STRICT)\n\nNEVER GUESS EMAIL FORMATS\n\nNEVER ASSUME DOMAIN CHANGE WITHOUT EXPLICIT SIGNALS\n\nNEVER RETURN GENERIC OR ROLE-BASED EMAILS\n\nNEVER RETURN MASKED EMAILS\n\nNEVER OUTPUT MULTIPLE EMAILS\n\nNEVER ADD EXTRA JSON KEYS\n\nNEVER OUTPUT TEXT OUTSIDE JSON\n\nNEVER RELAX PERSONAL OWNERSHIP REQUIREMENT\n\n\n## 📦 OUTPUT FORMAT (STRICT JSON ONLY)\n\n### ✅ WHEN EMAIL IS FOUND\n```json\n{\n  \"email\": \"person@newdomain.com\",\n  \"is_result_found\": true,\n  \"is_domain_changed\": true\n}\n\n{\n  \"email\": null,\n  \"is_result_found\": false,\n  \"is_domain_changed\": false\n}\n```\n\n##🎯 FEW-SHOT EXAMPLES\n\n###✅ VALID (DOMAIN CHANGED WITH EVIDENCE)\n```json\n{\n  \"email\": \"sai@newco.ai\",\n  \"is_result_found\": true,\n  \"is_domain_changed\": true\n}\n```\n\n❌ INVALID (DOMAIN CHANGED WITHOUT EVIDENCE)\n```json\n{\n  \"email\": null,\n  \"is_result_found\": false,\n  \"is_domain_changed\": false\n}\n```"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1232,
+        448
+      ],
+      "id": "6ce4a936-e002-4da6-8745-06ba345085f6",
+      "name": "Looking for email id"
+    },
+    {
+      "parameters": {
+        "url": "https://api.scrapingdog.com/google",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "6964f64dd2b237912a0d7d0e"
+            },
+            {
+              "name": "country",
+              "value": "us"
+            },
+            {
+              "name": "advance_search",
+              "value": "false"
+            },
+            {
+              "name": "domain",
+              "value": "google.com"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "query",
+              "value": "= {{ $json.full_name }} from {{ $json.company_domain }} email id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1584,
+        448
+      ],
+      "id": "3b740a87-7007-4732-9825-87adce5c9b46",
+      "name": "SERP Search",
+      "executeOnce": false,
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.is_result_found }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    },
+                    "id": "c2dee82b-164a-44bf-982f-7c10ca49da83"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Result Found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2cb33f96-372a-4d37-a80a-d56450687a0d",
+                    "leftValue": "={{ $json.is_result_found }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Result Not Found"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        400
+      ],
+      "id": "90aaeaad-1dc3-448f-9090-cc7cee87d8cc",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "found_emails": "={{ $json.emails[0].address }}",
+            "execution_status": "completed",
+            "execution_ended_at": "={{ $now }}",
+            "final_status": "=valid",
+            "execution_id": "={{ $execution.id }}",
+            "tool_used": "web_search"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        640,
+        0
+      ],
+      "id": "c48c8b7e-90b3-4251-8cd5-6de1a25cf066",
+      "name": "Add the valid email1",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.truelist.io/api/v1/verify_inline",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjBmYmRiOTAzLTYzZjYtNDRhYS1hZWFmLWE0NmI4MmQzNTBmMiIsImV4cGlyZXNfYXQiOm51bGx9.TxY4RBEJDdzMa4WP5D_LPtlfIWMVuX-xl2Tm2YdEx9U"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -288,
+        224
+      ],
+      "id": "37ff250a-5f89-4474-af3c-0737dae03bd1",
+      "name": "Uploading For Email Validation1",
+      "retryOnFail": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.emails[0].email_state }}",
+                    "rightValue": "ok",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "bf97b94e-b94a-4fe1-9b17-296f3011b404"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Valid"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a32051dd-67a5-4446-91d1-5ebf183e4f45",
+                    "leftValue": "={{ $json.emails[0].email_state }}",
+                    "rightValue": "risky",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "risky"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c6941183-9bff-45fe-a1d4-542b53e612a0",
+                    "leftValue": "={{ $json.emails[0].email_state }}",
+                    "rightValue": "email_invalid",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "email_invalid"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b53e181e-b9d8-4e56-bda8-b996c63c903e",
+                    "leftValue": "={{ $json.emails[0].email_state }}",
+                    "rightValue": "unknown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unknown"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        128
+      ],
+      "id": "bc858418-c2fb-4aff-90a5-c6dfbba1801c",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "found_emails": "={{ $json.emails[0].address }}",
+            "execution_status": "web_search_finished",
+            "execution_ended_at": "={{ $now }}",
+            "final_status": "=risky",
+            "execution_id": "={{ $execution.id }}",
+            "tool_used": "web_search"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        640,
+        192
+      ],
+      "id": "bd5c3ed5-cf6d-4b85-867d-0d9a5941d1ea",
+      "name": "Add As Risky Email",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 4,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2208,
+        448
+      ],
+      "id": "74f75b14-c197-4a18-9acb-bdec3af2e1b6",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        672
+      ],
+      "id": "45319fd2-ab51-4f63-8b80-0dbcba109b14"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "execution_status",
+              "value": "email_generation_finished"
+            },
+            {
+              "column": "execution_status",
+              "value": "obstructive_error"
+            },
+            {
+              "column": "execution_status",
+              "value": "web_search_error"
+            }
+          ]
+        },
+        "combineConditions": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2832,
+        448
+      ],
+      "id": "9b4d07d8-7aa3-44c3-a4aa-8b52265a1b96",
+      "name": "Get Records for web search",
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $json.record_uuid }}",
+            "execution_status": "email_generation_finished"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2784,
+        704
+      ],
+      "id": "c4140ff9-5ffc-4e06-8d59-7ced1eba88ed",
+      "name": "Update as Web_search in progress",
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3184,
+        448
+      ],
+      "id": "abe1d388-8baf-4e2c-a4b7-9ee7ebe38e5e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $json.record_uuid }}",
+            "execution_status": "web_searching"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1872,
+        448
+      ],
+      "id": "a32a2e27-9271-4be2-9b59-72c56bb1769d",
+      "name": "Update as Web_search in progress1",
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "execution_status": "web_search_error",
+            "execution_ended_at": "={{ $now }}",
+            "error_message": "={{ $json.error.message }}",
+            "execution_id": "={{ $execution.id }}",
+            "is_catch_all_domain": false,
+            "tool_used": "web_search"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -656,
+        688
+      ],
+      "id": "40ec6d8f-bd11-467f-864b-ed0176869405",
+      "name": "Update as web_search error",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "execution_status": "web_search_error",
+            "execution_ended_at": "={{ $now }}",
+            "error_message": "={{ $json.error.message }}",
+            "execution_id": "={{ $execution.id }}",
+            "is_catch_all_domain": false
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -32,
+        976
+      ],
+      "id": "e6694724-4dee-4323-b4ed-a6cb1ee4907b",
+      "name": "Update as error",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "execution_ended_at": "={{ $now }}",
+            "error_message": "={{ $json.error.message }}",
+            "execution_id": "={{ $execution.id }}",
+            "is_catch_all_domain": true,
+            "tool_used": "web_search",
+            "execution_status": "completed",
+            "final_status": "risky"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        336,
+        512
+      ],
+      "id": "5b050380-a342-4212-837e-60edace6710a",
+      "name": "Update as web_search error1",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "438653c6-b506-4d35-8db7-7a354995d6f3",
+              "leftValue": "={{ $json.error.message }}",
+              "rightValue": "408",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        544
+      ],
+      "id": "e9e6652e-9882-4ea2-af00-7194a2ed8347",
+      "name": "is 408 error?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_sales_navigator_main",
+          "mode": "list",
+          "cachedResultName": "fact_sales_navigator_main"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "record_uuid": "={{ $('Loop Over Items').item.json.record_uuid }}",
+            "execution_ended_at": "={{ $now }}",
+            "error_message": "={{ $json.error.message }}",
+            "execution_id": "={{ $execution.id }}",
+            "is_catch_all_domain": true,
+            "tool_used": "web_search",
+            "execution_status": "error"
+          },
+          "matchingColumns": [
+            "record_uuid"
+          ],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "found_emails",
+              "displayName": "found_emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_status",
+              "displayName": "execution_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "record_uuid",
+              "displayName": "record_uuid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dataset_id",
+              "displayName": "dataset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_status",
+              "displayName": "final_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "batch_id",
+              "displayName": "batch_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "execution_ended_at",
+              "displayName": "execution_ended_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_started_at",
+              "displayName": "execution_started_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apify_item_count",
+              "displayName": "apify_item_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tool_used",
+              "displayName": "tool_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "is_catch_all_domain",
+              "displayName": "is_catch_all_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        256,
+        688
+      ],
+      "id": "89934660-798c-46e1-a08b-72e579c62d23",
+      "name": "Update as web_search error2",
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "2kcmS1UMX1gZLliM",
+          "name": "Linkedin Enrichment"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.truelist.io/api/v1/verify_inline",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "=abhijitgorai240@gmail.com"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjBmYmRiOTAzLTYzZjYtNDRhYS1hZWFmLWE0NmI4MmQzNTBmMiIsImV4cGlyZXNfYXQiOm51bGx9.TxY4RBEJDdzMa4WP5D_LPtlfIWMVuX-xl2Tm2YdEx9U"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -720,
+        80
+      ],
+      "id": "6cda4ce1-6a54-4762-a452-964d6e58fa08",
+      "name": "Uploading For Email Validation",
+      "retryOnFail": false,
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-01-12T05:18:16.044-05:00",
+          "Readable date": "January 12th 2026, 5:18:16 am",
+          "Readable time": "5:18:16 am",
+          "Day of week": "Monday",
+          "Year": "2026",
+          "Month": "January",
+          "Day of month": "12",
+          "Hour": "05",
+          "Minute": "18",
+          "Second": "16",
+          "Timezone": "America/New_York (UTC-05:00)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Looking for email id",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Looking for email id": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SERP Search": {
+      "main": [
+        [
+          {
+            "node": "Looking for email id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update as web_search error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Uploading For Email Validation1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update as not found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Uploading For Email Validation1": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "is 408 error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Add the valid email1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add As Risky Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update as not found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update as not found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Update as Web_search in progress1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Records for web search": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as Web_search in progress": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Records for web search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as Web_search in progress1": {
+      "main": [
+        [
+          {
+            "node": "SERP Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as not found": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add As Risky Email": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add the valid email1": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "is 408 error?": {
+      "main": [
+        [
+          {
+            "node": "Update as web_search error1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update as web_search error2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as web_search error1": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as web_search error2": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update as web_search error": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "20613180-64a4-4e52-92e0-1cc02f8183b4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be43619193ab80e981ebf2462cd228e75c0617232a561d10b82d032934741bf6"
+  },
+  "id": "IddhzaKbc4kfy5pu",
+  "tags": [],
+  "workflow_id": "Web_search Tool"
+}

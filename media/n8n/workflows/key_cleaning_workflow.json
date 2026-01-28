@@ -1,0 +1,675 @@
+{
+  "name": "Key Cleaning Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Comprehensive Database Cleaning Workflow\n\nThis workflow implements the complete cleaning pipeline:\n1. Queries database in batches\n2. Applies cleaning functions to each field\n3. Compares original vs cleaned values\n4. Updates records if modified\n5. Tracks statistics (processed, updated, errors)\n6. Logs errors to CSV and database",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "key-cleaning",
+        "options": {}
+      },
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize statistics\nconst body = $input.item.json.body || $input.item.json;\nconst tableFilter = body.table_filter || 'all';\nconst batchSize = body.batch_size || 1000;\n\nreturn {\n  json: {\n    table_filter: tableFilter,\n    batch_size: batchSize,\n    stats: {\n      processed: 0,\n      updated: 0,\n      errors: 0,\n      invalid_names: 0\n    },\n    current_table: null,\n    current_offset: 0\n  }\n};"
+      },
+      "id": "initialize-1",
+      "name": "Initialize Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determine which tables to clean\nconst tableFilter = $input.item.json.table_filter || 'all';\nconst tables = [];\n\nif (tableFilter === 'all' || tableFilter === 'companies') {\n  tables.push({ table: 'companies', type: 'company' });\n}\nif (tableFilter === 'all' || tableFilter === 'contacts') {\n  tables.push({ table: 'contacts', type: 'contact' });\n}\nif (tableFilter === 'all' || tableFilter === 'companies_metadata') {\n  tables.push({ table: 'companies_metadata', type: 'company_metadata' });\n}\nif (tableFilter === 'all' || tableFilter === 'contacts_metadata') {\n  tables.push({ table: 'contacts_metadata', type: 'contact_metadata' });\n}\n\nreturn tables.map(t => ({ json: { ...$input.item.json, current_table: t.table, table_type: t.type } }));"
+      },
+      "id": "determine-tables-1",
+      "name": "Determine Tables to Clean",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) as total FROM {{ $json.current_table }}",
+        "options": {}
+      },
+      "id": "get-count-1",
+      "name": "Get Total Count",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        230,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create batch queries\nconst total = parseInt($input.item.json.total || 0, 10);\nconst batchSize = $input.item.json.batch_size || 1000;\nconst table = $input.item.json.current_table;\nconst batches = [];\n\nfor (let offset = 0; offset < total; offset += batchSize) {\n  batches.push({\n    json: {\n      ...$input.item.json,\n      offset,\n      limit: batchSize,\n      batch_number: Math.floor(offset / batchSize) + 1,\n      total_batches: Math.ceil(total / batchSize)\n    }\n  });\n}\n\nreturn batches;"
+      },
+      "id": "create-batches-1",
+      "name": "Create Batch Queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM {{ $json.current_table }} LIMIT {{ $json.limit }} OFFSET {{ $json.offset }}",
+        "options": {}
+      },
+      "id": "fetch-batch-1",
+      "name": "Fetch Batch",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        590,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean text helper function\nfunction cleanText(value) {\n  if (value === null || value === undefined) return null;\n  if (typeof value !== 'string') value = String(value);\n  if (value === '_' || value === '') return null;\n  // Remove special chars, keep alphanumeric, spaces, hyphens, periods\n  const cleaned = value.replace(/[^a-zA-Z0-9\\s\\-\\.]/g, '').trim();\n  return cleaned || null;\n}\n\n// Clean array helper\nfunction cleanArray(arr) {\n  if (!Array.isArray(arr)) return null;\n  const cleaned = arr.map(item => cleanText(item)).filter(Boolean);\n  return cleaned.length > 0 ? cleaned : null;\n}\n\n// Process each record in batch\nconst items = $input.all();\nconst tableType = items[0]?.json.table_type || 'company';\nconst processed = [];\nconst errors = [];\n\nfor (const item of items) {\n  try {\n    const record = { ...item.json };\n    const original = JSON.parse(JSON.stringify(record));\n    let modified = false;\n    const modifiedFields = [];\n    \n    if (tableType === 'company') {\n      // Clean company name (call API)\n      if (record.name) {\n        // Will be cleaned via API call\n        record._needs_name_cleaning = true;\n      }\n      \n      // Clean text fields\n      if (record.address) {\n        const cleaned = cleanText(record.address);\n        if (cleaned !== record.address) {\n          record.address = cleaned;\n          modified = true;\n          modifiedFields.push('address');\n        }\n      }\n      \n      if (record.text_search) {\n        const cleaned = cleanText(record.text_search);\n        if (cleaned !== record.text_search) {\n          record.text_search = cleaned;\n          modified = true;\n          modifiedFields.push('text_search');\n        }\n      }\n      \n      // Clean array fields\n      if (record.industries) {\n        const cleaned = cleanArray(record.industries);\n        if (JSON.stringify(cleaned) !== JSON.stringify(record.industries)) {\n          record.industries = cleaned;\n          modified = true;\n          modifiedFields.push('industries');\n        }\n      }\n      \n      if (record.keywords) {\n        // Will be cleaned via API\n        record._needs_keyword_cleaning = true;\n      }\n      \n      if (record.technologies) {\n        const cleaned = cleanArray(record.technologies);\n        if (JSON.stringify(cleaned) !== JSON.stringify(record.technologies)) {\n          record.technologies = cleaned;\n          modified = true;\n          modifiedFields.push('technologies');\n        }\n      }\n    } else if (tableType === 'contact') {\n      // Clean title (call API)\n      if (record.title) {\n        record._needs_title_cleaning = true;\n      }\n      \n      // Clean text fields\n      if (record.text_search) {\n        const cleaned = cleanText(record.text_search);\n        if (cleaned !== record.text_search) {\n          record.text_search = cleaned;\n          modified = true;\n          modifiedFields.push('text_search');\n        }\n      }\n      \n      // Clean array fields\n      if (record.departments) {\n        const cleaned = cleanArray(record.departments);\n        if (JSON.stringify(cleaned) !== JSON.stringify(record.departments)) {\n          record.departments = cleaned;\n          modified = true;\n          modifiedFields.push('departments');\n        }\n      }\n    } else if (tableType === 'company_metadata' || tableType === 'contact_metadata') {\n      // Clean all text fields in metadata\n      const textFields = ['linkedin_url', 'facebook_url', 'twitter_url', 'website', \n                          'company_name_for_emails', 'phone_number', 'latest_funding',\n                          'last_raised_at', 'city', 'state', 'country', 'work_direct_phone',\n                          'home_phone', 'other_phone', 'stage'];\n      \n      for (const field of textFields) {\n        if (record[field]) {\n          const cleaned = cleanText(record[field]);\n          if (cleaned !== record[field]) {\n            record[field] = cleaned;\n            modified = true;\n            modifiedFields.push(field);\n          }\n        }\n      }\n    }\n    \n    if (modified) {\n      record.updated_at = new Date().toISOString();\n      record._modified = true;\n      record._modified_fields = modifiedFields;\n      record._original = original;\n    }\n    \n    processed.push({ json: record });\n  } catch (error) {\n    errors.push({\n      json: {\n        ...item.json,\n        error_reason: error.message,\n        error_type: 'cleaning_error',\n        _is_error: true\n      }\n    });\n  }\n}\n\nreturn processed.concat(errors);"
+      },
+      "id": "clean-batch-1",
+      "name": "Clean Batch Records",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        770,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/clean/company-name",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "company_name",
+              "value": "={{$json.name}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "clean-company-names-api-1",
+      "name": "Clean Company Names (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        950,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/clean/keywords",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keywords",
+              "value": "={{$json.keywords}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "clean-keywords-api-1",
+      "name": "Clean Keywords (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        950,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/clean/title",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "clean-titles-api-1",
+      "name": "Clean Titles (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        950,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge cleaning API results\nconst items = $input.all();\nconst nameResults = $('Clean Company Names (API)').all() || [];\nconst keywordResults = $('Clean Keywords (API)').all() || [];\nconst titleResults = $('Clean Titles (API)').all() || [];\n\n// Create lookup maps\nconst nameMap = {};\nnameResults.forEach(r => {\n  if (r.json.cleaned_name !== undefined) {\n    nameMap[r.json.original_name] = r.json.cleaned_name;\n  }\n});\n\nconst keywordMap = {};\nkeywordResults.forEach(r => {\n  if (r.json.cleaned_keywords !== undefined) {\n    keywordMap[JSON.stringify(r.json.original_keywords)] = r.json.cleaned_keywords;\n  }\n});\n\nconst titleMap = {};\ntitleResults.forEach(r => {\n  if (r.json.cleaned_title !== undefined) {\n    titleMap[r.json.original_title] = r.json.cleaned_title;\n  }\n});\n\n// Apply cleaning results\nreturn items.map(item => {\n  const record = item.json;\n  \n  if (record._needs_name_cleaning && record.name && nameMap[record.name]) {\n    const cleaned = nameMap[record.name];\n    if (cleaned !== record.name) {\n      record.name = cleaned;\n      record._modified = true;\n      if (!record._modified_fields) record._modified_fields = [];\n      record._modified_fields.push('name');\n      if (cleaned === null) record._invalid_name = true;\n    }\n  }\n  \n  if (record._needs_keyword_cleaning && record.keywords) {\n    const key = JSON.stringify(record.keywords);\n    if (keywordMap[key]) {\n      const cleaned = keywordMap[key];\n      if (JSON.stringify(cleaned) !== JSON.stringify(record.keywords)) {\n        record.keywords = cleaned;\n        record._modified = true;\n        if (!record._modified_fields) record._modified_fields = [];\n        record._modified_fields.push('keywords');\n      }\n    }\n  }\n  \n  if (record._needs_title_cleaning && record.title && titleMap[record.title]) {\n    const cleaned = titleMap[record.title];\n    if (cleaned !== record.title) {\n      record.title = cleaned;\n      record._modified = true;\n      if (!record._modified_fields) record._modified_fields = [];\n      record._modified_fields.push('title');\n    }\n  }\n  \n  return { json: record };\n});"
+      },
+      "id": "merge-api-cleaning-1",
+      "name": "Merge API Cleaning Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json._modified}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-modified-1",
+      "name": "Filter Modified Records",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        1310,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{$json.current_table}}",
+          "mode": "list"
+        },
+        "updateKey": "id",
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "update-records-1",
+      "name": "Update Records",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1490,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Track statistics for this batch\nconst items = $input.all();\nconst errors = items.filter(i => i.json._is_error);\nconst modified = items.filter(i => i.json._modified);\nconst invalidNames = items.filter(i => i.json._invalid_name);\n\nconst batchStats = {\n  processed: items.length - errors.length,\n  updated: modified.length,\n  errors: errors.length,\n  invalid_names: invalidNames.length\n};\n\nreturn [{\n  json: {\n    ...$('Fetch Batch').item.json,\n    batch_stats: batchStats\n  }\n}];"
+      },
+      "id": "track-batch-stats-1",
+      "name": "Track Batch Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1670,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log errors to CSV format\nconst errors = $input.all().filter(i => i.json._is_error);\nif (errors.length === 0) return [];\n\nconst timestamp = new Date().toISOString();\nconst table = $('Fetch Batch').item.json.current_table;\n\nreturn errors.map(error => ({\n  json: {\n    timestamp,\n    error_type: 'cleaning_error',\n    row_data: JSON.stringify({\n      table,\n      row_id: error.json.id || error.json.uuid,\n      record: error.json\n    }),\n    error_reason: error.json.error_reason || 'Unknown error',\n    _csv_row: [\n      timestamp,\n      'cleaning_error',\n      JSON.stringify({\n        table,\n        row_id: error.json.id || error.json.uuid,\n        record: error.json\n      }),\n      error.json.error_reason || 'Unknown error'\n    ]\n  }\n}));"
+      },
+      "id": "format-cleaning-errors-1",
+      "name": "Format Cleaning Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1130,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write errors to CSV file\nconst errors = $input.all();\nif (errors.length === 0) return [];\n\nconst fs = require('fs');\nconst path = require('path');\n\nconst now = new Date();\nconst filename = `error_${now.getDate().toString().padStart(2, '0')}_${(now.getMonth() + 1).toString().padStart(2, '0')}_${now.getFullYear().toString().slice(-2)}_${now.getHours().toString().padStart(2, '0')}_${now.getMinutes().toString().padStart(2, '0')}_${now.getSeconds().toString().padStart(2, '0')}.csv`;\nconst errorDir = path.join(process.cwd(), 'scripts', 'data', 'error');\n\nif (!fs.existsSync(errorDir)) {\n  fs.mkdirSync(errorDir, { recursive: true });\n}\n\nconst filePath = path.join(errorDir, filename);\nconst fileExists = fs.existsSync(filePath);\n\nif (!fileExists) {\n  fs.appendFileSync(filePath, 'timestamp,error_type,row_data,error_reason\\n', 'utf8');\n}\n\nfor (const error of errors) {\n  const row = error.json._csv_row || [\n    error.json.timestamp,\n    error.json.error_type,\n    error.json.row_data,\n    error.json.error_reason\n  ];\n  const csvRow = row.map(cell => {\n    const str = String(cell);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return '\"' + str.replace(/\"/g, '\"\"') + '\"';\n    }\n    return str;\n  }).join(',') + '\\n';\n  \n  fs.appendFileSync(filePath, csvRow, 'utf8');\n}\n\nreturn [{\n  json: {\n    error_file_path: filePath,\n    error_count: errors.length\n  }\n}];"
+      },
+      "id": "write-cleaning-error-csv-1",
+      "name": "Write Cleaning Error CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1310,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "error_logs",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "error_type": "cleaning_error",
+            "error_message": "={{$json.error_reason}}",
+            "context": "={{JSON.parse($json.row_data)}}",
+            "created_at": "={{$json.timestamp}}"
+          },
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-cleaning-errors-db-1",
+      "name": "Log Cleaning Errors to DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1490,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIALS",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "final_stats",
+        "options": {}
+      },
+      "id": "aggregate-final-stats-1",
+      "name": "Aggregate Final Statistics",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate final statistics\nconst allBatches = $input.all();\n\nlet totalProcessed = 0;\nlet totalUpdated = 0;\nlet totalErrors = 0;\nlet totalInvalidNames = 0;\n\nfor (const batch of allBatches) {\n  const stats = batch.json.batch_stats || {};\n  totalProcessed += stats.processed || 0;\n  totalUpdated += stats.updated || 0;\n  totalErrors += stats.errors || 0;\n  totalInvalidNames += stats.invalid_names || 0;\n}\n\nreturn [{\n  json: {\n    processed: totalProcessed,\n    updated: totalUpdated,\n    errors: totalErrors,\n    invalid_names: totalInvalidNames,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "calculate-final-stats-1",
+      "name": "Calculate Final Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2030,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#data-pipeline",
+        "text": "✅ Database Cleaning Completed\n\nProcessed: {{$json.processed}}\nUpdated: {{$json.updated}}\nErrors: {{$json.errors}}\nInvalid Names: {{$json.invalid_names}}",
+        "otherOptions": {}
+      },
+      "id": "slack-notification-1",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2210,
+        0
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Statistics": {
+      "main": [
+        [
+          {
+            "node": "Determine Tables to Clean",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determine Tables to Clean": {
+      "main": [
+        [
+          {
+            "node": "Get Total Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Total Count": {
+      "main": [
+        [
+          {
+            "node": "Create Batch Queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Batch Queries": {
+      "main": [
+        [
+          {
+            "node": "Fetch Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Batch": {
+      "main": [
+        [
+          {
+            "node": "Clean Batch Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Batch Records": {
+      "main": [
+        [
+          {
+            "node": "Clean Company Names (API)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clean Keywords (API)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clean Titles (API)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Cleaning Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Company Names (API)": {
+      "main": [
+        [
+          {
+            "node": "Merge API Cleaning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Keywords (API)": {
+      "main": [
+        [
+          {
+            "node": "Merge API Cleaning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Titles (API)": {
+      "main": [
+        [
+          {
+            "node": "Merge API Cleaning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Cleaning Errors": {
+      "main": [
+        [
+          {
+            "node": "Write Cleaning Error CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Cleaning Error CSV": {
+      "main": [
+        [
+          {
+            "node": "Log Cleaning Errors to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge API Cleaning Results": {
+      "main": [
+        [
+          {
+            "node": "Filter Modified Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Modified Records": {
+      "main": [
+        [
+          {
+            "node": "Update Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Records": {
+      "main": [
+        [
+          {
+            "node": "Track Batch Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Track Batch Statistics": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Final Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Final Statistics": {
+      "main": [
+        [
+          {
+            "node": "Calculate Final Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Final Statistics": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "key_cleaning_workflow"
+}

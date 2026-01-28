@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_delete_documentation_page_graphql-001",
+  "endpoint_id": "mutation_delete_documentation_page_graphql",
+  "endpoint_path": "graphql/DeleteDocumentationPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Delete a documentation page. Accepts DeleteDocumentationPageInput with pageId (required, String, max 255 chars). Removes page from both S3 (markdown content) and MongoDB (metadata). Returns Boolean (true if deleted). Uses Lambda Documentation service. Raises NotFoundError (404) if page not found. Raises ForbiddenError (403) if not Admin/SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/documentation/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/documentationService.ts",
+  "service_methods": [
+    "deleteDocumentationPage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation DeleteDocumentationPage($input: DeleteDocumentationPageInput!) { documentation { deleteDocumentationPage(input: $input) } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

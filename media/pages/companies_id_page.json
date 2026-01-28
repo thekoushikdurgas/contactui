@@ -1,0 +1,61 @@
+{
+  "_id": "companies_id_page-001",
+  "page_id": "companies_id_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/companies/[id]",
+    "file_path": "contact360/dashboard/app/(dashboard)/companies/[id]/page.tsx",
+    "purpose": "Company detail page displaying individual company information, contacts, and related data.",
+    "s3_key": "data/pages/companies_id_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetCompany",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "companiesService",
+        "via_hook": "useCompanyDetail",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get detailed information for a specific company by UUID"
+      },
+      {
+        "endpoint_path": "graphql/GetCompanyContacts",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "companiesService",
+        "via_hook": "useCompanyContacts",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get contacts belonging to a specific company with VQL filtering and pagination"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "CompanyDetail",
+        "file_path": "components/features/companies/CompanyDetail.tsx"
+      },
+      {
+        "name": "CompanyContactsList",
+        "file_path": "components/features/companies/CompanyContactsList.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 2,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

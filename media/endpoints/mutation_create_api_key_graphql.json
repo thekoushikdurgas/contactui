@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_create_api_key_graphql-001",
+  "endpoint_id": "mutation_create_api_key_graphql",
+  "endpoint_path": "graphql/CreateAPIKey",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a new API key. Accepts CreateAPIKeyInput with name (required, String, max 255 chars), permissions (optional, array of enum: read, write, default: [read]). Returns CreateAPIKeyResponse with id (UUID), name (String), key (String, full key - shown only once), keyPrefix (String, first 8 chars for display), permissions (array), createdAt (DateTime). Key is hashed before storage. Important: Full key is returned only once on creation.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/profile/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/profileService.ts",
+  "service_methods": [
+    "createAPIKey"
+  ],
+  "repository_methods": [
+    "create_api_key"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "profileService",
+      "via_hook": "useAPIKeys",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateAPIKey($input: CreateAPIKeyInput!) { profile { createAPIKey(input: $input) { id name key keyPrefix permissions createdAt } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

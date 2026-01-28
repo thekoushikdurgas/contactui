@@ -1,0 +1,26 @@
+{
+  "_id": "query_find_emails_graphql-001",
+  "endpoint_id": "query_find_emails_graphql",
+  "endpoint_path": "graphql/FindEmails",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Find emails by first name, last name, and company domain/website. Returns EmailFinderResponse with emails array (uuid, email) and total count. Uses LambdaEmailClient for email finding. Credits: 1 credit per search (FreeUser/ProUser only, SuperAdmin/Admin have unlimited). Either domain or website must be provided. Results are cached for 5 minutes.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/emailService.ts",
+  "service_methods": [
+    "findEmails"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

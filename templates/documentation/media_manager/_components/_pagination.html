@@ -1,0 +1,54 @@
+{% comment %}
+Reusable pagination component.
+
+Parameters:
+- page: Current page number (default: 1)
+- total: Total number of items
+- per_page: Items per page (default: 20)
+- base_url: Base URL for pagination links (optional)
+{% endcomment %}
+
+{% load mathfilters %}
+
+{% if total > per_page %}
+    {% with total_pages=total|div:per_page|ceil %}
+        <nav class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6" aria-label="Pagination">
+            <div class="hidden sm:block">
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                    Showing
+                    <span class="font-medium">{{ page|mul:per_page|sub:per_page|add:1 }}</span>
+                    to
+                    <span class="font-medium">
+                        {% if page|mul:per_page > total %}{{ total }}{% else %}{{ page|mul:per_page }}{% endif %}
+                    </span>
+                    of
+                    <span class="font-medium">{{ total }}</span>
+                    results
+                </p>
+            </div>
+            <div class="flex flex-1 justify-between sm:justify-end gap-2">
+                {% if page > 1 %}
+                    <a href="?page={{ page|add:-1 }}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md cursor-not-allowed">
+                        Previous
+                    </span>
+                {% endif %}
+                
+                {% if page < total_pages %}
+                    <a href="?page={{ page|add:1 }}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md cursor-not-allowed">
+                        Next
+                    </span>
+                {% endif %}
+            </div>
+        </nav>
+    {% endwith %}
+{% endif %}

@@ -1,0 +1,33 @@
+{
+  "endpoint_path": "graphql/DeleteDashboardPage",
+  "method": "MUTATION",
+  "pages": [
+    {
+      "_id": "admin_dashboard-pages_graphql_DeleteDashboardPage_MUTATION",
+      "relationship_id": "admin_dashboard-pages_graphql_DeleteDashboardPage_MUTATION",
+      "state": "development",
+      "access_control": null,
+      "page_reference": null,
+      "endpoint_reference": null,
+      "connection": null,
+      "files": null,
+      "data_flow": null,
+      "postman_reference": null,
+      "dependencies": null,
+      "performance": null,
+      "metadata": null,
+      "page_path": "/admin/dashboard-pages",
+      "endpoint_path": "graphql/DeleteDashboardPage",
+      "method": "MUTATION",
+      "api_version": null,
+      "via_service": "dashboardPagesService",
+      "via_hook": "useAdminDashboardPages",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "created_at": "2026-01-21T13:33:51.897968+00:00",
+  "updated_at": "2026-01-21T13:33:51.897968+00:00"
+}

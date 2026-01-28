@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Relationships Statistics - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Relationships Statistics</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Comprehensive statistics for all relationships</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_relationships' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Relationships
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Statistics Cards -->
+    {% if statistics %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% if statistics.total_relationships %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Relationships</dt>
+                    <dd class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ statistics.total_relationships }}</dd>
+                </div>
+            {% endif %}
+            {% if statistics.unique_pages %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unique Pages</dt>
+                    <dd class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ statistics.unique_pages }}</dd>
+                </div>
+            {% endif %}
+            {% if statistics.unique_endpoints %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unique Endpoints</dt>
+                    <dd class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ statistics.unique_endpoints }}</dd>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if statistics.by_usage_type %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">By Usage Type</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for usage_type, count in statistics.by_usage_type.items %}
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ usage_type|title }}</dt>
+                            <dd class="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ count }}</dd>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if statistics.by_usage_context %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">By Usage Context</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for usage_context, count in statistics.by_usage_context.items %}
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ usage_context|title }}</dt>
+                            <dd class="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ count }}</dd>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-12">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No statistics available</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

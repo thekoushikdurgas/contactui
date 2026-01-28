@@ -1,0 +1,83 @@
+<!-- Endpoints Tab Content -->
+<div id="endpoints-content" role="tabpanel" aria-labelledby="tab-endpoints" class="tab-content active">
+    <!-- View Mode: List -->
+    <div id="endpoints-list-view" class="view-mode-content {% if view_mode == 'list' %}active{% else %}hidden{% endif %}">
+        <!-- Tab Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Endpoints</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage API endpoints</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <div id="endpoints-filters" class="flex items-center gap-2">
+                    <div class="relative">
+                        <label for="endpoint-search" class="sr-only">Search endpoints</label>
+                        <input type="text" 
+                               id="endpoint-search" 
+                               data-search-input="true"
+                               data-tab="endpoints"
+                               placeholder="Search endpoints..."
+                               class="pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors w-64"
+                               aria-label="Search endpoints">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <label for="endpoint-api-version-filter" class="sr-only">Filter by API version</label>
+                    <select id="endpoint-api-version-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                            aria-label="Filter endpoints by API version">
+                        <option value="">All Versions</option>
+                        <option value="v1">v1</option>
+                        <option value="v2">v2</option>
+                        <option value="v3">v3</option>
+                        <option value="v4">v4</option>
+                        <option value="graphql">GraphQL</option>
+                    </select>
+                    <label for="endpoint-method-filter" class="sr-only">Filter by method</label>
+                    <select id="endpoint-method-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                            aria-label="Filter endpoints by method">
+                        <option value="">All Methods</option>
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="QUERY">QUERY</option>
+                        <option value="MUTATION">MUTATION</option>
+                    </select>
+                    <label for="endpoint-state-filter" class="sr-only">Filter by state</label>
+                    <select id="endpoint-state-filter" 
+                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                            aria-label="Filter endpoints by state">
+                        <option value="">All States</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                        <option value="coming_soon">Coming Soon</option>
+                        <option value="development">Development</option>
+                        <option value="test">Test</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Chips -->
+        <div id="endpoints-filter-chips" class="mb-4 filter-chips"></div>
+        
+        <!-- List Container -->
+        <div id="endpoints-list" class="space-y-4" role="list" aria-label="Endpoints list">
+            {% include 'components/loading-state.html' with type='spinner' size='md' message='Loading endpoints...' %}
+        </div>
+        
+        <!-- Pagination -->
+        <div id="endpoints-pagination" class="mt-6" aria-label="Endpoints pagination"></div>
+    </div>
+    
+    <!-- View Mode: Grid -->
+    <div id="endpoints-grid-view" class="view-mode-content {% if view_mode == 'grid' %}active{% else %}hidden{% endif %}">
+        <div id="endpoints-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Endpoints grid">
+            {% include 'components/loading-state.html' with type='skeleton' lines=6 %}
+        </div>
+        <div id="endpoints-grid-pagination" class="mt-6" aria-label="Endpoints grid pagination"></div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+{
+  "endpoint_path": "graphql/AggregateMetrics",
+  "method": "QUERY",
+  "pages": [
+    {
+      "_id": "analytics_graphql_AggregateMetrics_QUERY",
+      "relationship_id": "analytics_graphql_AggregateMetrics_QUERY",
+      "state": "development",
+      "access_control": null,
+      "page_reference": null,
+      "endpoint_reference": null,
+      "connection": null,
+      "files": null,
+      "data_flow": null,
+      "postman_reference": null,
+      "dependencies": null,
+      "performance": null,
+      "metadata": null,
+      "page_path": "/analytics",
+      "endpoint_path": "graphql/AggregateMetrics",
+      "method": "QUERY",
+      "api_version": null,
+      "via_service": "analyticsService",
+      "via_hook": "useAnalyticsPage",
+      "usage_type": "secondary",
+      "usage_context": "analytics",
+      "created_at": "2026-01-21T13:33:51.897968+00:00",
+      "updated_at": "2026-01-21T13:33:51.897968+00:00"
+    }
+  ],
+  "created_at": "2026-01-21T13:33:51.897968+00:00",
+  "updated_at": "2026-01-21T13:33:51.897968+00:00"
+}

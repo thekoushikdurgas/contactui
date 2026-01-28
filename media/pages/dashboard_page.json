@@ -1,0 +1,99 @@
+{
+  "_id": "dashboard_page-001",
+  "page_id": "dashboard_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/dashboard",
+    "file_path": "contact360/dashboard/app/(dashboard)/dashboard/page.tsx",
+    "purpose": "Main dashboard page displaying user statistics, recent activities, pending exports, performance charts, and quick actions.",
+    "s3_key": "data/pages/dashboard_page.json",
+    "status": "published",
+    "authentication": "Required (protected by DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/GetUserStats",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "adminService",
+        "via_hook": "useDashboardPage",
+        "usage_type": "conditional",
+        "usage_context": "analytics",
+        "description": "Get user statistics (total users, active users, users by role/plan). Only included if user is admin/superAdmin. Batched with activities and exports in useDashboardPage hook."
+      },
+      {
+        "endpoint_path": "graphql/GetActivities",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "activitiesService",
+        "via_hook": "useDashboardPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get recent user activities with limit. Batched with stats and exports in useDashboardPage hook."
+      },
+      {
+        "endpoint_path": "graphql/ListExports",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "exportsService",
+        "via_hook": "useDashboardPage",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "List pending and processing exports. Filtered by status. Batched with stats and activities in useDashboardPage hook."
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "DashboardPageLayout",
+        "file_path": "components/layouts/DashboardPageLayout.tsx"
+      },
+      {
+        "name": "DashboardHeader",
+        "file_path": "components/features/dashboard/DashboardHeader.tsx"
+      },
+      {
+        "name": "StatsGrid",
+        "file_path": "components/shared/StatsGrid.tsx"
+      },
+      {
+        "name": "DashboardPerformanceChart",
+        "file_path": "components/features/dashboard/DashboardPerformanceChart.tsx"
+      },
+      {
+        "name": "DashboardActivityFeed",
+        "file_path": "components/features/dashboard/DashboardActivityFeed.tsx"
+      },
+      {
+        "name": "DashboardQuickActions",
+        "file_path": "components/features/dashboard/DashboardQuickActions.tsx"
+      },
+      {
+        "name": "DashboardPendingExports",
+        "file_path": "components/features/dashboard/DashboardPendingExports.tsx"
+      },
+      {
+        "name": "DashboardUpgradeBanner",
+        "file_path": "components/features/dashboard/DashboardUpgradeBanner.tsx"
+      },
+      {
+        "name": "UsageOverview",
+        "file_path": "components/features/usage/UsageOverview.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 3,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

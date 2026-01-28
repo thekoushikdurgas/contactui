@@ -1,0 +1,620 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ workflow.name }} - Workflow Editor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/litegraph.js@0.7.18/css/litegraph.css">
+<style>
+    .editor-container {
+        display: flex;
+        height: calc(100vh - 180px);
+        gap: 0;
+    }
+    
+    .node-palette {
+        width: 280px;
+        background: var(--color-bg-primary);
+        border-right: 1px solid var(--color-border);
+        overflow-y: auto;
+    }
+    
+    .canvas-container {
+        flex: 1;
+        position: relative;
+        background: #1a1a2e;
+    }
+    
+    #workflow-canvas {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .property-panel {
+        width: 320px;
+        background: var(--color-bg-primary);
+        border-left: 1px solid var(--color-border);
+        overflow-y: auto;
+    }
+    
+    .node-category {
+        border-bottom: 1px solid var(--color-border);
+    }
+    
+    .node-item {
+        padding: 12px 16px;
+        cursor: grab;
+        border-bottom: 1px solid var(--color-border-light);
+        transition: background 0.15s;
+    }
+    
+    .node-item:hover {
+        background: var(--color-bg-secondary);
+    }
+    
+    .node-item:active {
+        cursor: grabbing;
+    }
+    
+    .property-group {
+        padding: 16px;
+        border-bottom: 1px solid var(--color-border);
+    }
+    
+    /* Custom LiteGraph styling */
+    .litegraph canvas {
+        background: #1a1a2e !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <!-- Editor Header -->
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'durgasflow:dashboard' %}" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+            </a>
+            <div>
+                <input type="text" id="workflow-name" value="{{ workflow.name }}" class="text-lg font-bold text-gray-900 dark:text-gray-100 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1" />
+                <p class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ workflow.trigger_type|title }} trigger</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <span id="save-status" class="text-xs text-gray-500 dark:text-gray-400">All changes saved</span>
+            
+            <button id="btn-undo" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Undo">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                </svg>
+            </button>
+            
+            <button id="btn-redo" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Redo">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path>
+                </svg>
+            </button>
+            
+            <div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
+            
+            <button id="btn-execute" class="px-4 py-2 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Execute
+            </button>
+            
+            <button id="btn-save" class="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                </svg>
+                Save
+            </button>
+        </div>
+    </div>
+
+    <!-- Editor Main Area -->
+    <div class="editor-container rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
+        <!-- Node Palette (Left Sidebar) -->
+        <div class="node-palette">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                <input type="text" id="node-search" placeholder="Search nodes..." class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+            </div>
+            
+            <div id="node-categories">
+                <!-- Categories will be populated by JavaScript -->
+                <div class="node-category">
+                    <button class="w-full p-4 text-left font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-between" onclick="toggleCategory(this)">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                            Triggers
+                        </span>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="category-items">
+                        <div class="node-item" draggable="true" data-node-type="trigger/manual">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Manual Trigger</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Start manually</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="trigger/webhook">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Webhook Trigger</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Start via HTTP</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="trigger/schedule">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Schedule Trigger</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Start on schedule</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-category">
+                    <button class="w-full p-4 text-left font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-between" onclick="toggleCategory(this)">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-violet-500"></span>
+                            AI Agents
+                        </span>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="category-items hidden">
+                        <div class="node-item" draggable="true" data-node-type="ai/chat_completion">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">AI Chat Completion</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Generate AI responses</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="ai/code_generator">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">AI Code Generator</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Generate code</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="ai/summarizer">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">AI Summarizer</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Summarize content</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-category">
+                    <button class="w-full p-4 text-left font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-between" onclick="toggleCategory(this)">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-teal-500"></span>
+                            Actions
+                        </span>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="category-items hidden">
+                        <div class="node-item" draggable="true" data-node-type="action/http_request">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">HTTP Request</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Make API calls</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="action/email">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Send Email</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Send email notification</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="action/slack">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Send to Slack</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Send Slack message</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="action/debug">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Debug</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Log data for debugging</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-category">
+                    <button class="w-full p-4 text-left font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-between" onclick="toggleCategory(this)">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                            Logic
+                        </span>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="category-items hidden">
+                        <div class="node-item" draggable="true" data-node-type="logic/condition">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">If/Condition</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Branch on condition</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="logic/switch">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Switch</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Multi-way branch</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="logic/loop">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Loop</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Iterate over items</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="logic/merge">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Merge</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Combine inputs</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="node-category">
+                    <button class="w-full p-4 text-left font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-between" onclick="toggleCategory(this)">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                            DocsAI
+                        </span>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="category-items hidden">
+                        <div class="node-item" draggable="true" data-node-type="docsai/get_page">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Get Page</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Fetch documentation page</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="docsai/search_pages">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Search Pages</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Search documentation</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="docsai/get_endpoint">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Get Endpoint</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Fetch API endpoint</div>
+                        </div>
+                        <div class="node-item" draggable="true" data-node-type="docsai/search_knowledge">
+                            <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Search Knowledge</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Search knowledge base</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Canvas Area -->
+        <div class="canvas-container">
+            <canvas id="workflow-canvas"></canvas>
+            
+            <!-- Mini Map -->
+            <div id="minimap" class="absolute bottom-4 right-4 w-40 h-28 bg-gray-800/90 rounded-lg border border-gray-600 overflow-hidden">
+                <!-- Mini map will be rendered here -->
+            </div>
+            
+            <!-- Zoom Controls -->
+            <div class="absolute bottom-4 left-4 flex flex-col gap-2">
+                <button id="btn-zoom-in" class="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                </button>
+                <button id="btn-zoom-out" class="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                </button>
+                <button id="btn-fit" class="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" title="Fit to view">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Property Panel (Right Sidebar) -->
+        <div class="property-panel" id="property-panel">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                <h3 class="font-bold text-gray-900 dark:text-gray-100">Properties</h3>
+            </div>
+            
+            <div id="no-node-selected" class="p-6 text-center">
+                <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Select a node to view its properties</p>
+            </div>
+            
+            <div id="node-properties" class="hidden">
+                <!-- Properties will be rendered dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/litegraph.js@0.7.18/build/litegraph.js"></script>
+<script>
+    // Workflow data
+    const workflowId = "{{ workflow.id }}";
+    const initialGraphData = {{ graph_data|safe }};
+    
+    // Initialize LiteGraph
+    let graph = new LGraph();
+    let canvas;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup canvas
+        canvas = new LGraphCanvas("#workflow-canvas", graph);
+        canvas.background_image = null;
+        canvas.render_shadows = false;
+        canvas.render_curved_connections = true;
+        canvas.render_connection_arrows = true;
+        
+        // Load initial graph data
+        if (initialGraphData && Object.keys(initialGraphData).length > 0) {
+            try {
+                graph.configure(initialGraphData);
+            } catch (e) {
+                console.warn('Could not load graph data:', e);
+            }
+        }
+        
+        // Register custom node types
+        registerCustomNodes();
+        
+        // Setup event handlers
+        setupEventHandlers();
+        
+        // Start rendering
+        graph.start();
+    });
+    
+    function registerCustomNodes() {
+        // Manual Trigger
+        function ManualTriggerNode() {
+            this.addOutput("trigger", "object");
+            this.properties = { description: "" };
+            this.size = [180, 60];
+            this.color = "#8855ff";
+            this.bgcolor = "#443377";
+        }
+        ManualTriggerNode.title = "Manual Trigger";
+        ManualTriggerNode.prototype.onExecute = function() {
+            this.setOutputData(0, { triggered: true });
+        };
+        LiteGraph.registerNodeType("trigger/manual", ManualTriggerNode);
+        
+        // HTTP Request
+        function HTTPRequestNode() {
+            this.addInput("input", "object");
+            this.addOutput("response", "object");
+            this.properties = { url: "", method: "GET" };
+            this.size = [180, 80];
+            this.color = "#44aa88";
+            this.bgcolor = "#335544";
+        }
+        HTTPRequestNode.title = "HTTP Request";
+        LiteGraph.registerNodeType("action/http_request", HTTPRequestNode);
+        
+        // AI Chat Completion
+        function ChatCompletionNode() {
+            this.addInput("input", "object");
+            this.addOutput("response", "object");
+            this.properties = { model: "gpt-3.5-turbo", prompt: "" };
+            this.size = [180, 80];
+            this.color = "#aa44ff";
+            this.bgcolor = "#553377";
+        }
+        ChatCompletionNode.title = "AI Chat Completion";
+        LiteGraph.registerNodeType("ai/chat_completion", ChatCompletionNode);
+        
+        // Condition Node
+        function ConditionNode() {
+            this.addInput("input", "object");
+            this.addOutput("true", "object");
+            this.addOutput("false", "object");
+            this.properties = { field: "", operator: "equals", value: "" };
+            this.size = [180, 80];
+            this.color = "#ff8844";
+            this.bgcolor = "#664422";
+        }
+        ConditionNode.title = "If/Condition";
+        LiteGraph.registerNodeType("logic/condition", ConditionNode);
+        
+        // Debug Node
+        function DebugNode() {
+            this.addInput("input", "object");
+            this.addOutput("output", "object");
+            this.properties = { message: "Debug" };
+            this.size = [150, 60];
+            this.color = "#888888";
+            this.bgcolor = "#444444";
+        }
+        DebugNode.title = "Debug";
+        LiteGraph.registerNodeType("action/debug", DebugNode);
+    }
+    
+    function setupEventHandlers() {
+        // Save button
+        document.getElementById('btn-save').addEventListener('click', saveWorkflow);
+        
+        // Execute button
+        document.getElementById('btn-execute').addEventListener('click', executeWorkflow);
+        
+        // Zoom controls
+        document.getElementById('btn-zoom-in').addEventListener('click', () => {
+            canvas.setZoom(canvas.ds.scale * 1.2, [canvas.canvas.width/2, canvas.canvas.height/2]);
+        });
+        
+        document.getElementById('btn-zoom-out').addEventListener('click', () => {
+            canvas.setZoom(canvas.ds.scale / 1.2, [canvas.canvas.width/2, canvas.canvas.height/2]);
+        });
+        
+        document.getElementById('btn-fit').addEventListener('click', () => {
+            canvas.setZoom(1, [0, 0]);
+            canvas.ds.offset = [0, 0];
+        });
+        
+        // Node selection
+        graph.onNodeSelected = function(node) {
+            showNodeProperties(node);
+        };
+        
+        graph.onNodeDeselected = function(node) {
+            hideNodeProperties();
+        };
+        
+        // Drag and drop from palette
+        setupDragAndDrop();
+        
+        // Auto-save on change
+        graph.onAfterChange = debounce(autoSave, 2000);
+    }
+    
+    function setupDragAndDrop() {
+        const nodeItems = document.querySelectorAll('.node-item[draggable="true"]');
+        const canvasEl = document.getElementById('workflow-canvas');
+        
+        nodeItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('node-type', item.dataset.nodeType);
+            });
+        });
+        
+        canvasEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        
+        canvasEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const nodeType = e.dataTransfer.getData('node-type');
+            if (nodeType) {
+                const rect = canvasEl.getBoundingClientRect();
+                const pos = canvas.convertEventToCanvasOffset(e);
+                const node = LiteGraph.createNode(nodeType);
+                if (node) {
+                    node.pos = [pos[0], pos[1]];
+                    graph.add(node);
+                }
+            }
+        });
+    }
+    
+    function showNodeProperties(node) {
+        document.getElementById('no-node-selected').classList.add('hidden');
+        const propsContainer = document.getElementById('node-properties');
+        propsContainer.classList.remove('hidden');
+        
+        let html = `
+            <div class="property-group">
+                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Node Title</label>
+                <input type="text" value="${node.title}" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm" onchange="updateNodeTitle(${node.id}, this.value)" />
+            </div>
+        `;
+        
+        if (node.properties) {
+            html += '<div class="property-group"><h4 class="text-sm font-bold text-gray-900 dark:text-gray-100 mb-3">Configuration</h4>';
+            for (const [key, value] of Object.entries(node.properties)) {
+                html += `
+                    <div class="mb-3">
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">${key}</label>
+                        <input type="text" value="${value}" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm" onchange="updateNodeProperty(${node.id}, '${key}', this.value)" />
+                    </div>
+                `;
+            }
+            html += '</div>';
+        }
+        
+        propsContainer.innerHTML = html;
+    }
+    
+    function hideNodeProperties() {
+        document.getElementById('no-node-selected').classList.remove('hidden');
+        document.getElementById('node-properties').classList.add('hidden');
+    }
+    
+    function updateNodeTitle(nodeId, title) {
+        const node = graph.getNodeById(nodeId);
+        if (node) {
+            node.title = title;
+            canvas.setDirty(true, true);
+        }
+    }
+    
+    function updateNodeProperty(nodeId, key, value) {
+        const node = graph.getNodeById(nodeId);
+        if (node) {
+            node.properties[key] = value;
+        }
+    }
+    
+    async function saveWorkflow() {
+        const graphData = graph.serialize();
+        const name = document.getElementById('workflow-name').value;
+        
+        document.getElementById('save-status').textContent = 'Saving...';
+        
+        try {
+            const response = await fetch(`/api/durgasflow/workflows/${workflowId}/graph/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ graph_data: graphData })
+            });
+            
+            if (response.ok) {
+                document.getElementById('save-status').textContent = 'All changes saved';
+            } else {
+                document.getElementById('save-status').textContent = 'Save failed';
+            }
+        } catch (e) {
+            console.error('Save failed:', e);
+            document.getElementById('save-status').textContent = 'Save failed';
+        }
+    }
+    
+    async function executeWorkflow() {
+        try {
+            const response = await fetch(`/api/durgasflow/workflows/${workflowId}/execute/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({})
+            });
+            
+            const data = await response.json();
+            if (data.execution_id) {
+                window.location.href = `/durgasflow/execution/${data.execution_id}/`;
+            }
+        } catch (e) {
+            console.error('Execution failed:', e);
+            alert('Failed to execute workflow');
+        }
+    }
+    
+    function autoSave() {
+        saveWorkflow();
+    }
+    
+    function toggleCategory(button) {
+        const items = button.nextElementSibling;
+        const chevron = button.querySelector('.chevron');
+        items.classList.toggle('hidden');
+        chevron.style.transform = items.classList.contains('hidden') ? '' : 'rotate(180deg)';
+    }
+    
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+               document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+    }
+</script>
+{% endblock %}

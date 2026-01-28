@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_create_import_job_graphql-001",
+  "endpoint_id": "mutation_create_import_job_graphql",
+  "endpoint_path": "graphql/CreateImportJob",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a CSV import job. Accepts CreateImportJobInput with s3Key (required, String, max 500 chars), s3Bucket (optional, String, max 255 chars), service (optional, enum: contact, company, for metadata), retryCount (optional, Int). Uses ConnectraClient.create_job with job_type 'insert_csv_file'. Creates UserImport record in database (non-blocking - failures don't stop job creation). Returns Job with uuid, jobType, status, data, createdAt. CSV can contain both contact and company data - Connectra auto-processes both. Raises ValidationError (422) if s3Key is empty.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/imports/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/importsService.ts",
+  "service_methods": [
+    "createImportJob"
+  ],
+  "repository_methods": [
+    "create_user_import"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateImportJob($input: CreateImportJobInput!) { imports { createImportJob(input: $input) { uuid jobType status data createdAt } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

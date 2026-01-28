@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_me_graphql-001",
+  "endpoint_id": "query_get_me_graphql",
+  "endpoint_path": "graphql/GetMe",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get current authenticated user information. No input required. Returns User object with uuid, email, name, isActive, lastSignInAt, createdAt, updatedAt, and profile (jobTitle, bio, role, credits, subscription info). Returns null if user is not authenticated. Used for session validation and displaying user info in the UI.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/auth/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/authService.ts",
+  "service_methods": [
+    "me"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/profile",
+      "page_title": "Profile Page",
+      "via_service": "authService",
+      "via_hook": "useProfilePage",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query { auth { me { uuid email name profile { jobTitle bio role credits } } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

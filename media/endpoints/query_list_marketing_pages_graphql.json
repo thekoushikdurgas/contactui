@@ -1,0 +1,26 @@
+{
+  "_id": "query_list_marketing_pages_graphql-001",
+  "endpoint_id": "query_list_marketing_pages_graphql",
+  "endpoint_path": "graphql/ListMarketingPages",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "List published marketing pages. Public endpoint (no authentication required). Returns MarketingPageList with pages array and total count. Uses MarketingService.list_pages with include_drafts=False and include_deleted=False. Only returns published pages (drafts and deleted pages excluded). Response structure is validated (pages must be a list, total must be non-negative integer). Individual page conversion errors are logged but don't fail the entire request. Pages are converted to GraphQL types with error handling.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/marketingService.ts",
+  "service_methods": [
+    "listPublishedPages"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

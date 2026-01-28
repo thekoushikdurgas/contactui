@@ -1,0 +1,56 @@
+{
+  "_id": "query_get_user_stats_graphql-001",
+  "endpoint_id": "query_get_user_stats_graphql",
+  "endpoint_path": "graphql/GetUserStats",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get aggregated user statistics. No input required. Returns UserStats with totalUsers (Int!), activeUsers (Int!), inactiveUsers (Int!), usersByRole (array of UserRoleCount with role and count), usersBySubscription (array of UserSubscriptionCount with subscriptionPlan and count). Raises ForbiddenError (403) if current user is not Admin or SuperAdmin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/users/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/adminService.ts",
+  "service_methods": [
+    "userStats"
+  ],
+  "repository_methods": [
+    "get_user_statistics"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/statistics",
+      "page_title": "Admin Statistics Page",
+      "via_service": "adminService",
+      "via_hook": "useAdminStatistics",
+      "usage_type": "primary",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/admin/users",
+      "page_title": "Admin Users Page",
+      "via_service": "adminService",
+      "via_hook": "useAdminUsers",
+      "usage_type": "secondary",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    },
+    {
+      "page_path": "/dashboard",
+      "page_title": "Dashboard Page",
+      "via_service": "adminService",
+      "via_hook": "useDashboardPage",
+      "usage_type": "conditional",
+      "usage_context": "analytics",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetUserStats { users { userStats { totalUsers activeUsers inactiveUsers usersByRole { role count } usersBySubscription { subscriptionPlan count } } } }",
+  "sql_file": null,
+  "page_count": 3,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

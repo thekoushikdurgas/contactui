@@ -1,0 +1,251 @@
+{
+  "name": "Daily Data Quality Report",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Daily Data Quality Email Report\n\nThis workflow:\n1. Runs comprehensive analysis\n2. Generates summary statistics\n3. Creates formatted email report\n4. Sends to stakeholders\n5. Stores report in Google Sheets/Notion",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/comprehensive",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "analysis_type",
+              "value": "comprehensive"
+            },
+            {
+              "name": "batch_size",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Run Comprehensive Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/job/{{$json.job_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-status-1",
+      "name": "Check Analysis Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format email report\nconst stats = $input.item.json.statistics || {};\nconst companyStats = stats.company_names || {};\nconst keywordStats = stats.keywords || {};\nconst titleStats = stats.titles || {};\n\nconst htmlReport = `\n<h2>Daily Data Quality Report</h2>\n<p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>\n\n<h3>Company Names</h3>\n<ul>\n  <li>Total: ${companyStats.total || 0}</li>\n  <li>Valid: ${companyStats.valid || 0}</li>\n  <li>Invalid: ${companyStats.invalid || 0}</li>\n  <li>Needs Cleaning: ${companyStats.needs_cleaning || 0}</li>\n</ul>\n\n<h3>Keywords</h3>\n<ul>\n  <li>Total: ${keywordStats.total_keywords || 0}</li>\n  <li>Valid: ${keywordStats.valid_keywords || 0}</li>\n  <li>Invalid: ${keywordStats.invalid_keywords || 0}</li>\n</ul>\n\n<h3>Contact Titles</h3>\n<ul>\n  <li>Total: ${titleStats.total_contacts || 0}</li>\n  <li>Valid: ${titleStats.valid || 0}</li>\n  <li>Invalid: ${titleStats.invalid || 0}</li>\n  <li>Needs Cleaning: ${titleStats.needs_cleaning || 0}</li>\n</ul>\n`;\n\nreturn {\n  json: {\n    htmlReport,\n    stats\n  }\n};"
+      },
+      "id": "format-report-1",
+      "name": "Format Email Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$env.EMAIL_TO}}",
+        "subject": "Daily Data Quality Report - {{$now.toFormat('yyyy-MM-dd')}}",
+        "emailType": "html",
+        "message": "={{$json.htmlReport}}",
+        "options": {}
+      },
+      "id": "send-email-1",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        410,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{$env.GOOGLE_SHEET_ID}}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Daily Reports",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{$now.toFormat('yyyy-MM-dd')}}",
+            "Company Total": "={{$('Format Email Report').item.json.stats.company_names.total || 0}}",
+            "Company Valid": "={{$('Format Email Report').item.json.stats.company_names.valid || 0}}",
+            "Keyword Total": "={{$('Format Email Report').item.json.stats.keywords.total_keywords || 0}}",
+            "Keyword Valid": "={{$('Format Email Report').item.json.stats.keywords.valid_keywords || 0}}",
+            "Title Total": "={{$('Format Email Report').item.json.stats.titles.total_contacts || 0}}",
+            "Title Valid": "={{$('Format Email Report').item.json.stats.titles.valid || 0}}"
+          },
+          "schema": []
+        }
+      },
+      "id": "log-sheets-1",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        590,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SHEETS_API",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Run Comprehensive Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Comprehensive Analysis": {
+      "main": [
+        [
+          {
+            "node": "Check Analysis Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Analysis Status": {
+      "main": [
+        [
+          {
+            "node": "Format Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Email Report": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Report": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "daily_quality_report"
+}

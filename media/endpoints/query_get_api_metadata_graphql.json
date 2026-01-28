@@ -1,0 +1,36 @@
+{
+  "_id": "query_get_api_metadata_graphql-001",
+  "endpoint_id": "query_get_api_metadata_graphql",
+  "endpoint_path": "graphql/GetAPIMetadata",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get API metadata information. No input required. Returns APIMetadata with version (String), environment (String: development, staging, production), buildDate (DateTime), commitHash (String), modules (array of ModuleInfo with name, version, description). Also includes endpoints count and supported features. Public endpoint - no authentication required.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/health/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/healthService.ts",
+  "service_methods": [
+    "apiMetadata"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/system-status",
+      "page_title": "Admin System Status Page",
+      "via_service": "healthService",
+      "via_hook": "useSystemStatus",
+      "usage_type": "primary",
+      "usage_context": "data_fetching",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "query GetAPIMetadata { health { apiMetadata { version environment buildDate commitHash modules { name version } } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

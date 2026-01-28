@@ -1,0 +1,38 @@
+[Unit]
+Description=Gunicorn daemon for DocsAI Django application
+After=network.target
+Requires=gunicorn.socket
+
+[Service]
+Type=notify
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/docsai
+
+# Environment variables
+EnvironmentFile=/home/ubuntu/docsai/.env.prod
+Environment="DJANGO_ENV=production"
+Environment="PATH=/home/ubuntu/docsai/venv/bin"
+
+# Gunicorn command
+ExecStart=/home/ubuntu/docsai/venv/bin/gunicorn \
+  --config config.gunicorn.production \
+  --bind unix:/run/gunicorn.sock \
+  config.wsgi:application
+
+# Restart policy
+Restart=on-failure
+RestartSec=5s
+
+# Security
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/home/ubuntu/docsai /var/log/django
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=docsai-gunicorn
+
+[Install]
+WantedBy=multi-user.target

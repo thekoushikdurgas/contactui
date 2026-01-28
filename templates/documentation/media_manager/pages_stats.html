@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pages Statistics: {{ page_type|title }} - Media Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">{{ page_type|title }} Statistics</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Detailed statistics for {{ page_type }} pages</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:dashboard_pages' %}" class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Pages
+            </a>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total</dt>
+            <dd class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ total|default:"0" }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Published</dt>
+            <dd class="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">{{ published|default:"0" }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Draft</dt>
+            <dd class="mt-2 text-3xl font-bold text-yellow-600 dark:text-yellow-400">{{ draft|default:"0" }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Deleted</dt>
+            <dd class="mt-2 text-3xl font-bold text-red-600 dark:text-red-400">{{ deleted|default:"0" }}</dd>
+        </div>
+    </div>
+    
+    {% if last_updated %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-6">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Last Updated: <span class="font-medium text-gray-900 dark:text-gray-100">{{ last_updated }}</span></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

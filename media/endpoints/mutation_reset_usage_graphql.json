@@ -1,0 +1,28 @@
+{
+  "_id": "mutation_reset_usage_graphql-001",
+  "endpoint_id": "mutation_reset_usage_graphql",
+  "endpoint_path": "graphql/ResetUsage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Reset usage counter for a specific feature to zero. Accepts ResetUsageInput with featureKey (required, String, max 100 chars, valid feature: email_finder, email_verifier, ai_chat, export, linkedin_search). Returns ResetUsageResponse with featureKey (String), used (Int, 0 after reset), limit (Int), success (Boolean). Auto-creates usage record if doesn't exist. Raises ForbiddenError (403) if not Admin. Raises ValidationError (422) if invalid feature key.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/usage/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usageService.ts",
+  "service_methods": [
+    "resetUsage"
+  ],
+  "repository_methods": [
+    "reset_feature_usage"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation ResetUsage($input: ResetUsageInput!) { usage { resetUsage(input: $input) { featureKey used limit success } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

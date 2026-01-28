@@ -1,0 +1,81 @@
+{% comment %}
+Card component - Unified card design with variants.
+
+Usage:
+{% include 'components/card.html' with title="Card Title" variant="elevated" %}
+{% block card_content %}Content here{% endblock %}
+
+Parameters:
+- variant: Card style (default, elevated, outlined, flat) - default: default
+- title: Card title (optional)
+- header: Custom header content (optional, overrides title)
+- footer: Footer content (optional)
+- hover: Enable hover effects - default: false
+- loading: Show loading state - default: false
+- class: Additional CSS classes (optional)
+- resource_type: Resource type for color theming (pages, endpoints, relationships, postman, graph, operations) - optional
+{% endcomment %}
+
+{% load static %}
+
+{% if variant == 'elevated' %}
+    {% with card_shadow="shadow-lg" card_border="" %}
+{% elif variant == 'outlined' %}
+    {% with card_shadow="shadow-none" card_border="border-2" %}
+{% elif variant == 'flat' %}
+    {% with card_shadow="shadow-none" card_border="border-0" %}
+{% else %}
+    {% with card_shadow="shadow-md" card_border="border" %}
+{% endif %}
+
+{% if resource_type == 'pages' %}
+    {% with resource_bg="bg-blue-50 dark:bg-blue-900/10" resource_border="border-blue-200 dark:border-blue-800" %}
+{% elif resource_type == 'endpoints' %}
+    {% with resource_bg="bg-purple-50 dark:bg-purple-900/10" resource_border="border-purple-200 dark:border-purple-800" %}
+{% elif resource_type == 'relationships' %}
+    {% with resource_bg="bg-green-50 dark:bg-green-900/10" resource_border="border-green-200 dark:border-green-800" %}
+{% elif resource_type == 'postman' %}
+    {% with resource_bg="bg-amber-50 dark:bg-amber-900/10" resource_border="border-amber-200 dark:border-amber-800" %}
+{% elif resource_type == 'graph' %}
+    {% with resource_bg="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10" resource_border="border-purple-200 dark:border-purple-800" %}
+{% elif resource_type == 'operations' %}
+    {% with resource_bg="bg-gray-50 dark:bg-gray-900/10" resource_border="border-gray-200 dark:border-gray-800" %}
+{% else %}
+    {% with resource_bg="bg-white dark:bg-gray-800" resource_border="border-gray-200 dark:border-gray-700" %}
+{% endif %}
+
+<div class="{{ resource_bg }} {{ resource_border }} rounded-xl {{ card_shadow }} {{ card_border }} overflow-hidden transition-all duration-200
+    {% if hover %}hover:shadow-xl hover:-translate-y-1{% endif %}
+    {% if loading %}opacity-50 pointer-events-none{% endif %}
+    {{ class|default:'' }}">
+    
+    {% if loading %}
+        <div class="px-8 py-6 animate-pulse">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+        </div>
+    {% else %}
+        {% if header %}
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+                {{ header|safe }}
+            </div>
+        {% elif title %}
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ title }}</h3>
+            </div>
+        {% endif %}
+        
+        <div class="px-6 py-6">
+            {% block card_content %}{% endblock %}
+        </div>
+        
+        {% if footer %}
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+                {{ footer|safe }}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endwith %}
+{% endwith %}

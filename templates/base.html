@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-theme="{% if request.session.theme %}{{ request.session.theme }}{% else %}light{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DocsAI Agent{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN (load first so tailwind exists for config) -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <!-- Tailwind config: dark mode via data-theme -->
+    <script>
+      tailwind.config = {
+        darkMode: ['selector', '[data-theme="dark"]'],
+      };
+    </script>
+    <link rel="stylesheet" href="{% static 'css/design-tokens.css' %}">
+    
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="{% static 'css/components/pagination.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/button.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/form-inputs.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/skeleton.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/error-message.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/bulk-operations.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/graph.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/tabs.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/sidebar.css' %}">
+    
+    <!-- Accessibility CSS -->
+    <link rel="stylesheet" href="{% static 'css/accessibility.css' %}">
+    
+    <!-- Responsive & Animations CSS -->
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen bg-primary dark:bg-gray-900 transition-colors font-sans antialiased">
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- ARIA Live Regions for announcements -->
+    <div id="aria-live-region" class="aria-live-region" aria-live="polite" aria-atomic="true"></div>
+    <div id="aria-live-alert" class="aria-live-region" aria-live="assertive" aria-atomic="true" role="alert"></div>
+    {% if user.is_authenticated %}
+        <div class="min-h-screen bg-primary dark:bg-gray-900 flex overflow-hidden transition-colors">
+            {% include 'layouts/sidebar.html' %}
+            <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[25] hidden md:!hidden" aria-hidden="true" tabindex="-1"></div>
+        <div class="flex-1 flex flex-col ml-0 md:ml-[260px] min-w-0 h-screen overflow-hidden transition-[margin] duration-300">
+                {% include 'layouts/header.html' %}
+                
+                <main class="p-8 flex-1 overflow-y-auto bg-primary dark:bg-gray-900">
+                    <div class="max-w-[1600px] mx-auto pb-20">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="fixed top-20 right-8 z-[100] animate-in fade-in zoom-in-95 duration-300">
+                                    <div class="px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3 {% if message.tags == 'success' %}bg-white dark:bg-gray-800 border-green-100 dark:border-green-800 text-green-700 dark:text-green-300{% elif message.tags == 'error' %}bg-white dark:bg-gray-800 border-red-100 dark:border-red-800 text-red-700 dark:text-red-300{% else %}bg-white dark:bg-gray-800 border-blue-100 dark:border-blue-800 text-blue-700 dark:text-blue-300{% endif %}">
+                                        <div class="w-2 h-2 rounded-full {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-blue-500{% endif %} animate-pulse"></div>
+                                        <span class="text-sm font-bold">{{ message }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        {% block content %}{% endblock %}
+                    </div>
+                </main>
+                
+                {% include 'layouts/footer.html' %}
+            </div>
+            
+            <!-- Command Palette -->
+            {% include 'components/command_palette.html' %}
+            
+            <!-- Floating AI Chat Button -->
+            <div class="fixed bottom-6 right-6 z-50">
+                <a href="{% url 'ai_agent:chat' %}" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-300 transform active:scale-90 bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600 hover:rotate-6 {% if request.resolver_match.url_name == 'chat' %}bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 rotate-12{% endif %}">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="auth-layout min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors">
+            {% block auth_content %}{% endblock %}
+        </div>
+    {% endif %}
+    
+    <!-- D3.js for Graph Visualization -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- JavaScript Files -->
+    {% load static %}
+    <script>
+    </script>
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/animations.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/components/dashboard-pagination.js' %}"></script>
+    <script src="{% static 'js/components/dashboard-controller.js' %}?v=20260124"></script>
+    <script src="{% static 'js/components/unified-dashboard-controller.js' %}?v=20260126"></script>
+    <script src="{% static 'js/components/stats-loader.js' %}"></script>
+    <script src="{% static 'js/components/relationship-graph-viewer.js' %}"></script>
+    <script src="{% static 'js/components/modal.js' %}"></script>
+    <script src="{% static 'js/components/button.js' %}"></script>
+    <script src="{% static 'js/components/bulk-operations.js' %}"></script>
+    <script src="{% static 'js/components/toast.js' %}"></script>
+    <script src="{% static 'js/utils/debounce.js' %}"></script>
+    <script src="{% static 'js/utils/csrf.js' %}"></script>
+    <script src="{% static 'js/accessibility.js' %}"></script>
+    <script src="{% static 'js/components/sidebar-keyboard.js' %}"></script>
+    <script>
+      (function() {
+        document.addEventListener('DOMContentLoaded', function() {
+          var btn = document.getElementById('sidebar-menu-btn');
+          var sidebar = document.getElementById('app-sidebar');
+          var overlay = document.getElementById('sidebar-overlay');
+          if (!btn || !sidebar || !overlay) return;
+          function open() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+          function close() {
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
+          }
+          function toggle() {
+            if (overlay.classList.contains('hidden')) open(); else close();
+          }
+          btn.addEventListener('click', toggle);
+          overlay.addEventListener('click', close);
+        });
+      })();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

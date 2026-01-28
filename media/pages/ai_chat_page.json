@@ -1,0 +1,117 @@
+{
+  "_id": "ai_chat_page-001",
+  "page_id": "ai_chat_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/ai-chat",
+    "file_path": "contact360/dashboard/app/(dashboard)/ai-chat/page.tsx",
+    "purpose": "AI chat assistant page for interacting with AI models, managing chat history, and sending messages. Pro users only.",
+    "s3_key": "data/pages/ai_chat_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": "Pro user role required",
+    "page_state": "development",
+    "last_updated": "2026-01-20T00:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/ListAIChats",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "List all AI chats with optional filters (search, date range, etc.)"
+      },
+      {
+        "endpoint_path": "graphql/GetAIChat",
+        "method": "QUERY",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "primary",
+        "usage_context": "data_fetching",
+        "description": "Get a specific AI chat with all messages"
+      },
+      {
+        "endpoint_path": "graphql/CreateAIChat",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Create a new AI chat"
+      },
+      {
+        "endpoint_path": "graphql/UpdateAIChat",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Update an AI chat (e.g., title, metadata)"
+      },
+      {
+        "endpoint_path": "graphql/DeleteAIChat",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Delete an AI chat"
+      },
+      {
+        "endpoint_path": "graphql/SendMessage",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "aiChatsService",
+        "via_hook": "useAiChat",
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Send a message to the AI chat and receive response"
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "ChatSidebar",
+        "file_path": "components/features/ai-chat/ChatSidebar.tsx"
+      },
+      {
+        "name": "ChatHeader",
+        "file_path": "components/features/ai-chat/ChatHeader.tsx"
+      },
+      {
+        "name": "ChatRateLimitAlert",
+        "file_path": "components/features/ai-chat/ChatRateLimitAlert.tsx"
+      },
+      {
+        "name": "ChatMessagesList",
+        "file_path": "components/features/ai-chat/ChatMessagesList.tsx"
+      },
+      {
+        "name": "ChatMobileSidebar",
+        "file_path": "components/features/ai-chat/ChatMobileSidebar.tsx"
+      },
+      {
+        "name": "ChatWelcomeOrInput",
+        "file_path": "components/features/ai-chat/ChatWelcomeOrInput.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 6,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": null
+  },
+  "content": null,
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

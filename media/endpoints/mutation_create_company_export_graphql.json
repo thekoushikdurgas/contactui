@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_create_company_export_graphql-001",
+  "endpoint_id": "mutation_create_company_export_graphql",
+  "endpoint_path": "graphql/CreateCompanyExport",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Create a CSV export of selected companies. Accepts CreateCompanyExportInput with companyIds (required, array of UUID, max 10000). Creates export job via ConnectraClient. Returns ExportResponse with exportId (UUID), downloadUrl (presigned S3 URL, valid 24h), expiresAt (DateTime), companyCount (Int), status (enum: pending, processing, completed, failed). Credits: 1 credit per 100 companies (FreeUser/ProUser only). UserExport record created (non-blocking).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/exports/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/exportsService.ts",
+  "service_methods": [
+    "exportCompanies"
+  ],
+  "repository_methods": [
+    "create_export"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/companies",
+      "page_title": "Companies Page",
+      "via_service": "exportsService",
+      "via_hook": "useCompanyExport",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation CreateCompanyExport($input: CreateCompanyExportInput!) { exports { exportCompanies(input: $input) { exportId downloadUrl expiresAt companyCount status } } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

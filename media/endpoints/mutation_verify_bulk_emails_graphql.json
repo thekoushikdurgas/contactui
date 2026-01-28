@@ -1,0 +1,36 @@
+{
+  "_id": "mutation_verify_bulk_emails_graphql-001",
+  "endpoint_id": "mutation_verify_bulk_emails_graphql",
+  "endpoint_path": "graphql/VerifyBulkEmails",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Verify multiple email addresses in bulk. Accepts BulkVerifyInput with emails array (required, non-empty, max 1000 emails per request) and optional provider (truelist, bulkmailverifier, default: truelist). Returns BulkVerificationResponse with results array, total, and counts by status (validCount, invalidCount, catchallCount, unknownCount). All emails must be valid email format. Uses LambdaEmailClient for bulk verification. No credit deduction (verification only).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/emailService.ts",
+  "service_methods": [
+    "verifyBulkEmails"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [
+    {
+      "page_path": "/verifier",
+      "page_title": "Verifier Page",
+      "via_service": "emailService",
+      "via_hook": "useVerifier",
+      "usage_type": "primary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

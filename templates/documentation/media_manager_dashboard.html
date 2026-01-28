@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Media Manager Dashboard - DocsAI Agent{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/documentation-dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/media-manager-dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Media Manager Dashboard</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-2">Manage documentation resources using direct service calls</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{% url 'documentation:statistics' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors font-medium text-sm shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Statistics
+            </a>
+            <a href="{% url 'documentation:health' %}" class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Health Status
+            </a>
+        </div>
+    </div>
+    
+    <!-- Overview Statistics Cards -->
+    {% if overview_stats %}
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Overview</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="{% url 'documentation:dashboard_pages' %}" class="flex items-center gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-all cursor-pointer border border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700">
+                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Pages</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.pages.total|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard_endpoints' %}" class="flex items-center gap-3 p-4 rounded-xl bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 transition-all cursor-pointer border border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700">
+                <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Endpoints</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.endpoints.total|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard_relationships' %}" class="flex items-center gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-900/10 hover:bg-green-100 dark:hover:bg-green-900/20 transition-all cursor-pointer border border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700">
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Relationships</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.relationships.total|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+            <a href="{% url 'documentation:dashboard' %}" class="flex items-center gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-all cursor-pointer border border-amber-200 dark:border-amber-800 hover:border-amber-300 dark:hover:border-amber-700">
+                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Postman</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ overview_stats.postman.total|default:"0" }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Tabs -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden">
+        <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 px-6">
+            <nav class="flex flex-wrap gap-1 -mb-px" role="tablist" aria-label="Media Manager Dashboard tabs">
+                <a href="{% url 'documentation:dashboard_pages' %}" 
+                   class="tab-button group {% if active_tab == 'pages' %}active{% endif %}" 
+                   data-tab="pages"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'pages' %}true{% else %}false{% endif %}"
+                   aria-controls="pages-content"
+                   id="tab-pages">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Pages</span>
+                    {% if overview_stats.pages.total %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full">{{ overview_stats.pages.total }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'documentation:dashboard_endpoints' %}" 
+                   class="tab-button group {% if active_tab == 'endpoints' %}active{% endif %}" 
+                   data-tab="endpoints"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'endpoints' %}true{% else %}false{% endif %}"
+                   aria-controls="endpoints-content"
+                   id="tab-endpoints">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Endpoints</span>
+                    {% if overview_stats.endpoints.total %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full">{{ overview_stats.endpoints.total }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'documentation:dashboard_relationships' %}" 
+                   class="tab-button group {% if active_tab == 'relationships' %}active{% endif %}" 
+                   data-tab="relationships"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'relationships' %}true{% else %}false{% endif %}"
+                   aria-controls="relationships-content"
+                   id="tab-relationships">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span>Relationships</span>
+                    {% if overview_stats.relationships.total %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full">{{ overview_stats.relationships.total }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'documentation:dashboard' %}" 
+                   class="tab-button group {% if active_tab == 'postman' %}active{% endif %}" 
+                   data-tab="postman"
+                   role="tab"
+                   aria-selected="{% if active_tab == 'postman' %}true{% else %}false{% endif %}"
+                   aria-controls="postman-content"
+                   id="tab-postman">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <span>Postman</span>
+                    {% if overview_stats.postman.total %}
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-full">{{ overview_stats.postman.total }}</span>
+                    {% endif %}
+                </a>
+            </nav>
+        </div>
+        
+        <!-- View Mode Toggle -->
+        <div class="px-6 pt-4 pb-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">View:</span>
+                    <div class="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1" role="tablist">
+                        <a href="?tab={{ active_tab }}&view=list" 
+                           class="view-mode-btn px-3 py-1.5 text-sm font-medium rounded-md transition-colors {% if view_mode == 'list' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                           data-view-mode="list"
+                           role="tab">
+                            <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            List
+                        </a>
+                        <a href="?tab={{ active_tab }}&view=grid" 
+                           class="view-mode-btn px-3 py-1.5 text-sm font-medium rounded-md transition-colors {% if view_mode == 'grid' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}"
+                           data-view-mode="grid"
+                           role="tab">
+                            <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                            Grid
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            {% if active_tab == 'pages' %}
+                {% include 'documentation/media_manager/_pages_tab.html' %}
+            {% elif active_tab == 'endpoints' %}
+                {% include 'documentation/media_manager/_endpoints_tab.html' %}
+            {% elif active_tab == 'relationships' %}
+                {% include 'documentation/media_manager/_relationships_tab.html' %}
+            {% elif active_tab == 'postman' %}
+                {% include 'documentation/media_manager/_postman_tab.html' %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Tab button styles -->
+<style>
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+
+.tab-button:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+
+.tab-button.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+.dark .tab-button {
+    color: #9ca3af;
+}
+
+.dark .tab-button:hover {
+    color: #e5e7eb;
+    border-bottom-color: #4b5563;
+}
+
+.dark .tab-button.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+}
+</style>
+
+<script>
+    // Store initial data
+    const initialData = {{ initial_data|safe }};
+    
+    // Initialize Media Manager Dashboard Controller
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof MediaManagerDashboardController !== 'undefined') {
+            window.mediaManagerDashboardController = new MediaManagerDashboardController({
+                activeTab: '{{ active_tab }}',
+                viewMode: '{{ view_mode }}',
+                pagesApiUrl: "{% url 'documentation:api_media_manager_pages' %}",
+                endpointsApiUrl: "{% url 'documentation:api_media_manager_endpoints' %}",
+                relationshipsApiUrl: "{% url 'documentation:api_media_manager_relationships' %}",
+                postmanApiUrl: "{% url 'documentation:api_media_manager_postman' %}",
+                statisticsApiUrl: "{% url 'documentation:api_media_manager_statistics' %}",
+                healthApiUrl: "{% url 'documentation:api_media_manager_health' %}",
+            });
+        } else {
+            console.warn('MediaManagerDashboardController not loaded, using fallback rendering');
+            // Fallback rendering will be handled by individual tab partials
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/media-manager-dashboard.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{
+  "_id": "query_get_user_graphql-001",
+  "endpoint_id": "query_get_user_graphql",
+  "endpoint_path": "graphql/GetUser",
+  "method": "QUERY",
+  "api_version": "graphql",
+  "description": "Get user by UUID. Accepts uuid (ID!, required, valid UUID format). Returns User object with uuid, email, name, isActive, lastSignInAt, createdAt, updatedAt, and profile (jobTitle, bio, role, credits, subscriptionPlan, subscriptionStatus, avatarUrl). Uses DataLoaders to prevent N+1 queries. Regular users can only query their own UUID; Admin/SuperAdmin can query any user. Raises NotFoundError (404) if user doesn't exist. Raises ForbiddenError (403) if regular user tries to access another user's data.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/users/queries.py",
+  "router_file": "contact360/dashboard/src/services/graphql/usersService.ts",
+  "service_methods": [
+    "user"
+  ],
+  "repository_methods": [
+    "get_user_by_uuid"
+  ],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "query GetUser($uuid: ID!) { users { user(uuid: $uuid) { uuid email name isActive profile { jobTitle bio role credits subscriptionPlan } } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

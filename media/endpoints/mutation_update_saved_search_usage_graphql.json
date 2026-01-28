@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_update_saved_search_usage_graphql-001",
+  "endpoint_id": "mutation_update_saved_search_usage_graphql",
+  "endpoint_path": "graphql/UpdateSavedSearchUsage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Update the last used timestamp and increment use count for a saved search. Accepts id (ID!, must be positive integer). Returns Boolean (true if successful). Uses SavedSearchRepository.update_usage to update usage tracking. User isolation enforced - users can only update usage for their own saved searches. Automatically sets last_used_at to current UTC timestamp and increments use_count by 1. Raises NotFoundError if saved search doesn't exist or ForbiddenError if it doesn't belong to user. Silently fails for usage tracking (no toast shown).",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-20T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": null,
+  "router_file": "contact360/dashboard/src/services/graphql/savedSearchesService.ts",
+  "service_methods": [
+    "updateSavedSearchUsage"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": null,
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

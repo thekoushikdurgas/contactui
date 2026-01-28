@@ -1,0 +1,159 @@
+{
+  "_id": "finder_page-001",
+  "page_id": "finder_page",
+  "page_type": "dashboard",
+  "metadata": {
+    "route": "/finder",
+    "file_path": "contact360/dashboard/app/(dashboard)/finder/page.tsx",
+    "purpose": "Find email addresses from names/domains",
+    "s3_key": "data/pages/finder_page.json",
+    "status": "published",
+    "authentication": "Required (protected by useSessionGuard and DashboardAccessGate)",
+    "authorization": null,
+    "page_state": "development",
+    "last_updated": "2025-01-27T12:00:00.000000+00:00",
+    "uses_endpoints": [
+      {
+        "endpoint_path": "graphql/FindSingleEmail",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "emailService",
+        "via_hook": null,
+        "usage_type": "primary",
+        "usage_context": "data_mutation",
+        "description": "Get a single email address for a contact using first name, last name, and company domain. Main API call for Email Finder functionality."
+      },
+      {
+        "endpoint_path": "graphql/VerifyAndFind",
+        "method": "MUTATION",
+        "api_version": "graphql",
+        "via_service": "emailService",
+        "via_hook": null,
+        "usage_type": "secondary",
+        "usage_context": "data_mutation",
+        "description": "Verify and find the first valid email with verification. Alternative endpoint for enhanced email finding."
+      }
+    ],
+    "ui_components": [
+      {
+        "name": "EmailFinderTool",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/EmailFinderTool.tsx"
+      },
+      {
+        "name": "EmailFinderView",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/EmailFinderTool.tsx"
+      },
+      {
+        "name": "DataSearch",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/app/DataSearch.tsx"
+      },
+      {
+        "name": "IconGenerator",
+        "file_path": "contact360/docs/1/contact360---precision-b2b-data/components/app/IconGenerator.tsx"
+      }
+    ],
+    "versions": [],
+    "endpoint_count": 2,
+    "api_versions": [
+      "graphql"
+    ],
+    "content_sections": {
+      "sidebar": {
+        "navigation": [
+          {
+            "label": "Email Finder",
+            "page": "app",
+            "icon": "Search"
+          },
+          {
+            "label": "Data Search",
+            "page": "data-search",
+            "icon": "Building2"
+          },
+          {
+            "label": "Icon Generator",
+            "page": "icon-generator",
+            "icon": "Sparkles"
+          },
+          {
+            "label": "Search History",
+            "icon": "History"
+          },
+          {
+            "label": "Billing & Usage",
+            "icon": "CreditCard"
+          },
+          {
+            "label": "Settings",
+            "icon": "Settings"
+          }
+        ],
+        "credits_widget": {
+          "title": "Credits Remaining",
+          "action": "Upgrade Plan"
+        },
+        "logout": {
+          "label": "Sign Out",
+          "icon": "LogOut"
+        }
+      },
+      "email_finder": {
+        "title": "Email Finder",
+        "subtitle": "Find a verified email",
+        "form_fields": [
+          {
+            "label": "First Name",
+            "placeholder": "e.g. Sarah",
+            "required": true,
+            "icon": "User"
+          },
+          {
+            "label": "Last Name",
+            "placeholder": "e.g. Connor",
+            "required": true,
+            "icon": "User"
+          },
+          {
+            "label": "Company Domain",
+            "placeholder": "e.g. skynet.com",
+            "required": true,
+            "icon": "Building2"
+          }
+        ],
+        "cta": {
+          "label": "Find Verified Email",
+          "loading_text": "Searching Database..."
+        },
+        "result_section": {
+          "title": "Verified Contact Found",
+          "success_icon": "Check",
+          "fields": [
+            "Name",
+            "Company Domain",
+            "Email Address",
+            "Confidence Percentage"
+          ],
+          "actions": [
+            {
+              "label": "Copy",
+              "icon": "Copy",
+              "action": "copy_email"
+            }
+          ]
+        },
+        "empty_state": {
+          "title": "No recent searches",
+          "description": "Your search results will appear here.",
+          "icon": "Search"
+        }
+      }
+    }
+  },
+  "content": null,
+  "created_at": "2025-01-27T12:00:00.000000+00:00",
+  "access_control": null,
+  "sections": null,
+  "fallback_data": [],
+  "mock_data": [],
+  "demo_data": []
+}

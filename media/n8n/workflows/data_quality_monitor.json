@@ -1,0 +1,314 @@
+{
+  "name": "Data Quality Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Automated workflow: Data Quality Monitoring with Auto-Cleaning\n\nThis workflow:\n1. Runs comprehensive analysis\n2. Checks data quality metrics\n3. If quality drops below threshold:\n   - Triggers automatic cleaning\n   - Sends alert to Slack\n   - Creates ticket in issue tracker (optional)",
+        "height": 530,
+        "width": 1100,
+        "color": 5
+      },
+      "id": "sticky-note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/analyze/comprehensive",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "analysis_type",
+              "value": "comprehensive"
+            },
+            {
+              "name": "batch_size",
+              "value": "1000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-request-1",
+      "name": "Run Comprehensive Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -130,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/job/{{$json.job_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-status-1",
+      "name": "Check Analysis Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate quality score\nconst stats = $input.item.json.statistics || {};\nconst companyStats = stats.company_names || {};\nconst keywordStats = stats.keywords || {};\nconst titleStats = stats.titles || {};\n\nconst totalCompanies = companyStats.total || 0;\nconst validCompanies = companyStats.valid || 0;\nconst totalKeywords = keywordStats.total_keywords || 0;\nconst validKeywords = keywordStats.valid_keywords || 0;\nconst totalContacts = titleStats.total_contacts || 0;\nconst validTitles = titleStats.valid || 0;\n\nconst companyQuality = totalCompanies > 0 ? (validCompanies / totalCompanies) * 100 : 100;\nconst keywordQuality = totalKeywords > 0 ? (validKeywords / totalKeywords) * 100 : 100;\nconst titleQuality = totalContacts > 0 ? (validTitles / totalContacts) * 100 : 100;\n\nconst overallQuality = (companyQuality + keywordQuality + titleQuality) / 3;\n\nreturn {\n  json: {\n    ...$input.item.json,\n    quality_metrics: {\n      company_quality: companyQuality,\n      keyword_quality: keywordQuality,\n      title_quality: titleQuality,\n      overall_quality: overallQuality\n    }\n  }\n};"
+      },
+      "id": "calculate-quality-1",
+      "name": "Calculate Quality Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        230,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{$json.quality_metrics.overall_quality}}",
+              "rightValue": "={{$env.QUALITY_THRESHOLD || 80}}",
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-threshold-1",
+      "name": "Check Quality Threshold",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        410,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL}}/v3/data-pipeline/clean/database",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.API_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "batch_size",
+              "value": "1000"
+            },
+            {
+              "name": "table_filter",
+              "value": "all"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "trigger-cleaning-1",
+      "name": "Trigger Automatic Cleaning",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        590,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#alerts",
+        "text": "⚠️ Data Quality Below Threshold\n\nOverall Quality: {{$('Calculate Quality Score').item.json.quality_metrics.overall_quality.toFixed(2)}}%\nCompany Quality: {{$('Calculate Quality Score').item.json.quality_metrics.company_quality.toFixed(2)}}%\nKeyword Quality: {{$('Calculate Quality Score').item.json.quality_metrics.keyword_quality.toFixed(2)}}%\nTitle Quality: {{$('Calculate Quality Score').item.json.quality_metrics.title_quality.toFixed(2)}}%\n\nAutomatic cleaning has been triggered.",
+        "otherOptions": {}
+      },
+      "id": "slack-alert-1",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        590,
+        -100
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#data-pipeline",
+        "text": "✅ Data Quality Check Passed\n\nOverall Quality: {{$('Calculate Quality Score').item.json.quality_metrics.overall_quality.toFixed(2)}}%\nCompany Quality: {{$('Calculate Quality Score').item.json.quality_metrics.company_quality.toFixed(2)}}%\nKeyword Quality: {{$('Calculate Quality Score').item.json.quality_metrics.keyword_quality.toFixed(2)}}%\nTitle Quality: {{$('Calculate Quality Score').item.json.quality_metrics.title_quality.toFixed(2)}}%",
+        "otherOptions": {}
+      },
+      "id": "slack-success-1",
+      "name": "Slack Success",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        410,
+        200
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Run Comprehensive Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Comprehensive Analysis": {
+      "main": [
+        [
+          {
+            "node": "Check Analysis Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Analysis Status": {
+      "main": [
+        [
+          {
+            "node": "Calculate Quality Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Quality Score": {
+      "main": [
+        [
+          {
+            "node": "Check Quality Threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Quality Threshold": {
+      "main": [
+        [
+          {
+            "node": "Trigger Automatic Cleaning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "triggerCount": 1,
+  "workflow_id": "data_quality_monitor"
+}

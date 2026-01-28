@@ -1,0 +1,1416 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-01-22T21:46:29.794124+00:00",
+  "total": 154,
+  "endpoints": [
+    {
+      "endpoint_id": "count_contacts_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "count_contacts_graphql.json"
+    },
+    {
+      "endpoint_id": "get_activities_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_activities_graphql.json"
+    },
+    {
+      "endpoint_id": "get_billing_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_billing_graphql.json"
+    },
+    {
+      "endpoint_id": "get_company_contacts_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_company_contacts_graphql.json"
+    },
+    {
+      "endpoint_id": "get_company_filters_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_company_filters_graphql.json"
+    },
+    {
+      "endpoint_id": "get_company_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_company_graphql.json"
+    },
+    {
+      "endpoint_id": "get_contact_filters_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_contact_filters_graphql.json"
+    },
+    {
+      "endpoint_id": "get_contact_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_contact_graphql.json"
+    },
+    {
+      "endpoint_id": "get_user_stats_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "get_user_stats_graphql.json"
+    },
+    {
+      "endpoint_id": "list_exports_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "list_exports_graphql.json"
+    },
+    {
+      "endpoint_id": "list_saved_searches_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "list_saved_searches_graphql.json"
+    },
+    {
+      "endpoint_id": "list_users_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "list_users_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_abort_upload_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_abort_upload_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_analyze_email_risk_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_analyze_email_risk_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_cancel_export_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_cancel_export_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_cancel_subscription_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_cancel_subscription_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_complete_upload_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_complete_upload_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_addon_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_addon_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_ai_chat_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_ai_chat_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_api_key_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_api_key_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_company_export_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_company_export_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_contact_export_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_contact_export_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_dashboard_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_dashboard_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_documentation_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_documentation_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_export_job_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_export_job_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_import_job_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_import_job_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_job_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_job_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_log_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_log_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_logs_batch_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_logs_batch_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_marketing_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_plan_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_plan_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_plan_period_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_plan_period_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_create_saved_search_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_create_saved_search_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_addon_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_addon_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_ai_chat_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_ai_chat_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_api_key_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_api_key_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_company_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_company_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_dashboard_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_dashboard_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_documentation_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_documentation_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_log_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_log_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_logs_bulk_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_logs_bulk_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_marketing_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_notifications_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_notifications_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_plan_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_plan_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_plan_period_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_plan_period_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_saved_search_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_saved_search_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_delete_user_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_delete_user_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_disable_2fa_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_disable_2fa_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_export_emails_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_export_emails_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_export_linkedin_results_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_export_linkedin_results_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_find_single_email_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_find_single_email_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_generate_and_verify_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_generate_and_verify_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_generate_company_summary_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_generate_company_summary_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_hard_delete_marketing_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_hard_delete_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_initiate_upload_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_initiate_upload_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_login_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_login_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_logout_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_logout_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_mark_notification_as_read_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_mark_notification_as_read_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_parse_filters_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_parse_filters_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_promote_to_admin_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_promote_to_admin_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_promote_to_super_admin_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_promote_to_super_admin_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_publish_marketing_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_publish_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_purchase_addon_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_purchase_addon_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_refresh_token_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_refresh_token_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_regenerate_backup_codes_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_regenerate_backup_codes_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_register_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_register_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_register_part_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_register_part_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_reset_usage_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_reset_usage_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_revoke_session_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_revoke_session_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_save_sales_navigator_profiles_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_save_sales_navigator_profiles_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_search_linkedin_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_search_linkedin_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_send_message_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_send_message_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_setup_2fa_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_setup_2fa_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_submit_metric_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_submit_metric_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_subscribe_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_subscribe_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_track_usage_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_track_usage_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_addon_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_addon_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_ai_chat_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_ai_chat_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_dashboard_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_dashboard_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_documentation_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_documentation_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_log_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_log_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_marketing_page_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_notification_preferences_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_notification_preferences_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_plan_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_plan_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_profile_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_profile_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_saved_search_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_saved_search_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_saved_search_usage_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_saved_search_usage_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_user_credits_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_user_credits_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_update_user_role_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_update_user_role_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_upload_avatar_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_upload_avatar_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_upsert_by_linkedin_url_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_upsert_by_linkedin_url_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_verify_2fa_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_verify_2fa_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_verify_and_find_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_verify_and_find_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_verify_bulk_emails_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_verify_bulk_emails_graphql.json"
+    },
+    {
+      "endpoint_id": "mutation_verify_single_email_graphql",
+      "method": "MUTATION",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "mutation_verify_single_email_graphql.json"
+    },
+    {
+      "endpoint_id": "query_admin_marketing_pages_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_admin_marketing_pages_graphql.json"
+    },
+    {
+      "endpoint_id": "query_aggregate_metrics_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_aggregate_metrics_graphql.json"
+    },
+    {
+      "endpoint_id": "query_companies_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_companies_graphql.json"
+    },
+    {
+      "endpoint_id": "query_contacts_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_contacts_graphql.json"
+    },
+    {
+      "endpoint_id": "query_find_emails_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_find_emails_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_2fa_status_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_2fa_status_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_activities_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_activities_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_activity_stats_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_activity_stats_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_addons_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_addons_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_admin_addons_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_admin_addons_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_admin_plans_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_admin_plans_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_ai_chat_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_ai_chat_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_api_metadata_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_api_metadata_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_billing_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_billing_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_dashboard_page_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_dashboard_page_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_documentation_content_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_documentation_content_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_documentation_page_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_documentation_page_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_export_download_url_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_export_download_url_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_export_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_export_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_health_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_health_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_import_job_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_import_job_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_invoices_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_invoices_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_job_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_job_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_log_statistics_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_log_statistics_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_marketing_page_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_marketing_page_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_me_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_me_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_performance_metrics_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_performance_metrics_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_plans_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_plans_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_presigned_url_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_presigned_url_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_s3_file_data_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_s3_file_data_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_s3_file_presigned_url_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_s3_file_presigned_url_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_saved_search_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_saved_search_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_session_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_session_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_unread_count_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_unread_count_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_upload_status_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_upload_status_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_upload_url_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_upload_url_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_usage_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_usage_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_user_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_user_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_user_history_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_user_history_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_user_stats_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_user_stats_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_vql_health_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_vql_health_graphql.json"
+    },
+    {
+      "endpoint_id": "query_get_vql_stats_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_get_vql_stats_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_ai_chats_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_ai_chats_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_api_keys_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_api_keys_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_dashboard_pages_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_dashboard_pages_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_documentation_pages_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_documentation_pages_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_exports_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_exports_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_import_jobs_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_import_jobs_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_jobs_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_jobs_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_marketing_pages_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_marketing_pages_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_notifications_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_notifications_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_s3_files_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_s3_files_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_saved_searches_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_saved_searches_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_scraping_records_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_scraping_records_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_sessions_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_sessions_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_team_members_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_team_members_graphql.json"
+    },
+    {
+      "endpoint_id": "query_list_users_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_list_users_graphql.json"
+    },
+    {
+      "endpoint_id": "query_query_logs_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_query_logs_graphql.json"
+    },
+    {
+      "endpoint_id": "query_search_logs_graphql",
+      "method": "QUERY",
+      "api_version": "graphql",
+      "path": "",
+      "file_name": "query_search_logs_graphql.json"
+    }
+  ],
+  "indexes": {
+    "by_method": {
+      "QUERY": [
+        "count_contacts_graphql",
+        "get_activities_graphql",
+        "get_billing_graphql",
+        "get_company_contacts_graphql",
+        "get_company_filters_graphql",
+        "get_company_graphql",
+        "get_contact_filters_graphql",
+        "get_contact_graphql",
+        "get_user_stats_graphql",
+        "list_exports_graphql",
+        "list_saved_searches_graphql",
+        "list_users_graphql",
+        "query_admin_marketing_pages_graphql",
+        "query_aggregate_metrics_graphql",
+        "query_companies_graphql",
+        "query_contacts_graphql",
+        "query_find_emails_graphql",
+        "query_get_2fa_status_graphql",
+        "query_get_activities_graphql",
+        "query_get_activity_stats_graphql",
+        "query_get_addons_graphql",
+        "query_get_admin_addons_graphql",
+        "query_get_admin_plans_graphql",
+        "query_get_ai_chat_graphql",
+        "query_get_api_metadata_graphql",
+        "query_get_billing_graphql",
+        "query_get_dashboard_page_graphql",
+        "query_get_documentation_content_graphql",
+        "query_get_documentation_page_graphql",
+        "query_get_export_download_url_graphql",
+        "query_get_export_graphql",
+        "query_get_health_graphql",
+        "query_get_import_job_graphql",
+        "query_get_invoices_graphql",
+        "query_get_job_graphql",
+        "query_get_log_statistics_graphql",
+        "query_get_marketing_page_graphql",
+        "query_get_me_graphql",
+        "query_get_performance_metrics_graphql",
+        "query_get_plans_graphql",
+        "query_get_presigned_url_graphql",
+        "query_get_s3_file_data_graphql",
+        "query_get_s3_file_presigned_url_graphql",
+        "query_get_saved_search_graphql",
+        "query_get_session_graphql",
+        "query_get_unread_count_graphql",
+        "query_get_upload_status_graphql",
+        "query_get_upload_url_graphql",
+        "query_get_usage_graphql",
+        "query_get_user_graphql",
+        "query_get_user_history_graphql",
+        "query_get_user_stats_graphql",
+        "query_get_vql_health_graphql",
+        "query_get_vql_stats_graphql",
+        "query_list_ai_chats_graphql",
+        "query_list_api_keys_graphql",
+        "query_list_dashboard_pages_graphql",
+        "query_list_documentation_pages_graphql",
+        "query_list_exports_graphql",
+        "query_list_import_jobs_graphql",
+        "query_list_jobs_graphql",
+        "query_list_marketing_pages_graphql",
+        "query_list_notifications_graphql",
+        "query_list_s3_files_graphql",
+        "query_list_saved_searches_graphql",
+        "query_list_scraping_records_graphql",
+        "query_list_sessions_graphql",
+        "query_list_team_members_graphql",
+        "query_list_users_graphql",
+        "query_query_logs_graphql",
+        "query_search_logs_graphql"
+      ],
+      "MUTATION": [
+        "mutation_abort_upload_graphql",
+        "mutation_analyze_email_risk_graphql",
+        "mutation_cancel_export_graphql",
+        "mutation_cancel_subscription_graphql",
+        "mutation_complete_upload_graphql",
+        "mutation_create_addon_graphql",
+        "mutation_create_ai_chat_graphql",
+        "mutation_create_api_key_graphql",
+        "mutation_create_company_export_graphql",
+        "mutation_create_contact_export_graphql",
+        "mutation_create_dashboard_page_graphql",
+        "mutation_create_documentation_page_graphql",
+        "mutation_create_export_job_graphql",
+        "mutation_create_import_job_graphql",
+        "mutation_create_job_graphql",
+        "mutation_create_log_graphql",
+        "mutation_create_logs_batch_graphql",
+        "mutation_create_marketing_page_graphql",
+        "mutation_create_plan_graphql",
+        "mutation_create_plan_period_graphql",
+        "mutation_create_saved_search_graphql",
+        "mutation_delete_addon_graphql",
+        "mutation_delete_ai_chat_graphql",
+        "mutation_delete_api_key_graphql",
+        "mutation_delete_company_graphql",
+        "mutation_delete_dashboard_page_graphql",
+        "mutation_delete_documentation_page_graphql",
+        "mutation_delete_log_graphql",
+        "mutation_delete_logs_bulk_graphql",
+        "mutation_delete_marketing_page_graphql",
+        "mutation_delete_notifications_graphql",
+        "mutation_delete_plan_graphql",
+        "mutation_delete_plan_period_graphql",
+        "mutation_delete_saved_search_graphql",
+        "mutation_delete_user_graphql",
+        "mutation_disable_2fa_graphql",
+        "mutation_export_emails_graphql",
+        "mutation_export_linkedin_results_graphql",
+        "mutation_find_single_email_graphql",
+        "mutation_generate_and_verify_graphql",
+        "mutation_generate_company_summary_graphql",
+        "mutation_hard_delete_marketing_page_graphql",
+        "mutation_initiate_upload_graphql",
+        "mutation_login_graphql",
+        "mutation_logout_graphql",
+        "mutation_mark_notification_as_read_graphql",
+        "mutation_parse_filters_graphql",
+        "mutation_promote_to_admin_graphql",
+        "mutation_promote_to_super_admin_graphql",
+        "mutation_publish_marketing_page_graphql",
+        "mutation_purchase_addon_graphql",
+        "mutation_refresh_token_graphql",
+        "mutation_regenerate_backup_codes_graphql",
+        "mutation_register_graphql",
+        "mutation_register_part_graphql",
+        "mutation_reset_usage_graphql",
+        "mutation_revoke_session_graphql",
+        "mutation_save_sales_navigator_profiles_graphql",
+        "mutation_search_linkedin_graphql",
+        "mutation_send_message_graphql",
+        "mutation_setup_2fa_graphql",
+        "mutation_submit_metric_graphql",
+        "mutation_subscribe_graphql",
+        "mutation_track_usage_graphql",
+        "mutation_update_addon_graphql",
+        "mutation_update_ai_chat_graphql",
+        "mutation_update_dashboard_page_graphql",
+        "mutation_update_documentation_page_graphql",
+        "mutation_update_log_graphql",
+        "mutation_update_marketing_page_graphql",
+        "mutation_update_notification_preferences_graphql",
+        "mutation_update_plan_graphql",
+        "mutation_update_profile_graphql",
+        "mutation_update_saved_search_graphql",
+        "mutation_update_saved_search_usage_graphql",
+        "mutation_update_user_credits_graphql",
+        "mutation_update_user_role_graphql",
+        "mutation_upload_avatar_graphql",
+        "mutation_upsert_by_linkedin_url_graphql",
+        "mutation_verify_2fa_graphql",
+        "mutation_verify_and_find_graphql",
+        "mutation_verify_bulk_emails_graphql",
+        "mutation_verify_single_email_graphql"
+      ]
+    },
+    "by_api_version": {
+      "graphql": [
+        "count_contacts_graphql",
+        "get_activities_graphql",
+        "get_billing_graphql",
+        "get_company_contacts_graphql",
+        "get_company_filters_graphql",
+        "get_company_graphql",
+        "get_contact_filters_graphql",
+        "get_contact_graphql",
+        "get_user_stats_graphql",
+        "list_exports_graphql",
+        "list_saved_searches_graphql",
+        "list_users_graphql",
+        "mutation_abort_upload_graphql",
+        "mutation_analyze_email_risk_graphql",
+        "mutation_cancel_export_graphql",
+        "mutation_cancel_subscription_graphql",
+        "mutation_complete_upload_graphql",
+        "mutation_create_addon_graphql",
+        "mutation_create_ai_chat_graphql",
+        "mutation_create_api_key_graphql",
+        "mutation_create_company_export_graphql",
+        "mutation_create_contact_export_graphql",
+        "mutation_create_dashboard_page_graphql",
+        "mutation_create_documentation_page_graphql",
+        "mutation_create_export_job_graphql",
+        "mutation_create_import_job_graphql",
+        "mutation_create_job_graphql",
+        "mutation_create_log_graphql",
+        "mutation_create_logs_batch_graphql",
+        "mutation_create_marketing_page_graphql",
+        "mutation_create_plan_graphql",
+        "mutation_create_plan_period_graphql",
+        "mutation_create_saved_search_graphql",
+        "mutation_delete_addon_graphql",
+        "mutation_delete_ai_chat_graphql",
+        "mutation_delete_api_key_graphql",
+        "mutation_delete_company_graphql",
+        "mutation_delete_dashboard_page_graphql",
+        "mutation_delete_documentation_page_graphql",
+        "mutation_delete_log_graphql",
+        "mutation_delete_logs_bulk_graphql",
+        "mutation_delete_marketing_page_graphql",
+        "mutation_delete_notifications_graphql",
+        "mutation_delete_plan_graphql",
+        "mutation_delete_plan_period_graphql",
+        "mutation_delete_saved_search_graphql",
+        "mutation_delete_user_graphql",
+        "mutation_disable_2fa_graphql",
+        "mutation_export_emails_graphql",
+        "mutation_export_linkedin_results_graphql",
+        "mutation_find_single_email_graphql",
+        "mutation_generate_and_verify_graphql",
+        "mutation_generate_company_summary_graphql",
+        "mutation_hard_delete_marketing_page_graphql",
+        "mutation_initiate_upload_graphql",
+        "mutation_login_graphql",
+        "mutation_logout_graphql",
+        "mutation_mark_notification_as_read_graphql",
+        "mutation_parse_filters_graphql",
+        "mutation_promote_to_admin_graphql",
+        "mutation_promote_to_super_admin_graphql",
+        "mutation_publish_marketing_page_graphql",
+        "mutation_purchase_addon_graphql",
+        "mutation_refresh_token_graphql",
+        "mutation_regenerate_backup_codes_graphql",
+        "mutation_register_graphql",
+        "mutation_register_part_graphql",
+        "mutation_reset_usage_graphql",
+        "mutation_revoke_session_graphql",
+        "mutation_save_sales_navigator_profiles_graphql",
+        "mutation_search_linkedin_graphql",
+        "mutation_send_message_graphql",
+        "mutation_setup_2fa_graphql",
+        "mutation_submit_metric_graphql",
+        "mutation_subscribe_graphql",
+        "mutation_track_usage_graphql",
+        "mutation_update_addon_graphql",
+        "mutation_update_ai_chat_graphql",
+        "mutation_update_dashboard_page_graphql",
+        "mutation_update_documentation_page_graphql",
+        "mutation_update_log_graphql",
+        "mutation_update_marketing_page_graphql",
+        "mutation_update_notification_preferences_graphql",
+        "mutation_update_plan_graphql",
+        "mutation_update_profile_graphql",
+        "mutation_update_saved_search_graphql",
+        "mutation_update_saved_search_usage_graphql",
+        "mutation_update_user_credits_graphql",
+        "mutation_update_user_role_graphql",
+        "mutation_upload_avatar_graphql",
+        "mutation_upsert_by_linkedin_url_graphql",
+        "mutation_verify_2fa_graphql",
+        "mutation_verify_and_find_graphql",
+        "mutation_verify_bulk_emails_graphql",
+        "mutation_verify_single_email_graphql",
+        "query_admin_marketing_pages_graphql",
+        "query_aggregate_metrics_graphql",
+        "query_companies_graphql",
+        "query_contacts_graphql",
+        "query_find_emails_graphql",
+        "query_get_2fa_status_graphql",
+        "query_get_activities_graphql",
+        "query_get_activity_stats_graphql",
+        "query_get_addons_graphql",
+        "query_get_admin_addons_graphql",
+        "query_get_admin_plans_graphql",
+        "query_get_ai_chat_graphql",
+        "query_get_api_metadata_graphql",
+        "query_get_billing_graphql",
+        "query_get_dashboard_page_graphql",
+        "query_get_documentation_content_graphql",
+        "query_get_documentation_page_graphql",
+        "query_get_export_download_url_graphql",
+        "query_get_export_graphql",
+        "query_get_health_graphql",
+        "query_get_import_job_graphql",
+        "query_get_invoices_graphql",
+        "query_get_job_graphql",
+        "query_get_log_statistics_graphql",
+        "query_get_marketing_page_graphql",
+        "query_get_me_graphql",
+        "query_get_performance_metrics_graphql",
+        "query_get_plans_graphql",
+        "query_get_presigned_url_graphql",
+        "query_get_s3_file_data_graphql",
+        "query_get_s3_file_presigned_url_graphql",
+        "query_get_saved_search_graphql",
+        "query_get_session_graphql",
+        "query_get_unread_count_graphql",
+        "query_get_upload_status_graphql",
+        "query_get_upload_url_graphql",
+        "query_get_usage_graphql",
+        "query_get_user_graphql",
+        "query_get_user_history_graphql",
+        "query_get_user_stats_graphql",
+        "query_get_vql_health_graphql",
+        "query_get_vql_stats_graphql",
+        "query_list_ai_chats_graphql",
+        "query_list_api_keys_graphql",
+        "query_list_dashboard_pages_graphql",
+        "query_list_documentation_pages_graphql",
+        "query_list_exports_graphql",
+        "query_list_import_jobs_graphql",
+        "query_list_jobs_graphql",
+        "query_list_marketing_pages_graphql",
+        "query_list_notifications_graphql",
+        "query_list_s3_files_graphql",
+        "query_list_saved_searches_graphql",
+        "query_list_scraping_records_graphql",
+        "query_list_sessions_graphql",
+        "query_list_team_members_graphql",
+        "query_list_users_graphql",
+        "query_query_logs_graphql",
+        "query_search_logs_graphql"
+      ]
+    },
+    "by_path": {}
+  },
+  "statistics": {
+    "total": 154,
+    "by_method": {
+      "QUERY": 71,
+      "MUTATION": 83
+    },
+    "by_api_version": {
+      "graphql": 154
+    }
+  }
+}

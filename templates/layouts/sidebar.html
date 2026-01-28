@@ -1,0 +1,105 @@
+{% load static %}
+<aside id="app-sidebar" class="fixed left-0 top-0 h-full w-[260px] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-30 transition-transform duration-300 ease-out -translate-x-full md:translate-x-0" aria-label="Main navigation">
+    <div class="flex items-center gap-3 px-6 h-16 border-b border-gray-100 dark:border-gray-800">
+        <div class="w-8 h-8 bg-blue-600 dark:bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-blue-900/50">
+            D
+        </div>
+        <span class="font-bold text-xl text-gray-800 dark:text-gray-100 tracking-tight">DocsAI</span>
+    </div>
+
+    <nav class="mt-6 px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
+        {% for group in sidebar_menu %}
+            {% include 'components/sidebar/group_item.html' with group=group %}
+        {% endfor %}
+    </nav>
+
+    <div class="absolute bottom-0 w-full p-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div class="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/50 dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group relative overflow-hidden">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ user.email }}" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-700 shadow-sm" />
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">{{ user.username }}</span>
+                <a href="{% url 'core:logout' %}" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-left hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<script>
+    // Toggle sidebar group (expand/collapse)
+    function toggleSidebarGroup(button) {
+        const groupItems = button.nextElementSibling;
+        const chevron = button.querySelector('.chevron');
+        const isExpanded = !groupItems.classList.contains('hidden');
+        
+        if (isExpanded) {
+            // Close
+            groupItems.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
+            button.setAttribute('aria-expanded', 'false');
+            // Save state to localStorage
+            const groupLabel = button.closest('.sidebar-group').dataset.groupLabel;
+            localStorage.setItem(`sidebar_group_${groupLabel}`, 'collapsed');
+        } else {
+            // Open
+            groupItems.classList.remove('hidden');
+            chevron.classList.add('rotate-180');
+            button.setAttribute('aria-expanded', 'true');
+            // Save state to localStorage
+            const groupLabel = button.closest('.sidebar-group').dataset.groupLabel;
+            localStorage.setItem(`sidebar_group_${groupLabel}`, 'expanded');
+        }
+    }
+    
+    // Toggle nested children items
+    function toggleNestedChildren(linkWrapper) {
+        const children = linkWrapper.querySelector('.nested-children');
+        const chevron = linkWrapper.querySelector('.chevron');
+        
+        if (!children) return;
+        
+        const isExpanded = !children.classList.contains('hidden');
+        
+        if (isExpanded) {
+            children.classList.add('hidden');
+            if (chevron) chevron.classList.remove('rotate-90');
+        } else {
+            children.classList.remove('hidden');
+            if (chevron) chevron.classList.add('rotate-90');
+        }
+    }
+    
+    // Initialize sidebar state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restore group expanded state from localStorage
+        const groups = document.querySelectorAll('.sidebar-group');
+        groups.forEach(group => {
+            const groupLabel = group.dataset.groupLabel;
+            const savedState = localStorage.getItem(`sidebar_group_${groupLabel}`);
+            const items = group.querySelector('.group-items');
+            const chevron = group.querySelector('.chevron');
+            const button = group.querySelector('.group-header');
+            
+            // If group has active items or was previously expanded, show it
+            if (group.classList.contains('has-active') || savedState === 'expanded') {
+                if (items) items.classList.remove('hidden');
+                if (chevron) chevron.classList.add('rotate-180');
+                if (button) button.setAttribute('aria-expanded', 'true');
+            }
+        });
+        
+        // Auto-expand nested children if any child is active
+        document.querySelectorAll('.sidebar-link-item-wrapper').forEach(wrapper => {
+            const hasActiveChild = wrapper.querySelector('.nested-children .bg-blue-50, .nested-children .dark\\:bg-blue-900\\/30');
+            if (hasActiveChild) {
+                const children = wrapper.querySelector('.nested-children');
+                const chevron = wrapper.querySelector('.chevron');
+                if (children) {
+                    children.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-90');
+                }
+            }
+        });
+    });
+</script>

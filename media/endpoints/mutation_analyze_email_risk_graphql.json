@@ -1,0 +1,26 @@
+{
+  "_id": "mutation_analyze_email_risk_graphql-001",
+  "endpoint_id": "mutation_analyze_email_risk_graphql",
+  "endpoint_path": "graphql/AnalyzeEmailRisk",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Analyze email address for risk factors using AI. Accepts AnalyzeEmailRiskInput with email (required, valid email format, max 255 chars). Returns EmailRiskAnalysisResponse with riskScore (Int, 0-100, higher = higher risk), analysis (String, detailed explanation), isRoleBased (Boolean, true if role-based like info@, support@), isDisposable (Boolean, true if from disposable email service), domain (String), createdAt (DateTime). Uses LambdaAIClient with Google Gemini AI for analysis. Activity logged (non-blocking). Raises ValidationError (422) if email format invalid.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/ai_chats/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/aiChatsService.ts",
+  "service_methods": [
+    "analyzeEmailRisk"
+  ],
+  "repository_methods": [],
+  "used_by_pages": [],
+  "rate_limit": null,
+  "graphql_operation": "mutation AnalyzeEmailRisk($input: AnalyzeEmailRiskInput!) { aiChats { analyzeEmailRisk(input: $input) { riskScore analysis isRoleBased isDisposable } } }",
+  "sql_file": null,
+  "page_count": 0,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

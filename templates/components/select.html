@@ -1,0 +1,70 @@
+{% comment %}
+Select Component
+
+Usage:
+{% include 'components/select.html' with name='status' label='Status' options=status_options %}
+
+Parameters:
+- name: Select name (required)
+- id: Select ID (defaults to name if not provided)
+- label: Label text (optional)
+- options: List of options as tuples (value, label) or dict {value: label} (required)
+- value: Selected value (optional)
+- required: Boolean - default: false
+- disabled: Boolean - default: false
+- size: Select size (sm, md, lg) - default: md
+- error: Error message (optional)
+- help_text: Help text (optional)
+- multiple: Boolean - default: false
+- class: Additional CSS classes (optional)
+- aria_label: ARIA label (optional)
+{% endcomment %}
+
+{% load static %}
+
+<div class="form-field">
+    {% if label %}
+    <label for="{{ id|default:name }}" class="form-label{% if required %} form-label-required{% endif %}">
+        {{ label }}
+    </label>
+    {% endif %}
+    
+    <div class="form-select-wrapper form-select-{{ size|default:'md' }}{% if error %} form-select-error{% endif %}">
+        <select name="{{ name }}"
+                id="{{ id|default:name }}"
+                class="form-select {{ class|default:'' }}"
+                {% if required %}required{% endif %}
+                {% if disabled %}disabled{% endif %}
+                {% if multiple %}multiple{% endif %}
+                {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+                {% if error %}aria-invalid="true" aria-describedby="{{ id|default:name }}-error"{% endif %}
+                {% if help_text %}aria-describedby="{{ id|default:name }}-help"{% endif %}>
+            {% if not multiple and not required %}
+            <option value="">-- Select --</option>
+            {% endif %}
+            {% for option in options %}
+                {% if option.0 %}
+                    {# Tuple format (value, label) #}
+                    <option value="{{ option.0 }}" {% if option.0 == value %}selected{% endif %}>{{ option.1 }}</option>
+                {% else %}
+                    {# Dict format {value: label} #}
+                    {% for opt_value, opt_label in option.items %}
+                    <option value="{{ opt_value }}" {% if opt_value == value %}selected{% endif %}>{{ opt_label }}</option>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    
+    {% if error %}
+    <p id="{{ id|default:name }}-error" class="form-error" role="alert">
+        {{ error }}
+    </p>
+    {% endif %}
+    
+    {% if help_text and not error %}
+    <p id="{{ id|default:name }}-help" class="form-help">
+        {{ help_text }}
+    </p>
+    {% endif %}
+</div>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Page Configurator - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-500 h-[calc(100vh-200px)] flex flex-col">
+    <div class="p-6 border-b border-gray-100">
+        <h1 class="text-xl font-bold text-gray-900">Visual Page Builder</h1>
+    </div>
+    
+    <div class="flex-1 grid grid-cols-4 gap-4 p-6 overflow-hidden">
+        <div class="bg-gray-50 rounded-2xl p-4 overflow-y-auto">
+            <h2 class="text-sm font-bold text-gray-700 mb-4">Components</h2>
+            <!-- Component palette -->
+        </div>
+        
+        <div class="col-span-2 bg-gray-50 rounded-2xl p-4 overflow-y-auto">
+            <h2 class="text-sm font-bold text-gray-700 mb-4">Canvas</h2>
+            <!-- Page builder canvas -->
+        </div>
+        
+        <div class="bg-gray-50 rounded-2xl p-4 overflow-y-auto">
+            <h2 class="text-sm font-bold text-gray-700 mb-4">Properties</h2>
+            <!-- Properties panel -->
+        </div>
+    </div>
+</div>
+{% endblock %}

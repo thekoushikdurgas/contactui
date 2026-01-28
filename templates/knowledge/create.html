@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Knowledge Item - DocsAI Agent{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex items-center gap-4">
+        <a href="{% url 'knowledge:list' %}" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+        <h1 class="text-2xl font-black text-gray-900 tracking-tight">Create Knowledge Item</h1>
+    </div>
+    
+    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <form method="post" class="space-y-8">
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Basic Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="pattern_type" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            Pattern Type <span class="text-red-500">*</span>
+                        </label>
+                        <select id="pattern_type" name="pattern_type" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium" required>
+                            <option value="">Select type...</option>
+                            {% for value, label in pattern_types %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="title" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            Title <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                            placeholder="Enter knowledge item title"
+                            required
+                        >
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Content</h2>
+                
+                <div>
+                    <label for="content" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Content <span class="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                        id="content" 
+                        name="content" 
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium resize-none"
+                        rows="15"
+                        placeholder="Enter knowledge content..."
+                        required
+                    ></textarea>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <h2 class="text-lg font-bold text-gray-900">Tags & Metadata</h2>
+                
+                <div>
+                    <label for="tags" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Tags (comma-separated)
+                    </label>
+                    <input 
+                        type="text" 
+                        id="tags" 
+                        name="tags" 
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
+                        placeholder="tag1, tag2, tag3"
+                    >
+                    <p class="text-xs text-gray-400 mt-2 ml-1">Separate multiple tags with commas</p>
+                </div>
+                
+                <div>
+                    <label for="metadata" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        Metadata (JSON, optional)
+                    </label>
+                    <textarea 
+                        id="metadata" 
+                        name="metadata" 
+                        class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-4 ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium font-mono resize-none"
+                        rows="8"
+                        placeholder='{"source": "internal", "version": "1.0"}'
+                    >{}</textarea>
+                    <p class="text-xs text-gray-400 mt-2 ml-1">Enter valid JSON metadata (optional)</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
+                <a href="{% url 'knowledge:list' %}" class="px-6 py-2 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">
+                    Create Knowledge Item
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

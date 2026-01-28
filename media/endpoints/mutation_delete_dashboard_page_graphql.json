@@ -1,0 +1,38 @@
+{
+  "_id": "mutation_delete_dashboard_page_graphql-001",
+  "endpoint_id": "mutation_delete_dashboard_page_graphql",
+  "endpoint_path": "graphql/DeleteDashboardPage",
+  "method": "MUTATION",
+  "api_version": "graphql",
+  "description": "Delete a custom dashboard page by pageId. Accepts DeleteDashboardPageInput with pageId (required, String). Permanently removes the page. Returns Boolean indicating success (true if deleted). Raises NotFoundError (404) if page not found. Raises ForbiddenError (403) if not Admin.",
+  "created_at": "2026-01-20T00:00:00.000000+00:00",
+  "updated_at": "2026-01-21T00:00:00.000000+00:00",
+  "endpoint_state": "development",
+  "service_file": "appointment360/app/graphql/modules/dashboard_pages/mutations.py",
+  "router_file": "contact360/dashboard/src/services/graphql/dashboardPagesService.ts",
+  "service_methods": [
+    "deleteDashboardPage"
+  ],
+  "repository_methods": [
+    "delete_dashboard_page"
+  ],
+  "used_by_pages": [
+    {
+      "page_path": "/admin/dashboard-pages",
+      "page_title": "Admin Dashboard Pages Page",
+      "via_service": "dashboardPagesService",
+      "via_hook": "useAdminDashboardPages",
+      "usage_type": "secondary",
+      "usage_context": "data_mutation",
+      "updated_at": "2026-01-20T00:00:00.000000+00:00"
+    }
+  ],
+  "rate_limit": null,
+  "graphql_operation": "mutation DeleteDashboardPage($input: DeleteDashboardPageInput!) { dashboardPages { deleteDashboardPage(input: $input) } }",
+  "sql_file": null,
+  "page_count": 1,
+  "access_control": null,
+  "lambda_services": null,
+  "files": null,
+  "methods": null
+}

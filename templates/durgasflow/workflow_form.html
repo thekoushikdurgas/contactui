@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_create %}Create Workflow{% else %}Edit Workflow{% endif %} - Durgasflow{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {% if is_create %}Create Workflow{% else %}Edit Workflow{% endif %}
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {% if is_create %}Set up a new automated workflow{% else %}Update workflow settings{% endif %}
+            </p>
+        </div>
+        <a href="{% if is_create %}{% url 'durgasflow:dashboard' %}{% else %}{% url 'durgasflow:workflow_detail' workflow.id %}{% endif %}" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+            Cancel
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="p-4 rounded-xl text-sm font-bold border {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800{% else %}bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-100 dark:border-blue-800{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Workflow Name
+                </label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    value="{% if not is_create %}{{ workflow.name }}{% endif %}"
+                    required
+                    class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="My Workflow"
+                />
+            </div>
+            
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Description
+                </label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="3"
+                    class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Describe what this workflow does..."
+                >{% if not is_create %}{{ workflow.description }}{% endif %}</textarea>
+            </div>
+            
+            <div>
+                <label for="trigger_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Trigger Type
+                </label>
+                <select 
+                    id="trigger_type" 
+                    name="trigger_type"
+                    class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                    <option value="manual" {% if not is_create and workflow.trigger_type == 'manual' %}selected{% endif %}>Manual</option>
+                    <option value="webhook" {% if not is_create and workflow.trigger_type == 'webhook' %}selected{% endif %}>Webhook</option>
+                    <option value="schedule" {% if not is_create and workflow.trigger_type == 'schedule' %}selected{% endif %}>Scheduled</option>
+                </select>
+            </div>
+            
+            <div class="flex items-center gap-4 pt-4">
+                <button 
+                    type="submit"
+                    class="px-6 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all shadow-lg shadow-blue-200 dark:shadow-blue-900/50"
+                >
+                    {% if is_create %}Create Workflow{% else %}Save Changes{% endif %}
+                </button>
+                {% if not is_create %}
+                    <a href="{% url 'durgasflow:editor' workflow.id %}" class="px-6 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        Open Editor
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
