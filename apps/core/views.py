@@ -134,15 +134,14 @@ def login_view(request):
                 messages.error(request, 'Access denied. SuperAdmin role required.')
                 return render(request, 'core/login.html', {'next': request.GET.get('next')})
             
-            # Set auth cookies (no Django session)
-            # Redirect to /login/?next=<target> so the browser sends the cookie on the next request
-            # (direct redirect to / can miss the cookie on first load in some browsers)
+            # Set auth cookies and redirect via 200 + client-side redirect so the browser stores
+            # the cookie before navigating. Many browsers do not send cookies set on a 302 response
+            # with the immediate redirect follow-up request.
             target = (next_url or '/').strip() or '/'
             if target and ('//' in target or not target.startswith('/')):
                 target = '/'
-            redirect_url = '/login/?next=' + quote(target)
-            debug_log(f"login_view POST success redirect to {redirect_url}")
-            response = redirect(redirect_url)
+            debug_log(f"login_view POST success 200+redirect to {target!r}")
+            response = render(request, 'core/redirecting.html', {'redirect_url': target})
             _set_auth_cookies(response, access_token, refresh_token, remember_me)
             
             cache.delete(fail_key)

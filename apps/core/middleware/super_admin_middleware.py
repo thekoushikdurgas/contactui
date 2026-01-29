@@ -30,6 +30,7 @@ class SuperAdminMiddleware:
     
     # Public routes that don't require SuperAdmin access
     PUBLIC_ROUTES = [
+        '/login',
         '/login/',
         '/logout/',
         '/register/',  # Will be removed later
