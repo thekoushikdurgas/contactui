@@ -1,5 +1,6 @@
 """SuperAdmin-only access middleware."""
 
+import hashlib
 import logging
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.conf import settings
@@ -126,7 +127,9 @@ class SuperAdminMiddleware:
         Returns:
             True if SuperAdmin, False otherwise
         """
-        cache_key = f'super_admin_check:{access_token[:20]}'
+        # Use hash of full token for cache key so different tokens (e.g. old vs new after login) don't collide
+        token_hash = hashlib.sha256(access_token.encode()).hexdigest()[:32]
+        cache_key = f'super_admin_check:{token_hash}'
         cached_result = cache.get(cache_key)
         if cached_result is not None:
             debug_log(f"middleware _check_super_admin cache_hit={cached_result}")
@@ -135,7 +138,6 @@ class SuperAdminMiddleware:
         try:
             client = Appointment360Client(request=request)
             is_super_admin = client.is_super_admin(access_token)
-            
             # Cache the result
             cache.set(cache_key, is_super_admin, self.cache_ttl)
             
