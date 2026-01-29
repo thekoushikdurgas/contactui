@@ -339,6 +339,22 @@ configure_environment() {
         sed -i "s|^ALLOWED_HOSTS=.*|ALLOWED_HOSTS=$allowed_hosts|" "$ENV_FILE"
     fi
     
+    # For HTTP-only deploy, disable SSL redirect so http://IP works; with SSL, enable it
+    if [ "$HTTP_ONLY" = true ]; then
+        ssl_redirect_value="false"
+    else
+        ssl_redirect_value="true"
+    fi
+    if grep -q '^SECURE_SSL_REDIRECT=' "$ENV_FILE" 2>/dev/null; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' "s|^SECURE_SSL_REDIRECT=.*|SECURE_SSL_REDIRECT=$ssl_redirect_value|" "$ENV_FILE"
+        else
+            sed -i "s|^SECURE_SSL_REDIRECT=.*|SECURE_SSL_REDIRECT=$ssl_redirect_value|" "$ENV_FILE"
+        fi
+    else
+        echo "SECURE_SSL_REDIRECT=$ssl_redirect_value" >> "$ENV_FILE"
+    fi
+    
     # Set file permissions
     chown ubuntu:ubuntu "$ENV_FILE"
     chmod 600 "$ENV_FILE"

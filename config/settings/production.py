@@ -9,18 +9,23 @@ from .base import *  # noqa
 # Override base settings for production
 DEBUG = False
 
+# SSL/HTTPS: Set SECURE_SSL_REDIRECT=True only when serving over HTTPS (domain + SSL).
+# For HTTP-only deploy (e.g. IP 34.201.10.84), set SECURE_SSL_REDIRECT=False in .env.prod.
+USE_HTTPS = os.getenv('SECURE_SSL_REDIRECT', 'false').lower() == 'true'
+
 # Security settings
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = USE_HTTPS
+SESSION_COOKIE_SECURE = USE_HTTPS
+CSRF_COOKIE_SECURE = USE_HTTPS
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-# HSTS
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# HSTS (only when using HTTPS)
+if USE_HTTPS:
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # Email Backend (SMTP for production)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
