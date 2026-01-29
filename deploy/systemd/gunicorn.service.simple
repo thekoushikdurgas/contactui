@@ -4,7 +4,7 @@ After=network.target
 Requires=gunicorn.socket
 
 [Service]
-Type=notify
+Type=simple
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/docsai
@@ -16,12 +16,11 @@ Environment="PATH=/home/ubuntu/docsai/venv/bin:/usr/bin:/bin"
 Environment="PYTHONPATH=/home/ubuntu/docsai"
 
 # Gunicorn command
-# Note: Using --config requires Gunicorn to support systemd notifications
-# If Type=notify fails, change to Type=simple and remove --config, use command-line args instead
+# Using Type=simple instead of notify - more compatible but less efficient
+# If this works, you can try switching back to Type=notify
 ExecStart=/home/ubuntu/docsai/venv/bin/gunicorn \
   --config config.gunicorn.production \
   --bind unix:/run/gunicorn.sock \
-  --pid /run/gunicorn.pid \
   config.wsgi:application
 
 # Restart policy

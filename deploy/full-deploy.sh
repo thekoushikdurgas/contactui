@@ -399,9 +399,47 @@ install_gunicorn() {
     log "Installing Gunicorn systemd service..."
     
     cd "$PROJECT_DIR"
-    bash deploy/systemd/install-systemd.sh
     
-    log "Gunicorn service installed ✓"
+    # Verify Gunicorn can be imported before installing service
+    if [ -d "venv" ]; then
+        source venv/bin/activate
+        log_info "Verifying Gunicorn configuration..."
+        if python -c "import config.gunicorn.production" 2>/dev/null; then
+            log "Gunicorn configuration verified ✓"
+        else
+            log_error "Failed to import config.gunicorn.production"
+            log_info "Checking Python path..."
+            python -c "import sys; print('\n'.join(sys.path))" || true
+            log_warning "Continuing anyway, but service may fail..."
+        fi
+        deactivate
+    fi
+    
+    # Run installation script
+    if bash deploy/systemd/install-systemd.sh; then
+        log "Gunicorn service installed ✓"
+        
+        # Verify service is running
+        sleep 3
+        if systemctl is-active --quiet gunicorn.service; then
+            log "Gunicorn service is running ✓"
+        else
+            log_error "Gunicorn service failed to start!"
+            log_info "Checking service status..."
+            systemctl status gunicorn.service --no-pager -l || true
+            log_info "Recent logs:"
+            journalctl -u gunicorn.service -n 30 --no-pager || true
+            log_warning "Service installation completed but Gunicorn is not running"
+            log_info "Troubleshooting:"
+            log_info "  1. Check logs: sudo journalctl -u gunicorn -f"
+            log_info "  2. Test manually: cd $PROJECT_DIR && source venv/bin/activate && gunicorn --config config.gunicorn.production config.wsgi:application --bind unix:/run/gunicorn.sock"
+            log_info "  3. Check socket: ls -la /run/gunicorn.sock"
+            log_info "  4. Check permissions: ls -la $PROJECT_DIR/.env.prod"
+        fi
+    else
+        log_error "Gunicorn installation script failed!"
+        exit 1
+    fi
 }
 
 # Install Nginx configuration
@@ -602,6 +640,21 @@ main() {
     print_summary
     
     log "Deployment script completed successfully!"
+    
+    # Final check
+    if ! systemctl is-active --quiet gunicorn.service 2>/dev/null; then
+        echo ""
+        log_warning "Gunicorn service is not running. Running troubleshooting..."
+        echo ""
+        if [ -f "$PROJECT_DIR/deploy/troubleshoot-gunicorn.sh" ]; then
+            bash "$PROJECT_DIR/deploy/troubleshoot-gunicorn.sh"
+        else
+            log_info "Troubleshooting script not found. Manual checks:"
+            log_info "  1. sudo systemctl status gunicorn"
+            log_info "  2. sudo journalctl -u gunicorn -f"
+            log_info "  3. ls -la /run/gunicorn.sock"
+        fi
+    fi
 }
 
 # Run main function

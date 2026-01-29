@@ -30,6 +30,26 @@ if [ -f "$PROJECT_DIR/.env.prod" ]; then
     chown ubuntu:ubuntu "$PROJECT_DIR/.env.prod"
     chmod 600 "$PROJECT_DIR/.env.prod"
     echo "Fixed permissions for .env.prod"
+else
+    echo "WARNING: .env.prod not found at $PROJECT_DIR/.env.prod"
+    echo "The service may fail to start without proper environment configuration"
+fi
+
+# Verify Gunicorn config can be imported
+echo "Verifying Gunicorn configuration..."
+cd "$PROJECT_DIR"
+if [ -d "venv" ]; then
+    source venv/bin/activate
+    if python -c "import config.gunicorn.production" 2>/dev/null; then
+        echo "Gunicorn configuration verified ✓"
+    else
+        echo "WARNING: Could not import config.gunicorn.production"
+        echo "This may cause the service to fail. Checking Python path..."
+        python -c "import sys; print('Python path:', sys.path)" || true
+    fi
+    deactivate
+else
+    echo "WARNING: Virtual environment not found. Cannot verify Gunicorn config."
 fi
 
 # Copy socket file
@@ -39,6 +59,12 @@ chmod 644 $SYSTEMD_DIR/gunicorn.socket
 # Copy service file
 cp deploy/systemd/gunicorn.service $SYSTEMD_DIR/
 chmod 644 $SYSTEMD_DIR/gunicorn.service
+
+# If Type=notify fails, we can use the simple version
+# Uncomment the following lines if you encounter issues:
+# echo "Using Type=simple service file (more compatible)"
+# cp deploy/systemd/gunicorn.service.simple $SYSTEMD_DIR/gunicorn.service
+# chmod 644 $SYSTEMD_DIR/gunicorn.service
 
 # Reload systemd
 systemctl daemon-reload
@@ -53,13 +79,42 @@ systemctl start gunicorn.socket
 systemctl enable gunicorn.service
 
 # Start service
-systemctl start gunicorn.service
+echo "Starting Gunicorn service..."
+if systemctl start gunicorn.service; then
+    echo "Gunicorn service started successfully"
+else
+    echo "ERROR: Failed to start Gunicorn service"
+    echo ""
+    echo "Checking service status..."
+    systemctl status gunicorn.service --no-pager || true
+    echo ""
+    echo "Recent Gunicorn logs:"
+    journalctl -u gunicorn.service -n 50 --no-pager || true
+    echo ""
+    echo "Troubleshooting steps:"
+    echo "1. Check logs: sudo journalctl -u gunicorn -f"
+    echo "2. Verify Python path: cd $PROJECT_DIR && source venv/bin/activate && python -c 'import config.gunicorn.production'"
+    echo "3. Test Gunicorn manually: cd $PROJECT_DIR && source venv/bin/activate && gunicorn --config config.gunicorn.production config.wsgi:application --bind unix:/run/gunicorn.sock"
+    exit 1
+fi
+
+# Wait a moment for service to initialize
+sleep 2
 
 # Check status
 echo "Checking service status..."
-systemctl status gunicorn.service --no-pager
+if systemctl is-active --quiet gunicorn.service; then
+    echo "Gunicorn service is running ✓"
+    systemctl status gunicorn.service --no-pager
+else
+    echo "WARNING: Gunicorn service may not be running properly"
+    systemctl status gunicorn.service --no-pager || true
+    echo ""
+    echo "Recent logs:"
+    journalctl -u gunicorn.service -n 30 --no-pager || true
+fi
 
 echo ""
-echo "Systemd services installed and started successfully!"
+echo "Systemd services installed!"
 echo "To view logs: sudo journalctl -u gunicorn -f"
 echo "To restart: sudo systemctl restart gunicorn"
