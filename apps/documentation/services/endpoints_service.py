@@ -231,11 +231,23 @@ class EndpointsService(DocumentationServiceBase):
             operation_name='update_endpoint'
         )
 
+    def _delete_local_endpoint_file(self, endpoint_id: str) -> None:
+        """Remove local endpoint file and invalidate local index cache so list_endpoints reflects delete."""
+        try:
+            from apps.documentation.services import get_shared_local_storage
+            from django.core.cache import cache
+            local_storage = get_shared_local_storage()
+            local_storage.delete_file(f"endpoints/{endpoint_id}.json")
+            cache.delete("local_json_storage:index:endpoints")
+        except Exception as e:
+            self.logger.warning(f"Failed to delete local endpoint file or clear index cache for {endpoint_id}: {e}")
+
     def delete_endpoint(self, endpoint_id: str) -> bool:
         """
         Delete endpoint (use S3 direct for writes).
         
         Uses DocumentationServiceBase._delete_resource() for common patterns (Task 2.3.4).
+        After successful deletion, removes local media file and invalidates local index cache.
         
         Args:
             endpoint_id: Endpoint identifier
@@ -246,11 +258,14 @@ class EndpointsService(DocumentationServiceBase):
         Raises:
             DocumentationError: If deletion fails after retries
         """
-        return self._delete_resource(
+        result = self._delete_resource(
             resource_id=endpoint_id,
             operation_name='delete_endpoint'
         )
-    
+        if result:
+            self._delete_local_endpoint_file(endpoint_id)
+        return result
+
     def _clear_cache_for_endpoint(self, endpoint_id: str) -> None:
         """
         Clear cache entries for a specific endpoint.

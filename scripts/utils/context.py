@@ -31,7 +31,9 @@ def _detect_context() -> tuple[bool, bool]:
         # Try to import Django settings
         if "DJANGO_SETTINGS_MODULE" in os.environ:
             import django
-            if not django.apps.apps.ready:
+            apps_registry = getattr(django, "apps", None)
+            ready = getattr(getattr(apps_registry, "apps", None), "ready", False) if apps_registry else False
+            if not ready:
                 django.setup()
             is_django = True
         else:
@@ -111,8 +113,8 @@ def get_endpoints_dir() -> Path:
 
 
 def get_relationships_dir() -> Path:
-    """Get relationships directory. Uses 'retations' on disk (legacy)."""
-    return get_media_root() / "retations"
+    """Get relationships directory. Uses 'relationship' on disk (legacy)."""
+    return get_media_root() / "relationship"
 
 
 def get_postman_dir() -> Path:

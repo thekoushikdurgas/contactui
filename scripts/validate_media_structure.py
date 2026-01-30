@@ -118,9 +118,9 @@ def main():
     
     # Check directory naming
     print("\n[1] Checking directory structure...")
-    if relationships_dir.name == "retations":
-        all_warnings.append("Directory named 'retations' (typo) - should be 'relationships'")
-        print("  ⚠️  WARNING: Directory is named 'retations' instead of 'relationships'")
+    if relationships_dir.name == "relationship":
+        all_warnings.append("Directory named 'relationship' (typo) - should be 'relationships'")
+        print("  ⚠️  WARNING: Directory is named 'relationship' instead of 'relationships'")
     else:
         print(f"  ✓ Directory name is correct: {relationships_dir.name}")
     

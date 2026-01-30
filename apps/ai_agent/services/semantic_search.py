@@ -115,7 +115,7 @@ class SemanticSearchService:
         """
         # Load relationships index
         try:
-            relationships_index = self.media_loader.local_storage.get_index('retations')
+            relationships_index = self.media_loader.local_storage.get_index('relationship')
             relationships = relationships_index.get('relationships', [])
             
             return self._simple_search(

@@ -13,6 +13,7 @@ from apps.documentation.utils.paths import (
     get_postman_dir,
     get_project_dir,
     get_relationships_dir,
+    get_result_dir,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,8 +52,8 @@ class FileOperationsService:
             if not parts:
                 return None
             d = parts[0]
-            if d in ("pages", "endpoints", "retations", "relationships", "postman", "project"):
-                return "relationships" if d == "retations" else d
+            if d in ("pages", "endpoints", "relationship", "relationships", "postman", "project"):
+                return "relationships" if d == "relationship" else d
         except ValueError:
             pass
         return None
@@ -171,11 +172,18 @@ class FileOperationsService:
             return {"status": "error", "uploaded": False, "s3_key": None, "errors": [str(e)], "lambda_api_response": None}
 
     def save_operation_result(self, file_path: str, operation: str, result: Dict[str, Any]) -> bool:
-        """Write operation result as {stem}_result.json in the same directory as the source file."""
+        """Write operation result under media/result/{relative_dir}/{stem}_result.json. All result types (analyze, validate, generate, upload_s3) are stored in media/result/."""
         resolved = self._validate_file_path(file_path)
         if not resolved:
             return False
-        out_path = resolved.parent / f"{resolved.stem}_result.json"
+        try:
+            rel = resolved.resolve().relative_to(self.media_root.resolve())
+            parts = rel.parts
+            relative_parent = parts[0] if len(parts) > 1 else "root"
+        except ValueError:
+            relative_parent = "root"
+        result_root = get_result_dir()
+        out_path = result_root / relative_parent / f"{resolved.stem}_result.json"
         payload = {
             "operation": operation,
             "file_path": file_path,

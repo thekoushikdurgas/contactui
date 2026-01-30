@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Upload all relationship JSON files from media/retations/ to Lambda Documentation API.
+Upload all relationship JSON files from media/relationship/ to Lambda Documentation API.
 
 This script reads by-page and by-endpoint relationship files,
 validates them, and uploads them using the Lambda API import endpoint.
@@ -49,7 +49,7 @@ class RelationshipsUploadScript(BaseUploadScript):
         """Initialize relationships upload script."""
         super().__init__(
             script_name="upload_docs_relationships_to_s3",
-            description="Upload documentation relationships from media/retations/ to Lambda Documentation API",
+            description="Upload documentation relationships from media/relationship/ to Lambda Documentation API",
         )
         self.api_client = None
         self.mode = "upsert"

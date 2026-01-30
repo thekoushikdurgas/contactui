@@ -455,7 +455,18 @@ class PagesService(DocumentationServiceBase):
             raise DocumentationError(
                 f"Failed to update page {page_id}: {error_response.get('error', str(e))}"
             ) from e
-    
+
+    def _delete_local_page_file(self, page_id: str) -> None:
+        """Remove local page file and invalidate local index cache so list_pages reflects delete."""
+        try:
+            from apps.documentation.services import get_shared_local_storage
+            from django.core.cache import cache
+            local_storage = get_shared_local_storage()
+            local_storage.delete_file(f"pages/{page_id}.json")
+            cache.delete(f"local_json_storage:index:pages")
+        except Exception as e:
+            self.logger.warning(f"Failed to delete local page file or clear index cache for {page_id}: {e}")
+
     def delete_page(self, page_id: str) -> bool:
         """
         Delete page with multi-strategy (GraphQL fallback).
@@ -484,16 +495,20 @@ class PagesService(DocumentationServiceBase):
                         # Use base class cache clearing
                         self._clear_resource_cache(page_id)
                         self._clear_list_cache()
+                        self._delete_local_page_file(page_id)
                         self.logger.debug(f"Page {page_id} deleted via GraphQL")
                         return True
                 except Exception as e:
                     self.logger.warning(f"GraphQL failed for delete_page, falling back: {e}")
             
             # Fallback to base class delete method (S3 direct)
-            return self._delete_resource(
+            result = self._delete_resource(
                 resource_id=page_id,
                 operation_name='delete_page'
             )
+            if result:
+                self._delete_local_page_file(page_id)
+            return result
             
         except DocumentationError:
             # Re-raise DocumentationError as-is

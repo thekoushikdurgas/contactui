@@ -39,7 +39,10 @@ def list_pages_view(request):
         )
         
         pages = result.get('pages', [])
-        
+        # Normalize: ensure each page has top-level status for list.html (status is under metadata in storage)
+        for p in pages:
+            if isinstance(p, dict) and "status" not in p:
+                p["status"] = (p.get("metadata") or {}).get("status", "draft")
         # Filter by search query if provided
         if search_query:
             pages = [
@@ -79,6 +82,9 @@ def get_page_view(request, page_id):
     if not page:
         messages.error(request, 'Page not found.')
         return redirect('documentation:list')
+    # Normalize: ensure top-level content for detail.html (content may be missing or only under metadata)
+    if isinstance(page, dict):
+        page['content'] = page.get('content') or (page.get('metadata') or {}).get('content', '') or ''
     context = {
         'page': page,
     }
@@ -184,12 +190,22 @@ def update_page_view(request, page_id):
         return redirect('documentation:list')
 
 
+def _safe_redirect_url(request, default_name='documentation:list'):
+    """Return redirect target: return_url if present and safe, else default."""
+    return_url = request.GET.get('return_url') or request.POST.get('return_url', '')
+    if return_url and return_url.startswith('/') and '//' not in return_url:
+        from django.utils.http import url_has_allowed_host_and_scheme
+        if url_has_allowed_host_and_scheme(return_url, allowed_hosts={request.get_host(), None}):
+            return return_url
+    return reverse(default_name)
+
+
 @login_required
 def delete_page_view(request, page_id):
     """Delete documentation page."""
     if not page_id:
         messages.error(request, 'Invalid page ID.')
-        return redirect('documentation:list')
+        return redirect(_safe_redirect_url(request))
     
     service = get_pages_service()
     
@@ -203,17 +219,19 @@ def delete_page_view(request, page_id):
         except Exception as e:
             logger.error(f"Error deleting page {page_id}: {e}", exc_info=True)
             messages.error(request, 'An error occurred while deleting the page.')
-        return redirect('documentation:list')
+        return redirect(_safe_redirect_url(request))
     
     try:
         page = service.get_page(page_id)
         if not page:
             messages.error(request, 'Page not found.')
-            return redirect('documentation:list')
-        
-        context = {'page': page}
+            return redirect(_safe_redirect_url(request))
+        if isinstance(page, dict) and 'status' not in page:
+            page['status'] = (page.get('metadata') or {}).get('status', 'draft')
+        return_url = request.GET.get('return_url', '')
+        context = {'page': page, 'return_url': return_url}
         return render(request, 'documentation/delete_confirm.html', context)
     except Exception as e:
         logger.error(f"Error loading page {page_id} for deletion: {e}", exc_info=True)
         messages.error(request, 'An error occurred while loading the page.')
-        return redirect('documentation:list')
+        return redirect(_safe_redirect_url(request))

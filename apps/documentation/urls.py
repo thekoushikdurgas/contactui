@@ -53,11 +53,13 @@ from .views.relationships_views import (
     relationship_form_view,
     relationship_create_api,
     relationship_update_api,
+    relationship_delete_view,
     relationship_delete_api,
 )
 from .views.postman_views import (
     postman_detail_view,
     postman_form_view,
+    postman_delete_view,
 )
 from .views import operations
 from .views import media_views
@@ -280,6 +282,7 @@ urlpatterns = [
     
     # Relationships CRUD and API (form + create/update/delete API for AJAX)
     path('relationships/list/', relationship_list_view, name='relationships_list'),
+    path('relationships/<str:relationship_id>/delete/', relationship_delete_view, name='relationship_delete'),
     path('relationships/<str:relationship_id>/', relationship_detail_view, name='relationship_detail'),
     path('relationships/create/', relationship_form_view, name='relationship_create'),
     path('relationships/<str:relationship_id>/edit/', relationship_form_view, name='relationship_edit'),
@@ -289,6 +292,7 @@ urlpatterns = [
     
     # Postman CRUD (create before detail so /postman/create/ is not captured as postman_id)
     path('postman/create/', postman_form_view, name='postman_create'),
+    path('postman/<str:postman_id>/delete/', postman_delete_view, name='postman_delete'),
     path('postman/<str:postman_id>/edit/', postman_form_view, name='postman_edit'),
     path('postman/<str:postman_id>/', postman_detail_view, name='postman_detail'),
     
@@ -449,6 +453,8 @@ urlpatterns = [
     path('api/media-manager/statistics/', media_manager_api.get_statistics_api, name='api_media_manager_statistics'),
     path('api/media-manager/health/', media_manager_api.get_health_api, name='api_media_manager_health'),
 
+    # Media Manager dashboard (GitHub-style file browser)
+    path('media/manager/', operations.media_manager_dashboard, name='media_manager_dashboard'),
     # Media file preview, viewer, form, delete
     path('media/preview/<path:file_path>', media_views.media_file_preview, name='media_file_preview'),
     path('media/viewer/<path:file_path>', media_views.media_file_viewer, name='media_file_viewer'),
@@ -477,6 +483,8 @@ urlpatterns = [
 
     # Operations
     path('operations/', operations.operations_dashboard, name='operations_dashboard'),
+    path('api/operations/upload-file-list/<str:resource_type>/', operations.upload_file_list_api, name='api_operations_upload_file_list'),
+    path('api/operations/upload-to-s3/<str:resource_type>/', operations.upload_to_s3_api, name='api_operations_upload_to_s3'),
     path('operations/analyze/', operations.analyze_docs_view, name='operations_analyze'),
     path('operations/validate/', operations.validate_docs_view, name='operations_validate'),
     path('operations/generate-json/', operations.generate_json_view, name='operations_generate_json'),

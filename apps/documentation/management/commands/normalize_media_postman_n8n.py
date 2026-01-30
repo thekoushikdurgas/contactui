@@ -177,6 +177,8 @@ class Command(BaseCommand):
 
         for fp in json_files:
             try:
+                if fp.name == "index.json":
+                    continue
                 raw = fp.read_text(encoding="utf-8")
                 if not raw.strip():
                     continue

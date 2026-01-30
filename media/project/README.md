@@ -60,7 +60,7 @@ Stores metadata for all API endpoints:
 
 ### 3. Relationships Collection
 
-**Location**: `retations/`
+**Location**: `relationship/`
 
 Tracks bidirectional relationships between pages and endpoints:
 - Which endpoints each page uses
@@ -68,7 +68,7 @@ Tracks bidirectional relationships between pages and endpoints:
 - Usage context and types
 - Service and hook information
 
-**See**: [Relationships Collection Documentation](./retations/README.md)
+**See**: [Relationships Collection Documentation](./relationship/README.md)
 
 ## Quick Start
 

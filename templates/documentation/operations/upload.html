@@ -4,52 +4,296 @@
 {% block title %}Upload to S3 - Operations{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Upload to S3</h1>
+<div class="w-full max-w-4xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Dashboard</a>
+        <span class="text-gray-400">/</span>
+        <a href="{% url 'documentation:operations_dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Operations</a>
+        <span class="text-gray-400">/</span>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Upload to S3</span>
+    </nav>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Upload to S3</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            Upload local JSON files from the media/ directory to S3.
+        </p>
         
-        <div class="space-y-4">
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-                Upload local JSON files from media/ directory to S3.
-            </p>
-            
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
-                
-                <div>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" name="upload_pages" checked class="rounded border-gray-300">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload pages/</span>
-                    </label>
+        <form id="upload-s3-form" method="post" action="{% url 'documentation:operations_upload' %}" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-3">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="upload_pages" value="1" checked class="rounded border-gray-300 dark:border-gray-600">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Upload pages/</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="upload_endpoints" value="1" checked class="rounded border-gray-300 dark:border-gray-600">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Upload endpoints/</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="upload_relationships" value="1" checked class="rounded border-gray-300 dark:border-gray-600">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Upload relationships/</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="upload_postman" value="1" class="rounded border-gray-300 dark:border-gray-600">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Upload postman/</span>
+                </label>
+            </div>
+            <div class="flex items-center gap-4">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                >
+                    Upload to S3
+                </button>
+                <a href="{% url 'documentation:operations_dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Progress (shown during upload) – per folder and per file -->
+    <div id="upload-progress" class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Uploading to S3</h3>
+        <p id="upload-progress-label" class="text-sm text-gray-600 dark:text-gray-400 mb-1">Preparing…</p>
+        <p id="upload-progress-file" class="text-xs text-gray-500 dark:text-gray-400 mb-2 hidden">Current file: —</p>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div id="upload-progress-bar" class="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+        </div>
+        <p id="upload-progress-step" class="text-xs text-gray-500 dark:text-gray-400 mt-2">0 / 0 files</p>
+        <p id="upload-progress-folders" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Folder 0 / 0</p>
+    </div>
+
+    <!-- Results (shown after upload) -->
+    <div id="upload-results" class="{% if not report %}hidden{% endif %} bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Upload Results</h3>
+        <div id="upload-results-body" class="space-y-4">
+            {% if report %}
+                {% if report.message %}
+                <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200">
+                    <p class="text-sm">{{ report.message }}</p>
                 </div>
-                
-                <div>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" name="upload_endpoints" checked class="rounded border-gray-300">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload endpoints/</span>
-                    </label>
-                </div>
-                
-                <div>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" name="upload_relationships" checked class="rounded border-gray-300">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Upload retations/</span>
-                    </label>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <button 
-                        type="submit"
-                        class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
-                    >
-                        Upload to S3
-                    </button>
-                    <a href="{% url 'documentation:operations_dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
-                        Cancel
-                    </a>
-                </div>
-            </form>
+                {% endif %}
+                {% if report.results %}
+                <ul class="space-y-2">
+                    {% for name, data in report.results.items %}
+                    <li class="flex items-center gap-3 p-3 rounded-lg {% if data.success %}bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200{% else %}bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200{% endif %}">
+                        <span class="font-medium">{{ name|title }}</span>
+                        {% if data.success %}
+                            <span class="text-sm">✓ {{ data.synced|default:0 }} / {{ data.total_files|default:0 }} files uploaded</span>
+                        {% else %}
+                            <span class="text-sm">✗ {% if data.error %}{{ data.error }}{% else %}{{ data.errors|default:0 }} error(s){% endif %}</span>
+                        {% endif %}
+                    </li>
+                    {% if data.error_details %}
+                    <ul class="ml-4 text-sm text-gray-600 dark:text-gray-400 list-disc space-y-1">
+                        {% for detail in data.error_details %}
+                        <li>{{ detail.file }}: {{ detail.error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {% if report.success %}
+                <p class="text-sm text-green-600 dark:text-green-400 font-medium">All selected types uploaded successfully.</p>
+                {% else %}
+                <p class="text-sm text-red-600 dark:text-red-400 font-medium">Some uploads failed. See details above.</p>
+                {% endif %}
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>
+
+<script>
+(function() {
+    function getCsrfToken() {
+        var m = document.cookie.match(/csrftoken=([^;]+)/);
+        return m ? m[1].trim() : '';
+    }
+    function buildResultsHtml(results, message) {
+        var html = '';
+        if (message) {
+            html += '<div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200"><p class="text-sm">' + escapeHtml(message) + '</p></div>';
+        }
+        if (results && Object.keys(results).length) {
+            html += '<ul class="space-y-2">';
+            var allOk = true;
+            for (var name in results) {
+                var d = results[name];
+                var ok = d.success;
+                if (!ok) allOk = false;
+                var cls = ok ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200' : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200';
+                var msg = ok ? ('✓ ' + (d.synced || 0) + ' / ' + (d.total_files || 0) + ' files uploaded') : ('✗ ' + (d.error || (d.errors || 0) + ' error(s)'));
+                html += '<li class="flex items-center gap-3 p-3 rounded-lg ' + cls + '"><span class="font-medium">' + escapeHtml(name.charAt(0).toUpperCase() + name.slice(1)) + '</span><span class="text-sm">' + escapeHtml(msg) + '</span></li>';
+                if (d.error_details && d.error_details.length) {
+                    html += '<ul class="ml-4 text-sm text-gray-600 dark:text-gray-400 list-disc space-y-1">';
+                    for (var i = 0; i < d.error_details.length; i++) {
+                        var det = d.error_details[i];
+                        html += '<li>' + escapeHtml(det.file) + ': ' + escapeHtml(det.error) + '</li>';
+                    }
+                    html += '</ul>';
+                }
+            }
+            html += '</ul>';
+            html += '<p class="text-sm font-medium ' + (allOk ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400') + '">' + (allOk ? 'All selected types uploaded successfully.' : 'Some uploads failed. See details above.') + '</p>';
+        }
+        return html || '<p class="text-sm text-gray-500">No results.</p>';
+    }
+    function escapeHtml(s) {
+        if (s == null) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+    }
+    var form = document.getElementById('upload-s3-form');
+    if (!form) return;
+    var progressEl = document.getElementById('upload-progress');
+    var progressBar = document.getElementById('upload-progress-bar');
+    var progressLabel = document.getElementById('upload-progress-label');
+    var progressFileEl = document.getElementById('upload-progress-file');
+    var progressStep = document.getElementById('upload-progress-step');
+    var progressFoldersEl = document.getElementById('upload-progress-folders');
+    var resultsEl = document.getElementById('upload-results');
+    var resultsBody = document.getElementById('upload-results-body');
+    var baseUrl = window.location.pathname.replace(/\/operations\/upload\/?$/, '');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var selected = [];
+        if (form.querySelector('[name=upload_pages]').checked) selected.push('pages');
+        if (form.querySelector('[name=upload_endpoints]').checked) selected.push('endpoints');
+        if (form.querySelector('[name=upload_relationships]').checked) selected.push('relationships');
+        if (form.querySelector('[name=upload_postman]').checked) selected.push('postman');
+        if (selected.length === 0) {
+            resultsBody.innerHTML = buildResultsHtml({}, 'Select at least one resource type to upload.');
+            resultsEl.classList.remove('hidden');
+            progressEl.classList.add('hidden');
+            return;
+        }
+        progressEl.classList.remove('hidden');
+        resultsEl.classList.add('hidden');
+        progressBar.style.width = '0%';
+        progressLabel.textContent = 'Fetching file lists…';
+        progressFileEl.classList.add('hidden');
+        progressStep.textContent = '0 / 0 files';
+        progressFoldersEl.textContent = 'Folder 0 / ' + selected.length;
+        var totalFolders = selected.length;
+        Promise.all(selected.map(function(type) {
+            return fetch(baseUrl + '/api/operations/upload-file-list/' + type + '/', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); });
+        })).then(function(responses) {
+            var folderFiles = [];
+            var totalFiles = 0;
+            for (var i = 0; i < selected.length; i++) {
+                var data = responses[i];
+                var files = (data.files || []).slice();
+                if (data.error) {
+                    folderFiles.push({ type: selected[i], files: [], error: data.error });
+                } else {
+                    folderFiles.push({ type: selected[i], files: files });
+                    totalFiles += files.length;
+                }
+            }
+            if (totalFiles === 0) {
+                progressEl.classList.add('hidden');
+                var emptyResults = {};
+                folderFiles.forEach(function(f) {
+                    emptyResults[f.type] = f.error ? { success: false, error: f.error, resource_type: f.type } : { success: true, synced: 0, total_files: 0, resource_type: f.type };
+                });
+                resultsBody.innerHTML = buildResultsHtml(emptyResults, 'No files to upload in selected folders.');
+                resultsEl.classList.remove('hidden');
+                return;
+            }
+            var filesDone = 0;
+            var collected = {};
+            var folderIndex = 0;
+            var fileIndex = 0;
+            function setProgress(folderIdx, fileIdxInFolder, fileCountInFolder, fileName) {
+                progressLabel.textContent = 'Folder ' + (folderIdx + 1) + ' / ' + totalFolders + ': ' + folderFiles[folderIdx].type + '/ — file ' + (fileIdxInFolder + 1) + ' / ' + fileCountInFolder;
+                progressFileEl.textContent = 'Current file: ' + (fileName || '—');
+                progressFileEl.classList.remove('hidden');
+                progressBar.style.width = (filesDone / totalFiles * 100) + '%';
+                progressStep.textContent = filesDone + ' / ' + totalFiles + ' files';
+                progressFoldersEl.textContent = 'Folder ' + (folderIdx + 1) + ' / ' + totalFolders;
+            }
+            function uploadNextFile() {
+                while (folderIndex < folderFiles.length) {
+                    var folder = folderFiles[folderIndex];
+                    var files = folder.files || [];
+                    if (files.length === 0) {
+                        collected[folder.type] = folder.error ? { success: false, error: folder.error, resource_type: folder.type } : { success: true, synced: 0, total_files: 0, errors: 0, error_details: [], resource_type: folder.type };
+                        folderIndex++;
+                        fileIndex = 0;
+                        continue;
+                    }
+                    if (fileIndex >= files.length) {
+                        folderIndex++;
+                        fileIndex = 0;
+                        continue;
+                    }
+                    var file = files[fileIndex];
+                    var relPath = file.relative_path || file.name || '';
+                    var name = file.name || relPath.split('/').pop() || '—';
+                    setProgress(folderIndex, fileIndex, files.length, name);
+                    var url = baseUrl + '/media/file/' + relPath + '/upload-s3/';
+                    return fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCsrfToken(),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    }).then(function(r) { return r.json(); }).then(function(resp) {
+                        if (!collected[folder.type]) {
+                            collected[folder.type] = { synced: 0, total_files: files.length, errors: 0, error_details: [], resource_type: folder.type };
+                        }
+                        var ok = resp.success && (resp.data && (resp.data.uploaded === true || resp.data.status === 'success'));
+                        if (ok) {
+                            collected[folder.type].synced += 1;
+                        } else {
+                            collected[folder.type].errors += 1;
+                            var errMsg = (resp.message || (resp.data && resp.data.errors && resp.data.errors[0]) || resp.error || 'Upload failed');
+                            collected[folder.type].error_details.push({ file: name, error: errMsg });
+                        }
+                        filesDone++;
+                        setProgress(folderIndex, fileIndex, files.length, name);
+                        fileIndex++;
+                        return uploadNextFile();
+                    }).catch(function(err) {
+                        if (!collected[folder.type]) {
+                            collected[folder.type] = { synced: 0, total_files: files.length, errors: 0, error_details: [], resource_type: folder.type };
+                        }
+                        collected[folder.type].errors += 1;
+                        collected[folder.type].error_details.push({ file: name, error: err.message || String(err) });
+                        filesDone++;
+                        fileIndex++;
+                        return uploadNextFile();
+                    });
+                }
+                progressBar.style.width = '100%';
+                progressLabel.textContent = 'Done.';
+                progressFileEl.classList.add('hidden');
+                progressStep.textContent = totalFiles + ' / ' + totalFiles + ' files';
+                progressFoldersEl.textContent = 'Folder ' + totalFolders + ' / ' + totalFolders;
+                progressEl.classList.add('hidden');
+                var finalResults = {};
+                for (var k in collected) {
+                    var c = collected[k];
+                    finalResults[k] = { success: c.errors === 0, synced: c.synced || 0, total_files: c.total_files || 0, errors: c.errors || 0, error_details: (c.error_details || []).slice(0, 15) };
+                }
+                resultsBody.innerHTML = buildResultsHtml(finalResults);
+                resultsEl.classList.remove('hidden');
+                resultsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            uploadNextFile();
+        }).catch(function(err) {
+            progressEl.classList.add('hidden');
+            resultsBody.innerHTML = buildResultsHtml({}, 'Failed to load file lists: ' + (err.message || String(err)));
+            resultsEl.classList.remove('hidden');
+        });
+    });
+})();
+</script>
 {% endblock %}

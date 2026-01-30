@@ -729,7 +729,7 @@ def main() -> int:
 
     pages_dir = media_root / "pages"
     endpoints_dir = media_root / "endpoints"
-    relationships_dir = media_root / "retations"
+    relationships_dir = media_root / "relationship"
     postman_dir = media_root / "postman"
 
     if not pages_dir.exists() or not endpoints_dir.exists() or not relationships_dir.exists():

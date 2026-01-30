@@ -674,7 +674,7 @@ python scripts/test_s3_connection.py
 
 ### `analyze_docs_files.py`
 
-Analyzes and validates all documentation JSON files in `docs/pages/`, `docs/endpoints/`, and `docs/retations/`.
+Analyzes and validates all documentation JSON files in `docs/pages/`, `docs/endpoints/`, and `docs/relationship/`.
 
 **Usage:**
 
@@ -771,7 +771,7 @@ python scripts/upload_docs_endpoints_to_s3.py --skip-existing
 
 ### `upload_docs_relationships_to_s3.py`
 
-Uploads all relationship JSON files from `docs/retations/` to S3 ensuring bidirectional consistency.
+Uploads all relationship JSON files from `docs/relationship/` to S3 ensuring bidirectional consistency.
 
 **Usage:**
 
@@ -788,8 +788,8 @@ python scripts/upload_docs_relationships_to_s3.py --skip-existing
 
 **What it does:**
 
-- Reads by-page relationship files from `docs/retations/by-page/`
-- Reads by-endpoint relationship files from `docs/retations/` (filtered by `by-endpoint_` prefix)
+- Reads by-page relationship files from `docs/relationship/by-page/`
+- Reads by-endpoint relationship files from `docs/relationship/` (filtered by `by-endpoint_` prefix)
 - Validates each file using schema validator
 - Uploads to S3:
   - By-page: `data/relationships/by-page/{sanitized_path}.json`

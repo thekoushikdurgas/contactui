@@ -1,6 +1,7 @@
 """Seed script to populate S3 with documentation page content from markdown files."""
 
 import asyncio
+import json
 import os
 import re
 import sys
@@ -16,6 +17,7 @@ from scripts.utils.context import (
     find_docs_directory,
     get_logger,
     get_settings,
+    get_workspace_root,
 )
 
 logger = get_logger(__name__)
@@ -24,25 +26,38 @@ settings = get_settings()
 # Find docs directory using context-aware utility
 DOCS_DIR = find_docs_directory() or (Path(__file__).parent.parent.parent / "docs" / "pages")
 
+# Paths to show in error when docs directory not found (must match context.find_docs_directory)
+def _possible_docs_paths():
+    workspace = get_workspace_root()
+    return [
+        workspace / "contact360" / "docs" / "pages",
+        workspace / "frontent" / "docs" / "pages",
+        workspace / "docs" / "pages",
+        workspace / "docsai" / "media" / "pages",
+        Path(__file__).parent.parent.parent / "media" / "pages",
+    ]
 # Try to import Lambda API dependencies (may not be available in Django context)
+USE_DJANGO_SEED = False
 try:
     from app.services.documentation_service import DocumentationService
     from app.services.s3_service import S3Service
     from app.repositories.repository_factory import get_documentation_repository
 except ImportError:
-    # Fallback for Django context - use Django services
+    # Fallback for Django context: seed by writing JSON to media/pages then syncing to S3
     try:
-        from apps.core.services import S3Service
-        from apps.documentation.services.operations import DocumentationOperationsService
-        
-        class DocumentationService:
-            def __init__(self):
-                self.operations_service = DocumentationOperationsService()
-        
-        def get_documentation_repository():
-            return None  # Not needed in Django context
-    except ImportError:
-        raise ImportError("Documentation services not available. Install Lambda API or Django app.")
+        if os.environ.get("DJANGO_SETTINGS_MODULE"):
+            import django
+            django.setup()
+        from apps.documentation.utils.paths import get_pages_dir
+        from apps.documentation.services.media_sync_service import MediaSyncService
+        USE_DJANGO_SEED = True
+        DocumentationService = None
+        S3Service = None
+        get_documentation_repository = None
+    except ImportError as e:
+        raise ImportError(
+            "Documentation services not available. Install Lambda API or ensure Django app is configured (DJANGO_SETTINGS_MODULE)."
+        ) from e
 
 
 def parse_markdown_file(file_path: Path) -> dict:
@@ -100,7 +115,7 @@ async def seed_documentation():
     if docs_dir is None:
         print(f"\n❌ ERROR: Documentation directory not found")
         print(f"   Tried the following paths:")
-        for path in POSSIBLE_DOCS_PATHS:
+        for path in _possible_docs_paths():
             print(f"     - {path}")
         print(f"\n   Please ensure the docs directory exists at one of these locations")
         return
@@ -242,8 +257,110 @@ async def seed_documentation():
     print(f"{'='*60}\n")
 
 
-async def main():
-    """Main entry point."""
+def seed_documentation_django():
+    """Django-only sync path: write markdown as JSON to media/pages, then sync to S3."""
+    print("=" * 60)
+    print("Documentation Pages Seeding (Django – media/pages → S3)")
+    print("=" * 60)
+
+    docs_dir = find_docs_directory()
+    if docs_dir is None:
+        print("\n❌ ERROR: Documentation directory not found")
+        print("   Tried the following paths:")
+        for path in _possible_docs_paths():
+            print(f"     - {path}")
+        print("\n   Please ensure the docs directory exists at one of these locations")
+        return
+
+    exclude_patterns = [
+        "_page_docs_template",
+        "CSS_",
+        "DOCUMENTATION_",
+        "FINAL_",
+        "IMPLEMENTATION_",
+        "PROGRESS_",
+        "page_docs_coverage",
+        "sidebar_",
+    ]
+    markdown_files = [
+        f for f in docs_dir.glob("*.md")
+        if not any(p in f.name for p in exclude_patterns)
+    ]
+    if not markdown_files:
+        print(f"\n⚠️  WARNING: No markdown files found in {docs_dir}")
+        return
+
+    pages_dir = get_pages_dir()
+    pages_dir.mkdir(parents=True, exist_ok=True)
+    print(f"\n📁 Found {len(markdown_files)} markdown files")
+    print(f"📂 Source: {docs_dir}")
+    print(f"📂 Target: {pages_dir}\n")
+
+    created_count = 0
+    updated_count = 0
+    error_count = 0
+    errors = []
+
+    for idx, file_path in enumerate(sorted(markdown_files), 1):
+        try:
+            content = file_path.read_text(encoding="utf-8")
+            data = parse_markdown_file(file_path)
+            page_id = data["page_id"]
+            out_path = pages_dir / f"{page_id}.json"
+            page_doc = {
+                "page_id": page_id,
+                "metadata": data["metadata"],
+                "content": content,
+            }
+            existed = out_path.exists()
+            out_path.write_text(json.dumps(page_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+            if existed:
+                updated_count += 1
+                print(f"[{idx:3d}/{len(markdown_files)}] 🔄 Updated: {page_id}")
+            else:
+                created_count += 1
+                print(f"[{idx:3d}/{len(markdown_files)}] ➕ Created: {page_id}")
+        except Exception as e:
+            error_count += 1
+            errors.append(f"{file_path.name}: {e}")
+            logger.exception("Error processing %s", file_path.name)
+            print(f"[{idx:3d}/{len(markdown_files)}] ❌ ERROR: {file_path.name}")
+
+    print(f"\n{'='*60}")
+    print("Local write summary")
+    print(f"{'='*60}")
+    print(f"  ✅ Created:  {created_count}")
+    print(f"  🔄 Updated:  {updated_count}")
+    print(f"  ❌ Errors:   {error_count}")
+    print(f"  📄 Total:    {len(markdown_files)}")
+
+    if errors:
+        print(f"\nErrors:")
+        for err in errors[:20]:
+            print(f"  ❌ {err}")
+        if len(errors) > 20:
+            print(f"  ... and {len(errors) - 20} more")
+
+    print("\n📤 Syncing pages to S3...")
+    try:
+        sync_svc = MediaSyncService()
+        result = sync_svc.sync_pages_to_s3(dry_run=False)
+        synced = result.get("synced", 0)
+        total = result.get("total_files", 0)
+        errs = result.get("errors", 0)
+        print(f"  ✅ Synced: {synced} / {total} files")
+        if errs:
+            print(f"  ❌ Upload errors: {errs}")
+            for detail in result.get("error_details", [])[:10]:
+                print(f"     - {detail.get('file', '')}: {detail.get('error', '')}")
+    except Exception as e:
+        print(f"  ❌ S3 sync failed: {e}")
+        logger.exception("S3 sync failed")
+    print(f"{'='*60}\n")
+
+
+async def main_async():
+    """Async main for Lambda path."""
     try:
         await seed_documentation()
     except KeyboardInterrupt:
@@ -252,10 +369,10 @@ async def main():
         print(f"\n❌ Fatal error: {e}")
         logger.error(f"Fatal error in seeding script: {e}", exc_info=True)
         raise
-    finally:
-        # No cleanup needed for S3
-        pass
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    if USE_DJANGO_SEED:
+        seed_documentation_django()
+    else:
+        asyncio.run(main_async())

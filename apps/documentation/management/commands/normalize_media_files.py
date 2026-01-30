@@ -129,7 +129,7 @@ class Command(BaseCommand):
     def _scan_root_media_json(self) -> None:
         """
         Scan media root for JSON files that are not under the main resource
-        subdirectories (pages, endpoints, relationships/retations, postman, n8n, project)
+        subdirectories (pages, endpoints, relationships/relationship, postman, n8n, project)
         and verify that they are at least well‑formed JSON.
         """
         media_root = get_media_root()
@@ -143,7 +143,7 @@ class Command(BaseCommand):
             "pages",
             "endpoints",
             "relationships",
-            "retations",
+            "relationship",  # singular, used in some setups
             "postman",
             "n8n",
             "project",

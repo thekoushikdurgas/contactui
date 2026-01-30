@@ -4,7 +4,7 @@ Management command to normalize local media JSON for relationships.
 Depending on deployment and migration strategy, relationships may be stored as:
 
 - Individual relationship JSON documents in an S3 bucket (managed by RelationshipsRepository)
-- Index-style JSON under ``media/retations`` / ``media/relationships`` on disk
+- Index-style JSON under ``media/relationship`` / ``media/relationships`` on disk
 
 This command focuses on the latter: reading relationship JSON files from the
 local media directory and validating/normalizing them via the canonical
@@ -61,12 +61,14 @@ class Command(BaseCommand):
                 )
             )
 
-        # We treat any *.json that is not an index as a relationship document,
+        # We treat any *.json that is not an index or result wrapper as a relationship document,
         # including both root-level and nested directories such as by-page/by-endpoint.
+        # Skip index files and *_result.json (upload/sync result wrappers, not EnhancedRelationship).
         json_files: List[Path] = [
             p
             for p in relationships_dir.rglob("*.json")
             if p.name not in {"index.json", "relationships_index.json"}
+            and not p.name.endswith("_result.json")
         ]
 
         self.stdout.write(
@@ -75,7 +77,6 @@ class Command(BaseCommand):
 
         normalized_count = 0
         error_count = 0
-        skipped_index_count = 0
 
         for fp in json_files:
             try:
@@ -86,30 +87,29 @@ class Command(BaseCommand):
                 import json
 
                 data = json.loads(raw)
-                try:
-                    rel_parts = fp.relative_to(relationships_dir).parts
-                except ValueError:
-                    rel_parts = fp.parts
-                is_index_view = "by-page" in rel_parts or "by-endpoint" in rel_parts
-                has_endpoints_list = (
-                    isinstance(data, dict)
-                    and "endpoints" in data
-                    and isinstance(data.get("endpoints"), list)
-                )
-                has_pages_list = (
-                    isinstance(data, dict)
-                    and "pages" in data
-                    and isinstance(data.get("pages"), list)
-                )
 
-                # Files under by-page/ or by-endpoint/ are index views (by-page has
-                # "endpoints" list, by-endpoint has "pages" list). Skip full validation.
-                if is_index_view and (has_endpoints_list or has_pages_list):
-                    skipped_index_count += 1
-                    continue
-
-                # Wrapper with "endpoints" list (not index view): normalize each entry.
-                if isinstance(data, dict) and "endpoints" in data and isinstance(
+                # Wrapper with "pages" list (by-endpoint): normalize each entry.
+                if isinstance(data, dict) and "pages" in data and isinstance(
+                    data["pages"], list
+                ):
+                    changed_items = []
+                    for item in data["pages"]:
+                        try:
+                            normalized = validate_relationship_data(item)
+                            changed_items.append(normalized)
+                        except Exception as item_exc:  # pragma: no cover - safety net
+                            error_count += 1
+                            self.stderr.write(
+                                self.style.ERROR(
+                                    f"[relationships] Failed to normalize entry in {fp}: {item_exc}"
+                                )
+                            )
+                    if write_changes and len(changed_items) == len(data["pages"]):
+                        data["pages"] = changed_items
+                        fp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+                    normalized_count += len(changed_items)
+                # Wrapper with "endpoints" list (by-page or similar): normalize each entry.
+                elif isinstance(data, dict) and "endpoints" in data and isinstance(
                     data["endpoints"], list
                 ):
                     changed_items = []
@@ -124,7 +124,7 @@ class Command(BaseCommand):
                                     f"[relationships] Failed to normalize entry in {fp}: {item_exc}"
                                 )
                             )
-                    if write_changes:
+                    if write_changes and len(changed_items) == len(data["endpoints"]):
                         data["endpoints"] = changed_items
                         fp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
                     normalized_count += len(changed_items)
@@ -144,13 +144,6 @@ class Command(BaseCommand):
                     )
                 )
 
-        if skipped_index_count:
-            self.stdout.write(
-                self.style.NOTICE(
-                    f"[relationships] Skipped {skipped_index_count} index view file(s) "
-                    "(by-page/by-endpoint; no full validation)."
-                )
-            )
         self.stdout.write(
             self.style.SUCCESS(
                 f"[relationships] Normalized {normalized_count} items "

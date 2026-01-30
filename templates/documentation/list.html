@@ -38,7 +38,7 @@
                             </div>
                         </td>
                         <td class="px-8 py-5">
-                            {% with status=page.metadata.status|default:page.status|default:"draft" %}
+                            {% with status=page.status|default:page.metadata.status|default:"draft" %}
                             {% include 'components/status_badge.html' with status=status %}
                             {% endwith %}
                         </td>

@@ -2,7 +2,7 @@
 """
 Upload index files from docs/ to S3.
 
-This script reads index files from docs/pages/, docs/endpoints/, and docs/retations/
+This script reads index files from docs/pages/, docs/endpoints/, and docs/relationship/
 and uploads them to S3 after validation.
 """
 

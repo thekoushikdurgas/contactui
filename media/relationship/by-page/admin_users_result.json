@@ -1,0 +1,16 @@
+{
+  "operation": "upload_s3",
+  "file_path": "relationship/by-page/admin_users.json",
+  "status": "success",
+  "timestamp": "2026-01-29T13:33:53.864826Z",
+  "result": {
+    "status": "success",
+    "uploaded": true,
+    "s3_key": "data/relationships/by-page/admin_users.json",
+    "errors": [],
+    "lambda_api_response": null
+  },
+  "errors": [],
+  "warnings": [],
+  "lambda_api_response": null
+}

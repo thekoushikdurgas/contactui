@@ -331,7 +331,7 @@ def validate_page_data(page_data: Dict[str, Any]) -> Dict[str, Any]:
     except PydanticValidationError as e:
         raise ValidationError(_("Invalid page data: %(error)s") % {"error": str(e)}) from e
 
-    return model.model_dump(by_alias=True)
+    return model.model_dump(by_alias=True, exclude_none=False)
 
 
 def validate_endpoint_data(endpoint_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -352,7 +352,7 @@ def validate_endpoint_data(endpoint_data: Dict[str, Any]) -> Dict[str, Any]:
     except PydanticValidationError as e:
         raise ValidationError(_("Invalid endpoint data: %(error)s") % {"error": str(e)}) from e
 
-    return model.model_dump(by_alias=True)
+    return model.model_dump(by_alias=True, exclude_none=False)
 
 
 def validate_relationship_data(relationship_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -374,7 +374,7 @@ def validate_relationship_data(relationship_data: Dict[str, Any]) -> Dict[str, A
     except PydanticValidationError as e:
         raise ValidationError(_("Invalid relationship data: %(error)s") % {"error": str(e)}) from e
 
-    return model.model_dump(by_alias=True)
+    return model.model_dump(by_alias=True, exclude_none=False)
 
 
 def validate_postman_configuration_data(config_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -392,4 +392,4 @@ def validate_postman_configuration_data(config_data: Dict[str, Any]) -> Dict[str
     except PydanticValidationError as e:
         raise ValidationError(_("Invalid Postman configuration data: %(error)s") % {"error": str(e)}) from e
 
-    return model.model_dump(by_alias=True)
+    return model.model_dump(by_alias=True, exclude_none=False)

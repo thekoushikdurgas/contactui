@@ -352,9 +352,21 @@ class RelationshipsService(DocumentationServiceBase):
                 f"Failed to update relationship {relationship_id}: {error_response.get('error', str(e))}"
             ) from e
     
+    def _delete_local_relationship_file(self, relationship_id: str) -> None:
+        """Remove local relationship file and invalidate local index cache so list_relationships reflects delete."""
+        try:
+            from apps.documentation.services import get_shared_local_storage
+            from django.core.cache import cache
+            local_storage = get_shared_local_storage()
+            local_storage.delete_file(f"relationships/{relationship_id}.json")
+            cache.delete("local_json_storage:index:relationships")
+        except Exception as e:
+            self.logger.warning(f"Failed to delete local relationship file or clear index cache for {relationship_id}: {e}")
+
     def delete_relationship(self, relationship_id: str) -> bool:
         """
         Delete relationship (use S3 direct for writes).
+        After successful deletion, removes local media file and invalidates local index cache.
         
         Args:
             relationship_id: Relationship identifier
@@ -373,12 +385,13 @@ class RelationshipsService(DocumentationServiceBase):
             
             success = _delete_relationship_with_retry()
             
-            # Clear cache
+            # Clear cache and local file
             if success:
                 self._clear_cache_for_relationship(relationship_id)
                 # Invalidate cache after delete
                 self.unified_storage.clear_cache('relationships', relationship_id)
                 self.unified_storage.clear_cache('relationships')
+                self._delete_local_relationship_file(relationship_id)
                 self.logger.debug(f"Cleared cache for relationship {relationship_id} and all relationships lists after delete")
             
             return success

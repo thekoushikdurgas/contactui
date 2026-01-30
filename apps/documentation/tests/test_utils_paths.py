@@ -64,8 +64,8 @@ class PathUtilsTestCase(TestCase):
         """Test getting relationships directory."""
         rel_dir = get_relationships_dir()
         self.assertIsInstance(rel_dir, Path)
-        # Note: Directory may be 'retations' (legacy) or 'relationships' on disk
-        self.assertIn(rel_dir.name, ('retations', 'relationships'))
+        # Note: Directory may be 'relationship' (legacy) or 'relationships' on disk
+        self.assertIn(rel_dir.name, ('relationship', 'relationships'))
 
     def test_get_postman_dir(self):
         """Test getting Postman directory."""

@@ -27,11 +27,13 @@ from .relationships_views import (
     relationship_form_view,
     relationship_create_api,
     relationship_update_api,
+    relationship_delete_view,
     relationship_delete_api,
 )
 from .postman_views import (
     postman_detail_view,
     postman_form_view,
+    postman_delete_view,
 )
 
 # Legacy views are imported directly in urls.py to avoid circular imports
@@ -63,10 +65,12 @@ __all__ = [
     'relationship_form_view',
     'relationship_create_api',
     'relationship_update_api',
+    'relationship_delete_view',
     'relationship_delete_api',
     # Postman
     'postman_detail_view',
     'postman_form_view',
+    'postman_delete_view',
     # Legacy views (from parent views.py)
     'list_pages_view',
     'get_page_view',

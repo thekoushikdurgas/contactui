@@ -60,3 +60,11 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 # CORS - allow all in tests
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Disable SuperAdmin-only enforcement so view tests don't require external auth
+SUPER_ADMIN_ONLY_ENABLED = False
+
+# Use only ModelBackend in tests so force_login() works (Appointment360Backend.get_user returns None)
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]

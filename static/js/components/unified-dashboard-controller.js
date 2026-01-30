@@ -151,12 +151,6 @@ class UnifiedDashboardController {
             };
         });
         
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:81', message: 'UnifiedDashboardController initialized', data: {activeTab: this.activeTab, viewMode: this.viewMode, filters: this.filters, currentPage: this.currentPage}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-        } catch {}
-        // #endregion
-        
         // Keep navigation hrefs consistent with current state
         this.updateNavigationHrefs();
 
@@ -497,24 +491,12 @@ class UnifiedDashboardController {
         
         const filters = this.filters[tabName] || {};
         
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:361', message: 'fetchTabData called', data: {tabName, filters, currentPage: this.currentPage[tabName], pageSize: this.pageSize[tabName], apiEndpoint: this.apiEndpoints[tabName]}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-        } catch {}
-        // #endregion
-        
         Object.keys(filters).forEach(key => {
             if (filters[key]) {
                 url.searchParams.set(key, filters[key]);
             }
         });
-        
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:371', message: 'API URL with filters', data: {tabName, url: url.toString(), filters}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-        } catch {}
-        // #endregion
-        
+
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -544,7 +526,9 @@ class UnifiedDashboardController {
         const renderFunction = this.getRenderFunction(tabName);
         
         if (items.length === 0) {
-            container.innerHTML = this.getEmptyState(tabName);
+            container.innerHTML = this.getEmptyState(tabName, 'list', data);
+            this.setupPagination(tabName, data);
+            this.renderFilterChips(tabName);
             return;
         }
         
@@ -1544,12 +1528,6 @@ class UnifiedDashboardController {
             // Filter selects
             const filterSelects = document.querySelectorAll(`#${tab}-filters select`);
             
-            // #region agent log
-            try {
-                fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:765', message: 'Finding filter selects', data: {tab, filterSelectsCount: filterSelects.length, filterSelectIds: Array.from(filterSelects).map(s => s.id)}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-            } catch {}
-            // #endregion
-            
             filterSelects.forEach(select => {
                 // Map filter IDs to API parameter names
                 const filterIdToApiKey = {
@@ -1564,19 +1542,7 @@ class UnifiedDashboardController {
                 
                 const filterName = filterIdToApiKey[select.id] || select.id.replace(`${tab}-`, '').replace('-filter', '').replace('-', '_');
                 
-                // #region agent log
-                try {
-                    fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:767', message: 'Attaching filter listener', data: {tab, selectId: select.id, filterName, filterValue: select.value}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-                } catch {}
-                // #endregion
-                
                 select.addEventListener('change', (e) => {
-                    // #region agent log
-                    try {
-                        fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:771', message: 'Filter change event', data: {tab, selectId: select.id, filterName, filterValue: e.target.value, currentFilters: this.filters[tab]}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-                    } catch {}
-                    // #endregion
-                    
                     if (e.target.value) {
                         this.filters[tab][filterName] = e.target.value;
                     } else {
@@ -1585,12 +1551,6 @@ class UnifiedDashboardController {
                     
                     // Reset to page 1 when filters change
                     this.currentPage[tab] = 1;
-                    
-                    // #region agent log
-                    try {
-                        fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'unified-dashboard-controller.js:781', message: 'Calling loadList after filter change', data: {tab, filters: this.filters[tab], currentPage: this.currentPage[tab]}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'H'})}).catch(()=>{});
-                    } catch {}
-                    // #endregion
                     
                     this.loadList(tab);
                 });
@@ -2005,12 +1965,21 @@ class UnifiedDashboardController {
     
     /**
      * Get empty state HTML
+     * @param {string} tabName - Tab (pages, endpoints, etc.)
+     * @param {string} viewMode - 'list' or 'files'
+     * @param {object} [data] - Optional response data; used to show filter-aware message when filters are active
      */
-    getEmptyState(tabName, viewMode = 'list') {
+    getEmptyState(tabName, viewMode = 'list', data) {
         if (viewMode === 'files') {
             return '<p class="text-gray-500 dark:text-gray-400 text-center py-12">No files found</p>';
         }
-        return `<p class="text-gray-500 dark:text-gray-400 text-center py-12">No ${tabName} found</p>`;
+        const filters = this.filters[tabName] || {};
+        const hasActiveFilters = Object.keys(filters).some(k => filters[k]);
+        const label = tabName === 'pages' ? 'pages' : tabName === 'endpoints' ? 'endpoints' : tabName === 'relationships' ? 'relationships' : 'items';
+        if (hasActiveFilters) {
+            return `<p class="text-gray-500 dark:text-gray-400 text-center py-12">No ${label} match your current filters.</p><p class="text-sm text-gray-400 dark:text-gray-500 text-center">Try changing or clearing the filters above.</p>`;
+        }
+        return `<p class="text-gray-500 dark:text-gray-400 text-center py-12">No ${label} found</p>`;
     }
     
     /**
@@ -2055,6 +2024,9 @@ class UnifiedDashboardController {
             const title = (page.metadata && page.metadata.content_sections && page.metadata.content_sections.title) || pid;
             const href = pageDetailUrlBase.replace('__PID__', encodeURIComponent(pid));
             const editHref = `/docs/pages/${encodeURIComponent(pid)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            // Only show subtitle when it adds information (avoid duplicate title/subtitle when title === pid)
+            const showSubtitle = title !== pid;
+            const subtitleHtml = showSubtitle ? `<p class="text-xs text-gray-500 dark:text-gray-400 font-mono">${pid.replace(/</g, '&lt;')}</p>` : (route && route !== '/' ? `<p class="text-xs text-gray-500 dark:text-gray-400 font-mono">${route.replace(/</g, '&lt;')}</p>` : '');
             
             return `
             <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer" 
@@ -2071,7 +2043,7 @@ class UnifiedDashboardController {
                             </div>
                             <div class="flex-1">
                                 <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">${(title || pid || 'Unknown').replace(/</g, '&lt;')}</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">${pid.replace(/</g, '&lt;')}</p>
+                                ${subtitleHtml}
                             </div>
                         </div>
                         <div class="flex items-center gap-2 mt-3">
@@ -2081,13 +2053,32 @@ class UnifiedDashboardController {
                         </div>
                     </div>
                     <div class="flex items-center gap-2 ml-4">
+                        <a href="${href}" 
+                           onclick="event.stopPropagation();"
+                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
+                           title="View" 
+                           aria-label="View page ${pid.replace(/"/g, '&quot;')}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
                         <a href="${editHref}" 
                            onclick="event.stopPropagation();"
                            class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
                            title="Edit" 
-                           aria-label="Edit page ${pid}">
+                           aria-label="Edit page ${pid.replace(/"/g, '&quot;')}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </a>
+                        <a href="/docs/pages/${encodeURIComponent(pid)}/delete/?return_url=${encodeURIComponent(window.location.href)}" 
+                           onclick="event.stopPropagation();"
+                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" 
+                           title="Delete" 
+                           aria-label="Delete page ${pid.replace(/"/g, '&quot;')}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </a>
                     </div>
@@ -2110,7 +2101,8 @@ class UnifiedDashboardController {
             const apiVersion = endpoint.api_version || '';
             const description = endpoint.description || endpoint.metadata?.description || '';
             const href = `/docs/endpoints/${encodeURIComponent(endpointId)}/`;
-            const editHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/edit/`;
+            const editHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            const deleteHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/delete/?return_url=${encodeURIComponent(window.location.href)}`;
             
             const methodColors = {
                 'GET': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
@@ -2148,15 +2140,22 @@ class UnifiedDashboardController {
                     </div>
                     ${description ? `<p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${description.replace(/</g, '&lt;').substring(0, 100)}${description.length > 100 ? '...' : ''}</p>` : ''}
                     <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <a href="${href}" class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors" onclick="event.stopPropagation()">View</a>
-                        <a href="${editHref}" class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors" onclick="event.stopPropagation()">Edit</a>
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-all" title="View" aria-label="View endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </a>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </a>
                     </div>
                 </div>
             </div>
             `;
         }).join('');
     }
-    
+
     /**
      * Render relationships list
      */
@@ -2171,6 +2170,7 @@ class UnifiedDashboardController {
             
             const href = `/docs/relationships/${encodeURIComponent(relationshipId)}/`;
             const editHref = `/docs/relationships/${encodeURIComponent(relationshipId)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            const deleteHref = `/docs/relationships/${encodeURIComponent(relationshipId)}/delete/?return_url=${encodeURIComponent(window.location.href)}`;
             
             return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
@@ -2191,22 +2191,14 @@ class UnifiedDashboardController {
                         </div>
                     </div>
                     <div class="flex items-center gap-2 ml-4">
-                        <a href="${href}" 
-                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
-                           title="View relationship" 
-                           aria-label="View relationship ${relationshipId}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="View relationship" aria-label="View relationship ${relationshipId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </a>
-                        <a href="${editHref}" 
-                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
-                           title="Edit relationship" 
-                           aria-label="Edit relationship ${relationshipId}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit relationship" aria-label="Edit relationship ${relationshipId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete relationship" aria-label="Delete relationship ${relationshipId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </a>
                     </div>
                 </div>
@@ -2236,6 +2228,7 @@ class UnifiedDashboardController {
             
             const href = `/docs/postman/${encodeURIComponent(configId)}/`;
             const editHref = `/docs/postman/${encodeURIComponent(configId)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            const deleteHref = `/docs/postman/${encodeURIComponent(configId)}/delete/?return_url=${encodeURIComponent(window.location.href)}`;
             
             return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
@@ -2250,22 +2243,14 @@ class UnifiedDashboardController {
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="${href}" 
-                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
-                           title="View Postman configuration" 
-                           aria-label="View Postman configuration ${configId}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all" title="View Postman configuration" aria-label="View Postman configuration ${configId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </a>
-                        <a href="${editHref}" 
-                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
-                           title="Edit Postman configuration" 
-                           aria-label="Edit Postman configuration ${configId}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit Postman configuration" aria-label="Edit Postman configuration ${configId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete Postman configuration" aria-label="Delete Postman configuration ${configId}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </a>
                     </div>
                 </div>
@@ -2297,6 +2282,8 @@ class UnifiedDashboardController {
         const pageSize = this.pageSize[tabName] || this.defaultPageSize;
         const startItem = total === 0 ? 0 : ((page - 1) * pageSize) + 1;
         const endItem = Math.min(page * pageSize, total);
+        // When total is 0, show "Page 1 of 1" instead of "Page 1 of 0" to avoid invalid state
+        const displayTotalPages = total === 0 ? 1 : Math.max(1, total_pages);
         
         let paginationHtml = '<div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">';
         
@@ -2350,7 +2337,7 @@ class UnifiedDashboardController {
             </button>
         `;
         
-        // Page number input
+        // Page number input (use displayTotalPages so empty result shows "Page 1 of 1" not "of 0")
         paginationHtml += `
             <div class="flex items-center gap-1">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Page</span>
@@ -2358,13 +2345,13 @@ class UnifiedDashboardController {
                     type="number" 
                     id="${tabName}-page-input"
                     min="1" 
-                    max="${total_pages}" 
-                    value="${page}"
+                    max="${displayTotalPages}" 
+                    value="${total === 0 ? 1 : page}"
                     class="w-16 px-2 py-1.5 text-sm text-center border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onchange="window.unifiedDashboardController.goToPage('${tabName}', parseInt(this.value) || 1)"
                     onkeypress="if(event.key==='Enter') { window.unifiedDashboardController.goToPage('${tabName}', parseInt(this.value) || 1); }"
                     aria-label="Page number">
-                <span class="text-sm text-gray-500 dark:text-gray-400">of ${total_pages}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">of ${displayTotalPages}</span>
             </div>
         `;
         

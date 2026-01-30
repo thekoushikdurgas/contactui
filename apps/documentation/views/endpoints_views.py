@@ -56,6 +56,16 @@ def _validate_endpoint_id(endpoint_id: Optional[str]) -> Optional[str]:
     return endpoint_id.strip()
 
 
+def _safe_redirect_url(request: HttpRequest, default_name: str = "documentation:endpoints_list"):
+    """Return redirect target: return_url if present and safe, else default."""
+    return_url = request.GET.get("return_url") or request.POST.get("return_url", "")
+    if return_url and return_url.startswith("/") and "//" not in return_url:
+        from django.utils.http import url_has_allowed_host_and_scheme
+        if url_has_allowed_host_and_scheme(return_url, allowed_hosts={request.get_host(), None}):
+            return return_url
+    return reverse(default_name)
+
+
 @login_required
 def endpoint_list_view(request):
     """List all endpoints."""
@@ -437,7 +447,7 @@ def endpoint_delete_view(request: HttpRequest, endpoint_id: str) -> HttpResponse
     validated_id = _validate_endpoint_id(endpoint_id)
     if not validated_id:
         messages.error(request, "Invalid endpoint ID.")
-        return redirect("documentation:endpoints_list")
+        return redirect(_safe_redirect_url(request))
 
     if request.method == "POST":
         try:
@@ -451,20 +461,22 @@ def endpoint_delete_view(request: HttpRequest, endpoint_id: str) -> HttpResponse
         except Exception as e:
             logger.error("Error deleting endpoint %s: %s", validated_id, e, exc_info=True)
             messages.error(request, "An error occurred while deleting the endpoint.")
-        return redirect("documentation:endpoints_list")
+        return redirect(_safe_redirect_url(request))
 
     try:
         endpoint = endpoints_service.get_endpoint(validated_id)
         if not endpoint:
             logger.warning("Endpoint not found for deletion: %s", validated_id)
             messages.error(request, "Endpoint not found.")
-            return redirect("documentation:endpoints_list")
+            return redirect(_safe_redirect_url(request))
     except Exception as e:
         logger.error("Error loading endpoint %s: %s", validated_id, e, exc_info=True)
         messages.error(request, "An error occurred while loading the endpoint.")
-        return redirect("documentation:endpoints_list")
+        return redirect(_safe_redirect_url(request))
 
+    return_url = request.GET.get("return_url", "")
     context: Dict[str, Any] = {
         "endpoint": endpoint,
+        "return_url": return_url,
     }
     return render(request, "documentation/endpoints/delete_confirm.html", context)

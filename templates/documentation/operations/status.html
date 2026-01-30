@@ -4,27 +4,59 @@
 {% block title %}Status - Operations{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Documentation Status</h1>
-    
+<div class="w-full max-w-4xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Dashboard</a>
+        <span class="text-gray-400">/</span>
+        <a href="{% url 'documentation:operations_dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Operations</a>
+        <span class="text-gray-400">/</span>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Status</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Documentation Status</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            System health and documentation storage status.
+        </p>
+        {% if health_status.status %}
+        <p class="text-sm mt-2">
+            <span class="font-medium">Overall:</span>
+            <span class="{% if health_status.status == 'healthy' %}text-green-600 dark:text-green-400{% elif health_status.status == 'degraded' %}text-amber-600 dark:text-amber-400{% else %}text-red-600 dark:text-red-400{% endif %}">{{ health_status.status|title }}</span>
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- System components -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">System Status</h2>
-        <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                <div>
-                    <p class="font-medium text-gray-900 dark:text-gray-100">Local JSON Files</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Primary data source</p>
-                </div>
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-            <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                <div>
-                    <p class="font-medium text-gray-900 dark:text-gray-100">S3 Storage</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Fallback storage</p>
-                </div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-            </div>
+        {% if health_status.error %}
+        <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 text-sm">
+            Could not load health status: {{ health_status.error }}
         </div>
+        {% elif health_status.components %}
+        <div class="space-y-4">
+            {% for name, comp in health_status.components.items %}
+            <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-gray-100">{{ name|title }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {% if comp.status == 'healthy' %}OK{% elif comp.status == 'unhealthy' %}{{ comp.error|default:"Error" }}{% elif comp.status == 'not_configured' %}Not configured{% else %}{{ comp.status|default:"—" }}{% endif %}
+                        {% if comp.response_time_ms %}({{ comp.response_time_ms }} ms){% endif %}
+                    </p>
+                </div>
+                <div class="w-3 h-3 rounded-full
+                    {% if comp.status == 'healthy' %}bg-green-500
+                    {% elif comp.status == 'unhealthy' %}bg-red-500
+                    {% elif comp.status == 'not_configured' %}bg-gray-400
+                    {% else %}bg-yellow-500{% endif %}"></div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-sm text-gray-500 dark:text-gray-400">No component data available.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -101,8 +101,11 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
         <form method="post" id="delete-form" class="space-y-4">
             {% csrf_token %}
+            {% if return_url %}
+            <input type="hidden" name="return_url" value="{{ return_url }}">
+            {% endif %}
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <a href="{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
+                <a href="{% if return_url %}{{ return_url }}{% else %}{% url 'documentation:endpoint_detail' endpoint_id=endpoint.endpoint_id %}{% endif %}" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm">
                     Cancel
                 </a>
                 <button type="submit" id="delete-btn" class="px-6 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors font-medium text-sm shadow-sm">

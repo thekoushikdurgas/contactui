@@ -58,6 +58,16 @@ def _validate_relationship_id(relationship_id: Optional[str]) -> Optional[str]:
     return relationship_id.strip()
 
 
+def _safe_redirect_url(request: HttpRequest, default_name: str = "documentation:relationships_list"):
+    """Return redirect target: return_url if present and safe, else default."""
+    return_url = request.GET.get("return_url") or request.POST.get("return_url", "")
+    if return_url and return_url.startswith("/") and "//" not in return_url:
+        from django.utils.http import url_has_allowed_host_and_scheme
+        if url_has_allowed_host_and_scheme(return_url, allowed_hosts={request.get_host(), None}):
+            return return_url
+    return reverse(default_name)
+
+
 @login_required
 def relationship_list_view(request):
     """List all relationships."""
@@ -410,6 +420,47 @@ def relationship_update_api(request: HttpRequest, relationship_id: str) -> JsonR
     except Exception as e:
         logger.error("Error updating relationship %s: %s", validated_id, e, exc_info=True)
         return server_error_response(f"Error updating relationship: {str(e)}").to_json_response()
+
+
+@login_required
+def relationship_delete_view(request: HttpRequest, relationship_id: str) -> HttpResponse:
+    """Delete relationship view. GET/POST /docs/relationships/<relationship_id>/delete/"""
+    validated_id = _validate_relationship_id(relationship_id)
+    if not validated_id:
+        messages.error(request, "Invalid relationship ID.")
+        return redirect(_safe_redirect_url(request))
+
+    if request.method == "POST":
+        try:
+            success = relationships_service.delete_relationship(validated_id)
+            if success:
+                logger.info("Relationship deleted successfully: %s", validated_id)
+                messages.success(request, "Relationship deleted successfully!")
+            else:
+                logger.warning("Failed to delete relationship: %s", validated_id)
+                messages.error(request, "Failed to delete relationship.")
+        except Exception as e:
+            logger.error("Error deleting relationship %s: %s", validated_id, e, exc_info=True)
+            messages.error(request, "An error occurred while deleting the relationship.")
+        return redirect(_safe_redirect_url(request))
+
+    try:
+        relationship = relationships_service.get_relationship(validated_id)
+        if not relationship:
+            logger.warning("Relationship not found for deletion: %s", validated_id)
+            messages.error(request, "Relationship not found.")
+            return redirect(_safe_redirect_url(request))
+    except Exception as e:
+        logger.error("Error loading relationship %s: %s", validated_id, e, exc_info=True)
+        messages.error(request, "An error occurred while loading the relationship.")
+        return redirect(_safe_redirect_url(request))
+
+    return_url = request.GET.get("return_url", "")
+    context: Dict[str, Any] = {
+        "relationship": relationship,
+        "return_url": return_url,
+    }
+    return render(request, "documentation/relationships/delete_confirm.html", context)
 
 
 @login_required

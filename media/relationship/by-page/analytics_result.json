@@ -1,0 +1,16 @@
+{
+  "operation": "upload_s3",
+  "file_path": "relationship/by-page/analytics.json",
+  "status": "success",
+  "timestamp": "2026-01-29T13:34:08.343569Z",
+  "result": {
+    "status": "success",
+    "uploaded": true,
+    "s3_key": "data/relationships/by-page/analytics.json",
+    "errors": [],
+    "lambda_api_response": null
+  },
+  "errors": [],
+  "warnings": [],
+  "lambda_api_response": null
+}

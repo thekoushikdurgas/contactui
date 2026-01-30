@@ -85,10 +85,81 @@
     </div>
     
     <!-- Results Display (hidden by default, shown after analysis) -->
-    <div id="analysis-results" class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+    <div id="analysis-results" class="{% if not report %}hidden{% endif %} bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Analysis Results</h3>
         <div id="results-content" class="space-y-4">
-            <!-- Results will be populated here -->
+            {% if report %}
+                {% if report.analysis_error %}
+                <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+                    <p class="font-medium">Analysis failed</p>
+                    <p class="text-sm mt-1">{{ report.analysis_error }}</p>
+                </div>
+                {% else %}
+                <div class="space-y-4">
+                    {% if report.summary %}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Total files</p>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ report.summary.total_files }}</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Valid</p>
+                            <p class="text-lg font-semibold text-green-700 dark:text-green-300">{{ report.summary.total_valid }}</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Invalid</p>
+                            <p class="text-lg font-semibold text-red-700 dark:text-red-300">{{ report.summary.total_invalid }}</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Type</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ analysis_type|default:"all" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if report.pages and report.pages.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pages errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.pages.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.pages.errors|length > 20 %}
+                            <li>… and {{ report.pages.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if report.endpoints and report.endpoints.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Endpoints errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.endpoints.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.endpoints.errors|length > 20 %}
+                            <li>… and {{ report.endpoints.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if report.relationships and report.relationships.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationships errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.relationships.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.relationships.errors|length > 20 %}
+                            <li>… and {{ report.relationships.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% else %}
+                <!-- Results will be populated after analysis -->
+            {% endif %}
         </div>
     </div>
 </div>

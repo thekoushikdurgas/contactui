@@ -410,7 +410,7 @@ This report validates the data quality and consistency across all three collecti
 1. **Update Schema Documentation**
    - Update `pages/schema.md` to support GraphQL format
    - Update `endpoints/schema.md` to support GraphQL format
-   - Update `retations/schema.md` to support GraphQL format
+   - Update `relationship/schema.md` to support GraphQL format
    - Add `"auth"` to page_type enum
    - Add `"conditional"` to usage_type enum
 

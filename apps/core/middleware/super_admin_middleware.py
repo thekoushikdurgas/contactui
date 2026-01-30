@@ -1,6 +1,7 @@
 """SuperAdmin-only access middleware."""
 
 import hashlib
+import json
 import logging
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.conf import settings
@@ -10,6 +11,17 @@ from apps.core.clients.appointment360_client import Appointment360Client, Appoin
 from apps.core.super_admin_debug import debug_log
 
 logger = logging.getLogger(__name__)
+
+# #region agent log
+def _agent_log(path: str, message: str, data: dict):
+    try:
+        import time
+        payload = {"location": "super_admin_middleware.py", "message": message, "data": data, "timestamp": int(time.time() * 1000), "sessionId": "debug-session", "hypothesisId": "H1"}
+        with open("d:\\code\\ayan\\contact\\.cursor\\debug.log", "a", encoding="utf-8") as f:
+            f.write(json.dumps(payload) + "\n")
+    except Exception:
+        pass
+# #endregion
 
 # Constants
 SUPER_ADMIN_ROLE = 'SuperAdmin'
@@ -70,10 +82,16 @@ class SuperAdminMiddleware:
         access_token = self._get_access_token(request)
         debug_log(f"middleware path={request.path!r} is_public={is_public} has_token={bool(access_token)}")
         if is_public:
+            # #region agent log
+            _agent_log(request.path, "middleware allow public", {"path": request.path, "is_public": True})
+            # #endregion
             return self.get_response(request)
         
         if not access_token:
             debug_log(f"middleware no token path={request.path!r} redirect to login")
+            # #region agent log
+            _agent_log(request.path, "middleware 403 no token", {"path": request.path, "outcome": "403_no_token"})
+            # #endregion
             if request.path == "/" or request.path == "":
                 return HttpResponseRedirect("/login/?next=/")
             return self._forbidden_response(request, "Authentication required")
@@ -82,11 +100,17 @@ class SuperAdminMiddleware:
         debug_log(f"middleware _check_super_admin path={request.path!r} result={is_super_admin}")
         if not is_super_admin:
             debug_log(f"middleware 403 SuperAdmin required path={request.path!r}")
+            # #region agent log
+            _agent_log(request.path, "middleware 403 not SuperAdmin", {"path": request.path, "outcome": "403_not_super_admin"})
+            # #endregion
             return self._forbidden_response(
                 request, 
                 "Access denied. SuperAdmin role required."
             )
         
+        # #region agent log
+        _agent_log(request.path, "middleware allow", {"path": request.path, "is_super_admin": True})
+        # #endregion
         return self.get_response(request)
     
     def _is_public_route(self, path: str) -> bool:

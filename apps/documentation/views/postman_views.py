@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from apps.documentation.services import postman_service, endpoints_service
 from apps.documentation.utils.view_helpers import validate_detail_tab
@@ -29,6 +30,58 @@ def _validate_postman_id(postman_id: Optional[str]) -> Optional[str]:
     if not postman_id or not postman_id.strip():
         return None
     return postman_id.strip()
+
+
+def _safe_redirect_url(request: HttpRequest, default_name: str = "documentation:dashboard"):
+    """Return redirect target: return_url if present and safe, else default."""
+    return_url = request.GET.get("return_url") or request.POST.get("return_url", "")
+    if return_url and return_url.startswith("/") and "//" not in return_url:
+        from django.utils.http import url_has_allowed_host_and_scheme
+        if url_has_allowed_host_and_scheme(return_url, allowed_hosts={request.get_host(), None}):
+            return return_url
+    return reverse(default_name)
+
+
+@login_required
+def postman_delete_view(request: HttpRequest, postman_id: str) -> HttpResponse:
+    """Delete Postman configuration view. GET/POST /docs/postman/<postman_id>/delete/"""
+    validated_id = _validate_postman_id(postman_id)
+    if not validated_id:
+        messages.error(request, "Invalid Postman configuration ID.")
+        return redirect(_safe_redirect_url(request))
+
+    if request.method == "POST":
+        try:
+            success = postman_service.delete_configuration(validated_id)
+            if success:
+                logger.info("Postman configuration deleted successfully: %s", validated_id)
+                messages.success(request, "Postman configuration deleted successfully!")
+            else:
+                logger.warning("Failed to delete Postman configuration: %s", validated_id)
+                messages.error(request, "Failed to delete Postman configuration.")
+        except Exception as e:
+            logger.error("Error deleting Postman configuration %s: %s", validated_id, e, exc_info=True)
+            messages.error(request, "An error occurred while deleting the Postman configuration.")
+        return redirect(_safe_redirect_url(request))
+
+    try:
+        postman_config = postman_service.get_configuration(validated_id)
+        if not postman_config:
+            logger.warning("Postman configuration not found for deletion: %s", validated_id)
+            messages.error(request, "Postman configuration not found.")
+            return redirect(_safe_redirect_url(request))
+    except Exception as e:
+        logger.error("Error loading Postman configuration %s: %s", validated_id, e, exc_info=True)
+        messages.error(request, "An error occurred while loading the Postman configuration.")
+        return redirect(_safe_redirect_url(request))
+
+    return_url = request.GET.get("return_url", "")
+    context: Dict[str, Any] = {
+        "postman": postman_config,
+        "postman_id": validated_id,
+        "return_url": return_url,
+    }
+    return render(request, "documentation/postman/delete_confirm.html", context)
 
 
 @login_required

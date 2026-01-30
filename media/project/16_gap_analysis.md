@@ -19,7 +19,7 @@ This document identifies gaps in documentation, relationships, and data quality,
 **Affected Files:**
 - `pages/schema.md`
 - `endpoints/schema.md`
-- `retations/schema.md`
+- `relationship/schema.md`
 
 **Gap Details:**
 - Schema expects REST format (`/api/v4/companies`), actual uses GraphQL (`graphql/QueryCompanies`)

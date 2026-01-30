@@ -519,6 +519,16 @@ class DashboardController {
                         </div>
                     </div>
                     <div class="flex items-center gap-2 ml-4">
+                        <a href="${href}" 
+                           onclick="event.stopPropagation();"
+                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
+                           title="View" 
+                           aria-label="View page ${pid}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
                         <a href="${editHref}" 
                            onclick="event.stopPropagation();"
                            class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" 
@@ -526,6 +536,15 @@ class DashboardController {
                            aria-label="Edit page ${pid}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </a>
+                        <a href="/docs/pages/${encodeURIComponent(pid)}/delete/?return_url=${encodeURIComponent(window.location.href)}" 
+                           onclick="event.stopPropagation();"
+                           class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" 
+                           title="Delete" 
+                           aria-label="Delete page ${pid}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </a>
                     </div>
@@ -548,7 +567,8 @@ class DashboardController {
             const apiVersion = endpoint.api_version || '';
             const description = endpoint.description || endpoint.metadata?.description || '';
             const href = `/docs/endpoints/${encodeURIComponent(endpointId)}/`;
-            const editHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/edit/`;
+            const editHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            const deleteHref = `/docs/endpoints/${encodeURIComponent(endpointId)}/delete/?return_url=${encodeURIComponent(window.location.href)}`;
             
             const methodColors = {
                 'GET': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
@@ -604,22 +624,14 @@ class DashboardController {
                     
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <a href="${href}" 
-                           class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors"
-                           onclick="event.stopPropagation()">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-all" title="View" aria-label="View endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </a>
-                        <a href="${editHref}" 
-                           class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
-                           onclick="event.stopPropagation()">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete endpoint ${endpointId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </a>
                     </div>
                 </div>
@@ -627,7 +639,7 @@ class DashboardController {
             `;
         }).join('');
     }
-    
+
     /**
      * Render relationships list (grid view)
      */
@@ -640,7 +652,8 @@ class DashboardController {
             const method = (rel.method || 'QUERY').toUpperCase();
             const relationshipId = rel.relationship_id || rel.id || '';
             const href = relationshipId ? `/docs/relationships/${encodeURIComponent(relationshipId)}/` : '#';
-            const editHref = relationshipId ? `/docs/relationships/${encodeURIComponent(relationshipId)}/edit/` : '#';
+            const editHref = relationshipId ? `/docs/relationships/${encodeURIComponent(relationshipId)}/edit/?return_url=${encodeURIComponent(window.location.href)}` : '#';
+            const deleteHref = relationshipId ? `/docs/relationships/${encodeURIComponent(relationshipId)}/delete/?return_url=${encodeURIComponent(window.location.href)}` : '#';
             const pageHref = rel.page_id ? `/docs/pages/${encodeURIComponent(rel.page_id)}/` : '#';
             const endpointHref = rel.endpoint_id ? `/docs/endpoints/${encodeURIComponent(rel.endpoint_id)}/` : '#';
             
@@ -716,22 +729,14 @@ class DashboardController {
                     
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <a href="${href}" 
-                           class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
-                           onclick="event.stopPropagation()">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="View relationship" aria-label="View relationship ${relationshipId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </a>
-                        <a href="${editHref}" 
-                           class="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
-                           onclick="event.stopPropagation()">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit relationship" aria-label="Edit relationship ${relationshipId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete relationship" aria-label="Delete relationship ${relationshipId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </a>
                     </div>
                 </div>
@@ -739,7 +744,7 @@ class DashboardController {
             `;
         }).join('');
     }
-    
+
     /**
      * Render Postman list (grid view)
      */
@@ -759,11 +764,12 @@ class DashboardController {
             const collectionCount = config.collection ? (config.collection.item ? config.collection.item.length : 0) : 0;
             const environmentCount = config.environments ? config.environments.length : 0;
             const href = `/docs/postman/${encodeURIComponent(configId)}/`;
+            const editHref = `/docs/postman/${encodeURIComponent(configId)}/edit/?return_url=${encodeURIComponent(window.location.href)}`;
+            const deleteHref = `/docs/postman/${encodeURIComponent(configId)}/delete/?return_url=${encodeURIComponent(window.location.href)}`;
             
             return `
-            <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer" 
+            <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-200" 
                  data-item-id="${configId.replace(/"/g, '&quot;')}"
-                 onclick="window.location.href='${href}'"
                  role="listitem">
                 <div class="space-y-3">
                     <div class="flex items-start justify-between">
@@ -798,6 +804,17 @@ class DashboardController {
                         </span>` : ''}
                     </div>
                     ` : ''}
+                    <div class="flex items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all" title="View" aria-label="View Postman configuration ${configId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </a>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit Postman configuration ${configId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete Postman configuration ${configId.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
             `;
@@ -990,12 +1007,6 @@ class DashboardController {
      * Apply filter
      */
     applyFilter(tabName, filterKey, filterValue) {
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:992', message: 'applyFilter called', data: {tabName, filterKey, filterValue, currentFilters: this.filters[tabName]}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-        } catch {}
-        // #endregion
-        
         if (!this.filters[tabName]) {
             this.filters[tabName] = {};
         }
@@ -1008,12 +1019,6 @@ class DashboardController {
         
         // Reset to page 1 when filters change
         this.currentPage[tabName] = 1;
-        
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1007', message: 'Calling loadTab after filter', data: {tabName, filters: this.filters[tabName], currentPage: this.currentPage[tabName]}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-        } catch {}
-        // #endregion
         
         // Reload tab
         this.loadTab(tabName);
@@ -1052,13 +1057,6 @@ class DashboardController {
         
         // Filter dropdowns (with debouncing for better performance)
         // Pages filters
-        // #region agent log
-        try {
-            const pageTypeFilter = document.getElementById('page-type-filter');
-            const pageStateFilter = document.getElementById('page-state-filter');
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1041', message: 'Attaching filter listeners', data: {pageTypeFilterFound: !!pageTypeFilter, pageStateFilterFound: !!pageStateFilter, pageTypeFilterVisible: pageTypeFilter ? (pageTypeFilter.offsetParent !== null) : false, pageStateFilterVisible: pageStateFilter ? (pageStateFilter.offsetParent !== null) : false}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-        } catch {}
-        // #endregion
         this.attachFilterListener('page-type-filter', 'pages', 'page_type');
         this.attachFilterListener('page-state-filter', 'pages', 'status');
         
@@ -1101,12 +1099,6 @@ class DashboardController {
     attachFilterListener(elementId, tabName, filterKey) {
         const element = document.getElementById(elementId);
         
-        // #region agent log
-        try {
-            fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1082', message: 'attachFilterListener called', data: {elementId, tabName, filterKey, elementFound: !!element, elementTagName: element ? element.tagName : null, elementVisible: element ? (element.offsetParent !== null) : false}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-        } catch {}
-        // #endregion
-        
         if (!element) {
             console.warn(`[DashboardController] Filter element not found: ${elementId}`);
             return;
@@ -1114,28 +1106,13 @@ class DashboardController {
         
         const debouncedFilter = window.debounce ? 
             window.debounce((value) => {
-                // #region agent log
-                try {
-                    fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1088', message: 'Filter value changed', data: {elementId, tabName, filterKey, value}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-                } catch {}
-                // #endregion
                 this.applyFilter(tabName, filterKey, value);
             }, 300) :
             (value) => {
-                // #region agent log
-                try {
-                    fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1090', message: 'Filter value changed (no debounce)', data: {elementId, tabName, filterKey, value}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-                } catch {}
-                // #endregion
                 this.applyFilter(tabName, filterKey, value);
             };
         
         element.addEventListener('change', (e) => {
-            // #region agent log
-            try {
-                fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({location: 'dashboard-controller.js:1092', message: 'Filter change event fired', data: {elementId, tabName, filterKey, value: e.target.value}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'G'})}).catch(()=>{});
-            } catch {}
-            // #endregion
             debouncedFilter(e.target.value);
         });
         

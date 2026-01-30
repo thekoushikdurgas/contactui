@@ -1,11 +1,16 @@
 {
   "version": "2.0",
-  "last_updated": "2026-01-22T21:46:29.947292+00:00",
+  "last_updated": "2026-01-29T15:42:30.280554+00:00",
   "total": 1,
   "collections": [
     {
       "collection_id": "Contact360 API",
       "file_name": "Contact360 API.postman_collection.json",
+      "type": "collection"
+    },
+    {
+      "collection_id": "Contact360 API",
+      "file_name": "Contact360_API.postman_collection.json",
       "type": "collection"
     },
     {
@@ -47,7 +52,7 @@
   },
   "statistics": {
     "total": 1,
-    "collections": 2,
+    "collections": 3,
     "environments": 2,
     "configurations": 1
   }

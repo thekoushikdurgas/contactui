@@ -20,6 +20,11 @@ def get_media_root() -> Path:
     return Path(settings.BASE_DIR) / "media"
 
 
+def get_result_dir() -> Path:
+    """Get directory for operation result files (analyze, validate, generate, upload_s3). All *_result.json live under media/result/."""
+    return get_media_root() / "result"
+
+
 def get_pages_dir() -> Path:
     """Get pages directory."""
     return get_media_root() / "pages"
@@ -31,16 +36,19 @@ def get_endpoints_dir() -> Path:
 
 
 def get_relationships_dir() -> Path:
-    """Get relationships directory. Note: On disk this may still be 'retations' (legacy) until migration."""
-    # TODO: Migrate directory from 'retations' to 'relationships' on disk
-    # For now, check both names for backward compatibility
+    """Get relationships directory. Note: On disk this may be 'relationships', 'relationship' (legacy), or 'relationship'."""
+    # TODO: Migrate directory from 'relationship' / 'relationship' to 'relationships' on disk
+    # For now, check all known names for backward compatibility
     media_root = get_media_root()
     relationships_dir = media_root / "relationships"
-    retations_dir = media_root / "retations"
+    relationship_dir = media_root / "relationship"
+    relationship_dir = media_root / "relationship"  # singular, used in some setups
     if relationships_dir.exists():
         return relationships_dir
-    elif retations_dir.exists():
-        return retations_dir
+    if relationship_dir.exists():
+        return relationship_dir
+    if relationship_dir.exists():
+        return relationship_dir
     return relationships_dir  # Return new name even if doesn't exist yet
 
 

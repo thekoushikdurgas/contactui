@@ -4,30 +4,108 @@
 {% block title %}Validate Documentation - Operations{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Validate Documentation Files</h1>
+<div class="w-full max-w-4xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <a href="{% url 'documentation:dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Dashboard</a>
+        <span class="text-gray-400">/</span>
+        <a href="{% url 'documentation:operations_dashboard' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Operations</a>
+        <span class="text-gray-400">/</span>
+        <span class="text-gray-700 dark:text-gray-300 font-medium">Validate</span>
+    </nav>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Validate Documentation Files</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            This will validate all JSON files in the media/ directory for proper structure and required fields.
+        </p>
         
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div class="flex items-center gap-4">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                >
+                    Validate Files
+                </button>
+                <a href="{% url 'documentation:operations_dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results (shown after validation) -->
+    <div id="validation-results" class="{% if not report %}hidden{% endif %} bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Validation Results</h3>
         <div class="space-y-4">
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-                This will validate all JSON files in the media/ directory for proper structure and required fields.
-            </p>
-            
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
-                
-                <div class="flex items-center gap-4">
-                    <button 
-                        type="submit"
-                        class="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
-                    >
-                        Validate Files
-                    </button>
-                    <a href="{% url 'documentation:operations_dashboard' %}" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium">
-                        Cancel
-                    </a>
+            {% if report %}
+                {% if report.analysis_error %}
+                <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+                    <p class="font-medium">Validation failed</p>
+                    <p class="text-sm mt-1">{{ report.analysis_error }}</p>
                 </div>
-            </form>
+                {% else %}
+                <div class="space-y-4">
+                    {% if report.summary %}
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Total files</p>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ report.summary.total_files }}</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Valid</p>
+                            <p class="text-lg font-semibold text-green-700 dark:text-green-300">{{ report.summary.total_valid }}</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Invalid</p>
+                            <p class="text-lg font-semibold text-red-700 dark:text-red-300">{{ report.summary.total_invalid }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if report.pages and report.pages.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pages errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.pages.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.pages.errors|length > 20 %}
+                            <li>… and {{ report.pages.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if report.endpoints and report.endpoints.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Endpoints errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.endpoints.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.endpoints.errors|length > 20 %}
+                            <li>… and {{ report.endpoints.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if report.relationships and report.relationships.errors %}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationships errors</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1 max-h-40 overflow-y-auto">
+                            {% for err in report.relationships.errors|slice:":20" %}
+                            <li>{{ err.file }}: {{ err.error|truncatewords:15 }}</li>
+                            {% endfor %}
+                            {% if report.relationships.errors|length > 20 %}
+                            <li>… and {{ report.relationships.errors|length|add:"-20" }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -24,6 +24,7 @@
       "schema_expects": "/api/v4/companies (starts with /api/)",
       "actual_value": "graphql/QueryCompanies (starts with graphql/)",
       "affected_files": 145,
+      "affected_pages": null,
       "recommendation": "Update schema to support GraphQL format"
     },
     {
@@ -34,6 +35,7 @@
       "schema_expects": ["GET", "POST", "PUT", "DELETE", "PATCH"],
       "actual_value": ["QUERY", "MUTATION"],
       "affected_files": 145,
+      "affected_pages": null,
       "recommendation": "Update schema to support GraphQL methods"
     },
     {
@@ -44,6 +46,7 @@
       "schema_expects": "v1, v4 (starts with v)",
       "actual_value": "graphql",
       "affected_files": 145,
+      "affected_pages": null,
       "recommendation": "Update schema to support 'graphql' as valid api_version"
     },
     {
@@ -51,6 +54,10 @@
       "category": "consistency",
       "collection": "relationships",
       "issue": "Relationship index count discrepancy",
+      "schema_expects": null,
+      "actual_value": null,
+      "affected_files": null,
+      "affected_pages": null,
       "details": "Index shows 80 GraphQL relationships but total is 95",
       "recommendation": "Verify relationship counting logic"
     },
@@ -59,6 +66,10 @@
       "category": "format_inconsistency",
       "collection": "relationships",
       "issue": "Path format inconsistency in by-endpoint files",
+      "schema_expects": null,
+      "actual_value": null,
+      "affected_files": null,
+      "affected_pages": null,
       "details": "Some files use 'QueryCompanies', others use 'graphql/QueryCompanies'",
       "recommendation": "Standardize to always include 'graphql/' prefix"
     }

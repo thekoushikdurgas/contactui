@@ -28,7 +28,7 @@ This document provides prioritized recommendations for improving the Contact360 
    - Change api_version from `v1/v4` to `graphql`
    - Update endpoint_id format examples
 
-3. Update `retations/schema.md`:
+3. Update `relationship/schema.md`:
    - Update endpoint_path format
    - Update method values
    - Add `"conditional"` to usage_type enum

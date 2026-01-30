@@ -163,7 +163,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <span>Pages</span>
-                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full" aria-label="Total pages: {{ overview_stats.total_pages|default:"0" }}">{{ overview_stats.total_pages|default:"0" }}</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full" aria-label="Total pages: {{ overview_stats.total_pages|default:"0" }}" title="Total pages (list below can be filtered)">{{ overview_stats.total_pages|default:"0" }}</span>
                 </a>
                 <a href="{% url 'documentation:dashboard' %}?tab=endpoints&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
                    class="tab-button group {% if active_tab == 'endpoints' %}active{% endif %}" 
@@ -177,7 +177,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span>Endpoints</span>
-                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full" aria-label="Total endpoints: {{ overview_stats.total_endpoints|default:"0" }}">{{ overview_stats.total_endpoints|default:"0" }}</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-full" aria-label="Total endpoints: {{ overview_stats.total_endpoints|default:"0" }}" title="Total endpoints (list below can be filtered)">{{ overview_stats.total_endpoints|default:"0" }}</span>
                 </a>
                 <a href="{% url 'documentation:dashboard' %}?tab=relationships&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
                    class="tab-button group {% if active_tab == 'relationships' %}active{% endif %}" 
@@ -191,7 +191,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
                     <span>Relationships</span>
-                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full" aria-label="Total relationships: {{ overview_stats.total_relationships|default:"0" }}">{{ overview_stats.total_relationships|default:"0" }}</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full" aria-label="Total relationships: {{ overview_stats.total_relationships|default:"0" }}" title="Total relationships (list below can be filtered)">{{ overview_stats.total_relationships|default:"0" }}</span>
                 </a>
                 <a href="{% url 'documentation:dashboard' %}?tab=postman&view={{ view_mode }}&page={{ current_page }}&page_size={{ page_size }}" 
                    class="tab-button group {% if active_tab == 'postman' %}active{% endif %}" 
@@ -205,7 +205,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     <span>Postman</span>
-                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-full" aria-label="Total Postman configurations: {{ overview_stats.total_postman|default:"0" }}">{{ overview_stats.total_postman|default:"0" }}</span>
+                    <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-full" aria-label="Total Postman configurations: {{ overview_stats.total_postman|default:"0" }}" title="Total Postman configs (list below can be filtered)">{{ overview_stats.total_postman|default:"0" }}</span>
                 </a>
                 <a href="{% url 'documentation:dashboard' %}?tab=graph" 
                    class="tab-button group {% if active_tab == 'graph' %}active{% endif %}" 
@@ -872,6 +872,7 @@
             const pid = (page.page_id || '').toString();
             const status = (page.metadata && page.metadata.status) || 'draft';
             const href = pageDetailUrlBase.replace('__PID__', encodeURIComponent(pid));
+            const deleteHref = '/docs/pages/' + encodeURIComponent(pid) + '/delete/?return_url=' + encodeURIComponent(window.location.href);
             return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
                 <div class="flex items-center justify-between">
@@ -881,7 +882,8 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass(status)}">${(status + '').replace(/</g, '&lt;')}</span>
-                        <a href="${href}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="View" aria-label="View page"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete page"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></a>
                     </div>
                 </div>
             </div>
@@ -897,7 +899,12 @@
             return;
         }
         const method = (m) => (m && (m + '').toUpperCase()) || 'QUERY';
-        container.innerHTML = endpoints.map(endpoint => `
+        container.innerHTML = endpoints.map(endpoint => {
+            const endpointId = endpoint.endpoint_id || 'Unknown';
+            const href = '/docs/endpoints/' + encodeURIComponent(endpointId) + '/';
+            const editHref = '/docs/endpoints/' + encodeURIComponent(endpointId) + '/edit/?return_url=' + encodeURIComponent(window.location.href);
+            const deleteHref = '/docs/endpoints/' + encodeURIComponent(endpointId) + '/delete/?return_url=' + encodeURIComponent(window.location.href);
+            return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
@@ -907,10 +914,15 @@
                         </div>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${((endpoint.endpoint_path || '')).replace(/</g, '&lt;')}</p>
                     </div>
-                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                    <div class="flex items-center gap-2">
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-all" title="View" aria-label="View endpoint" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></a>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit endpoint" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete endpoint" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></a>
+                    </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
     
     function renderRelationshipsList(relationships) {
@@ -920,14 +932,16 @@
             container.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-12">No relationships found</p>';
             return;
         }
-        
         container.innerHTML = relationships.map(rel => {
+            const relationshipId = rel.relationship_id || rel.id || 'Unknown';
             const pagePath = rel.page_path || rel.page_id || 'Unknown';
             const endpointPath = rel.endpoint_path || rel.endpoint_id || 'Unknown';
             const usageType = rel.usage_type || 'primary';
             const usageContext = rel.usage_context || 'data_fetching';
             const method = (rel.method || 'QUERY').toUpperCase();
-            
+            const href = '/docs/relationships/' + encodeURIComponent(relationshipId) + '/';
+            const editHref = '/docs/relationships/' + encodeURIComponent(relationshipId) + '/edit/?return_url=' + encodeURIComponent(window.location.href);
+            const deleteHref = '/docs/relationships/' + encodeURIComponent(relationshipId) + '/delete/?return_url=' + encodeURIComponent(window.location.href);
             return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
                 <div class="flex items-start justify-between">
@@ -945,6 +959,11 @@
                                 <span class="text-gray-500 dark:text-gray-400">Endpoint:</span> ${endpointPath.replace(/</g, '&lt;')}
                             </p>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="View" aria-label="View relationship" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></a>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit relationship" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete relationship" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></a>
                     </div>
                 </div>
             </div>
@@ -974,7 +993,9 @@
             const state = config.state || 'draft';
             const collectionCount = config.collection ? (config.collection.item ? config.collection.item.length : 0) : 0;
             const environmentCount = config.environments ? config.environments.length : 0;
-            
+            const href = '/docs/postman/' + encodeURIComponent(configId) + '/';
+            const editHref = '/docs/postman/' + encodeURIComponent(configId) + '/edit/?return_url=' + encodeURIComponent(window.location.href);
+            const deleteHref = '/docs/postman/' + encodeURIComponent(configId) + '/delete/?return_url=' + encodeURIComponent(window.location.href);
             return `
             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
                 <div class="flex items-center justify-between">
@@ -988,7 +1009,9 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">View</a>
+                        <a href="${href}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all" title="View" aria-label="View Postman configuration" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></a>
+                        <a href="${editHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Edit" aria-label="Edit Postman configuration" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></a>
+                        <a href="${deleteHref}" class="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all" title="Delete" aria-label="Delete Postman configuration" onclick="event.stopPropagation();"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></a>
                     </div>
                 </div>
             </div>

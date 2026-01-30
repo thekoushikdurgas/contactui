@@ -69,6 +69,25 @@ class LocalJSONStorage:
             logger.error(f"Error reading JSON file {full_path}: {e}")
             return None
 
+    def delete_file(self, relative_path: str) -> bool:
+        """Delete a JSON file from the local media directory if it exists.
+
+        Args:
+            relative_path: Relative path from media/ (e.g., 'pages/page_id.json')
+
+        Returns:
+            True if the file was deleted or did not exist, False on error.
+        """
+        full_path = self._get_file_path(relative_path)
+        try:
+            if full_path.exists() and full_path.is_file():
+                full_path.unlink()
+                logger.debug(f"Deleted local file: {full_path}")
+            return True
+        except OSError as e:
+            logger.warning(f"Failed to delete local file {full_path}: {e}")
+            return False
+
     def list_files(self, directory: str, pattern: str = "*.json") -> List[str]:
         """List JSON files in a directory.
         
@@ -110,9 +129,9 @@ class LocalJSONStorage:
         index_path = f"{resource_type}/index.json"
         index_data = self.read_json(index_path)
         
-        # If not found and resource_type is 'relationships', try 'retations' directory (legacy naming)
+        # If not found and resource_type is 'relationships', try 'relationship' directory (legacy naming)
         if not index_data and resource_type == 'relationships':
-            index_path = "retations/index.json"
+            index_path = "relationship/index.json"
             index_data = self.read_json(index_path)
         
         if not index_data:
@@ -216,8 +235,8 @@ class LocalJSONStorage:
         # Normalize page_path: remove leading slash, replace slashes with underscores
         normalized = page_path.lstrip('/').replace('/', '_')
         
-        # Try with .json extension (check both 'relationships' and legacy 'retations')
-        for dir_name in ["relationships", "retations"]:
+        # Try with .json extension (check both 'relationships' and legacy 'relationship')
+        for dir_name in ["relationships", "relationship"]:
             file_path = f"{dir_name}/by-page/{normalized}.json"
             relationships = self.read_json(file_path)
             if relationships:
@@ -225,7 +244,7 @@ class LocalJSONStorage:
         
         # Try without .json extension
         if not normalized.endswith('.json'):
-            for dir_name in ["relationships", "retations"]:
+            for dir_name in ["relationships", "relationship"]:
                 file_path = f"{dir_name}/by-page/{normalized}"
                 relationships = self.read_json(file_path)
                 if relationships:
@@ -251,8 +270,8 @@ class LocalJSONStorage:
         normalized = endpoint_path.replace('/', '_')
         filename = f"{normalized}_{method}.json"
         
-        # Try with .json extension (check both 'relationships' and legacy 'retations')
-        for dir_name in ["relationships", "retations"]:
+        # Try with .json extension (check both 'relationships' and legacy 'relationship')
+        for dir_name in ["relationships", "relationship"]:
             file_path = f"{dir_name}/by-endpoint/{filename}"
             relationships = self.read_json(file_path)
             if relationships:
@@ -260,7 +279,7 @@ class LocalJSONStorage:
         
         # Try without .json extension
         if not filename.endswith('.json'):
-            for dir_name in ["relationships", "retations"]:
+            for dir_name in ["relationships", "relationship"]:
                 file_path = f"{dir_name}/by-endpoint/{filename}"
                 relationships = self.read_json(file_path)
                 if relationships:

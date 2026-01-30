@@ -38,7 +38,7 @@ class MediaFileManagerService:
         self.data_prefix = (getattr(settings, "S3_DATA_PREFIX", "data/") or "data/").rstrip("/")
 
     def _resource_dirs(self, resource_type: str) -> List[Path]:
-        """Return directories to scan for a resource type."""
+        """Return directories to scan for a resource type. media/result/ is not included (operation results, not documentation content)."""
         if resource_type == "pages":
             return [get_pages_dir()]
         if resource_type == "endpoints":
@@ -137,7 +137,7 @@ class MediaFileManagerService:
             parts = (resource_type, name)
 
         if resource_type == "relationships" and len(parts) >= 2:
-            # Handle both 'relationships' and legacy 'retations' directory names
+            # Handle both 'relationships' and legacy 'relationship' directory names
             # relationships/by-page/foo.json -> data/relationships/by-page/foo.json
             sub = "/".join(parts[1:])
             return f"{self.data_prefix}/relationships/{sub}"
@@ -158,7 +158,7 @@ class MediaFileManagerService:
             return "pages"
         if parts[0] == "endpoints":
             return "endpoints"
-        if parts[0] in ("retations", "relationships"):  # Support both legacy and new names
+        if parts[0] in ("relationship", "relationships"):  # Support both legacy and new names
             return "relationships"
         if parts[0] == "postman":
             return "postman"

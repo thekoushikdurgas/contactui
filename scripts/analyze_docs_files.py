@@ -2,7 +2,7 @@
 """
 Analyze and validate all documentation JSON files.
 
-This script scans all JSON files in docs/pages/, docs/endpoints/, and docs/retations/
+This script scans all JSON files in docs/pages/, docs/endpoints/, and docs/relationship/
 and validates them against their respective schemas.
 
 Refactored to use shared validators and context-aware utilities.
@@ -10,12 +10,18 @@ Refactored to use shared validators and context-aware utilities.
 
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
 # Add parent directory to path for Lambda API imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# When run as subprocess with DJANGO_SETTINGS_MODULE (e.g. from docs/operations/analyze), init Django first
+if os.environ.get("DJANGO_SETTINGS_MODULE"):
+    import django
+    django.setup()
 
 # Use context-aware utilities and shared validators
 from scripts.utils.context import (
@@ -58,7 +64,7 @@ def analyze_pages() -> Dict[str, Any]:
         print(f"❌ Pages directory not found: {PAGES_DIR}")
         return {"valid": 0, "invalid": 0, "errors": [], "files": []}
     
-    validator = PageSchemaValidator()
+    validator = get_validator("pages")
     results = {
         "valid": 0,
         "invalid": 0,

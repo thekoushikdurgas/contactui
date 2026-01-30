@@ -653,9 +653,21 @@ class PostmanService(DocumentationServiceBase):
                 f"Failed to update configuration {config_id}: {error_response.get('error', str(e))}"
             ) from e
 
+    def _delete_local_postman_file(self, config_id: str) -> None:
+        """Remove local Postman configuration file and invalidate local index cache so list_configurations reflects delete."""
+        try:
+            from apps.documentation.services import get_shared_local_storage
+            from django.core.cache import cache
+            local_storage = get_shared_local_storage()
+            local_storage.delete_file(f"postman/configurations/{config_id}.json")
+            cache.delete("local_json_storage:index:postman")
+        except Exception as e:
+            self.logger.warning(f"Failed to delete local Postman config file or clear index cache for {config_id}: {e}")
+
     def delete_configuration(self, config_id: str) -> bool:
         """
         Delete Postman configuration.
+        After successful deletion, removes local configuration file and invalidates local index cache.
         
         Args:
             config_id: Configuration identifier
@@ -675,10 +687,11 @@ class PostmanService(DocumentationServiceBase):
             
             success = _delete_configuration_with_retry()
             
-            # Invalidate cache after delete
+            # Invalidate cache and local file after delete
             if success:
                 self.unified_storage.clear_cache('postman', config_id)
                 self.unified_storage.clear_cache('postman')
+                self._delete_local_postman_file(config_id)
                 self.logger.debug(f"Cleared cache for configuration {config_id} and all postman lists after delete")
             
             return success

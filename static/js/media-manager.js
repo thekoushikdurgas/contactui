@@ -318,41 +318,26 @@
 
   function tabButtons() {
     const buttons = document.querySelectorAll("[data-media-tab]");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:tabButtons',message:'Found tab buttons',data:{count:buttons.length,buttons:Array.from(buttons).map(b=>b.getAttribute('data-media-tab'))},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'dom_elements'})}).catch(()=>{});
-// #endregion
     return buttons;
   }
 
   function tabPanels() {
     const panels = document.querySelectorAll("[data-media-panel]");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:tabPanels',message:'Found tab panels',data:{count:panels.length,panels:Array.from(panels).map(p=>p.getAttribute('data-media-panel'))},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'dom_elements'})}).catch(()=>{});
-// #endregion
     return panels;
   }
 
   function getTableBody() {
     const tbody = document.getElementById("media-files-tbody");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:getTableBody',message:'Found table body',data:{exists:!!tbody},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'dom_elements'})}).catch(()=>{});
-// #endregion
     return tbody;
   }
 
   function getLoadingEl() {
     const loading = document.getElementById("media-files-loading");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:getLoadingEl',message:'Found loading element',data:{exists:!!loading},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'dom_elements'})}).catch(()=>{});
-// #endregion
     return loading;
   }
 
   function getEmptyEl() {
     const empty = document.getElementById("media-files-empty");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:getEmptyEl',message:'Found empty element',data:{exists:!!empty},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'dom_elements'})}).catch(()=>{});
-// #endregion
     return empty;
   }
 
@@ -465,10 +450,6 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
   }
 
   function setTab(tab) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:setTab',message:'Setting tab',data:{tab:tab},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'tab_switch'})}).catch(()=>{});
-    // #endregion
-
     currentTab = tab;
     // Clear selection when switching tabs
     clearSelection();
@@ -543,9 +524,6 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
   function renderRows(filteredFiles, displayFiles = null) {
     const filesToRender = displayFiles || applyClientSideFilters(filteredFiles || files);
     const tbody = getTableBody();
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:renderRows',message:'Rendering rows',data:{tbodyExists:!!tbody,filesCount:filesToRender.length,currentTab:currentTab,virtualScroll:virtualScrollEnabled,visibleRange:virtualScrollEnabled ? visibleRange : null},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'render'})}).catch(()=>{});
-// #endregion
     if (!tbody) return;
 
     // Clear existing content
@@ -634,28 +612,15 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
 
     const url = listUrl + "?resource_type=" + encodeURIComponent(currentTab);
 
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:loadFiles',message:'Loading files for tab',data:{currentTab:currentTab,url:url,cacheUsed:!forceRefresh && !!getCache(cacheKey)},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'api_call'})}).catch(()=>{});
-// #endregion
-
     return fetch(url, { headers: { "Accept": "application/json" } })
       .then((r) => {
         if (!r.ok) {
           throw new Error(`HTTP ${r.status}: ${r.statusText}`);
         }
 
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:loadFiles',message:'API response received',data:{status:r.status,statusText:r.statusText},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'api_response'})}).catch(()=>{});
-// #endregion
-
         return r.json();
       })
       .then((data) => {
-
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:loadFiles',message:'API data parsed',data:{success:data.success,total:data.total,filesCount:(data.data||[]).length},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'api_data'})}).catch(()=>{});
-// #endregion
-
         if (data.success) {
           files = data.data || [];
           setCache(cacheKey, files); // Cache the response
@@ -673,11 +638,6 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
         }
       })
       .catch((e) => {
-
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:loadFiles',message:'API call failed',data:{error:e.message},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'api_error'})}).catch(()=>{});
-// #endregion
-
         console.error("Media Manager load error:", e);
         showLoading(false);
         showError("Failed to load files. Please check your connection and try again.", () => loadFiles(true));
@@ -685,16 +645,9 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
   }
 
   function init() {
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:init',message:'Initializing Media Manager',data:{currentTab:currentTab,tabButtonsCount:tabButtons().length,tabPanelsCount:tabPanels().length},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'initialization'})}).catch(()=>{});
-// #endregion
-
     tabButtons().forEach((btn) => {
       btn.addEventListener("click", () => {
         const t = btn.getAttribute("data-media-tab");
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:tabClick',message:'Tab button clicked',data:{tab:t},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'tab_click'})}).catch(()=>{});
-// #endregion
         if (t) setTab(t);
       });
     });
@@ -736,10 +689,6 @@ fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{metho
     document.getElementById('sync-status-filter')?.addEventListener('change', updateFilters);
     document.getElementById('sort-by-filter')?.addEventListener('change', updateFilters);
     document.getElementById('sort-order-filter')?.addEventListener('change', updateFilters);
-
-// #region agent log
-fetch('http://127.0.0.1:7242/ingest/adfd807a-ef66-43c3-a0f8-1f2210dc4305',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'media-manager.js:init',message:'Setting initial tab',data:{initialTab:currentTab},timestamp:Date.now(),sessionId:'debug-session',runId:'media-manager-debug',hypothesisId:'initial_tab'})}).catch(()=>{});
-// #endregion
     setTab(currentTab);
 
     // Start background cache refresh

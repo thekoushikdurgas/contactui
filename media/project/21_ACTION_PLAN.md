@@ -44,7 +44,7 @@ Schema files document REST API format, but system uses GraphQL exclusively. This
    - [ ] Change `api_version` from `v1/v4` to `graphql`
    - [ ] Update `endpoint_id` format examples
 
-3. **Update `retations/schema.md`:**
+3. **Update `relationship/schema.md`:**
    - [ ] Update `endpoint_path` format
    - [ ] Update `method` values
    - [ ] Add `"conditional"` to `usage_type` enum (5 relationships use it)
