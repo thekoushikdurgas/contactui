@@ -19,8 +19,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Configuration
-PROJECT_DIR="/home/ubuntu/docsai"
+# Configuration - default path; override with PROJECT_DIR env (e.g. from deploy-to-ec2.sh)
+PROJECT_DIR="${PROJECT_DIR:-/home/ubuntu/docsai}"
 ENV_FILE="${PROJECT_DIR}/.env.prod"
 HTTP_ONLY=false
 INTERACTIVE=false

@@ -25,21 +25,32 @@ git clone <your-repo-url> .
 
 Choose one of the following options:
 
-#### Option A: HTTP-Only (No SSL, IP-based)
+#### Option A: Single-Command Deploy (pre-check → full-deploy → post-verify) ⭐ Recommended
+
+Runs pre-deployment validation, then full deployment, then post-deployment verification:
+
+```bash
+cd /home/ubuntu/docsai
+sudo bash deploy/deploy-to-ec2.sh --http-only --ip 34.201.10.84
+# or with SSL: sudo bash deploy/deploy-to-ec2.sh --domain docsai.example.com --email admin@example.com
+# or interactive: sudo bash deploy/deploy-to-ec2.sh --interactive
+```
+
+#### Option B: HTTP-Only (No SSL, IP-based) – full-deploy only
 
 ```bash
 cd /home/ubuntu/docsai
 sudo bash deploy/full-deploy.sh --http-only --ip 34.201.10.84
 ```
 
-#### Option B: With Domain and SSL
+#### Option C: With Domain and SSL
 
 ```bash
 cd /home/ubuntu/docsai
 sudo bash deploy/full-deploy.sh --domain docsai.example.com --email admin@example.com
 ```
 
-#### Option C: Interactive Mode (Recommended for First Time)
+#### Option D: Interactive Mode (First time)
 
 ```bash
 cd /home/ubuntu/docsai
@@ -52,13 +63,21 @@ sudo bash deploy/full-deploy.sh --interactive
 # Health check
 curl http://34.201.10.84/api/v1/health/
 
+# Or run post-deployment verification script
+bash deploy/post-deployment-verify.sh
+
 # Or with domain
 curl https://docsai.example.com/api/v1/health/
 ```
 
-## What the Script Does
+## What the Scripts Do
 
-The `full-deploy.sh` script automates the following steps:
+**`deploy-to-ec2.sh`** runs in order: `pre-deployment-check.sh` → `full-deploy.sh` → `post-deployment-verify.sh`. You can also run these separately:
+
+- **`pre-deployment-check.sh`** – Validates system, env, and required files (no changes).
+- **`post-deployment-verify.sh`** – Checks Gunicorn, Nginx, health endpoint, and logs after deploy.
+
+The **`full-deploy.sh`** script automates the following steps:
 
 1. ✅ **System Dependencies** - Installs Python, PostgreSQL, Nginx, etc.
 2. ✅ **Database Setup** - Creates PostgreSQL database and user (optional)

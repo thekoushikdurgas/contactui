@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'apps.page_builder',
     'apps.knowledge',
     'apps.durgasflow',  # Workflow automation (n8n-like)
+    'apps.admin',  # Admin dashboard (users, stats, logs, system status, settings)
 ]
 
 MIDDLEWARE = [
@@ -311,6 +312,26 @@ GRAPHQL_ENABLED = bool(APPOINTMENT360_GRAPHQL_URL)
 GRAPHQL_USE_FALLBACK = not GRAPHQL_ENABLED
 GRAPHQL_AUTH_ENABLED = os.getenv('GRAPHQL_AUTH_ENABLED', 'True').lower() == 'true'
 S3_AUTH_STORAGE_ENABLED = os.getenv('S3_AUTH_STORAGE_ENABLED', 'False').lower() == 'true'
+
+# Lambda Logs API Configuration
+LOGS_API_URL = os.getenv('LOGS_API_URL', 'https://ow8pbf850l.execute-api.us-east-1.amazonaws.com')
+LOGS_API_KEY = os.getenv('LOGS_API_KEY', 'bc7a0177de676a8e8bd98c2a0e6f96152b7b1ae1e72eb3d108ed13d5f01fd9bd')
+LOGS_API_ENABLED = bool(LOGS_API_URL and LOGS_API_KEY)
+LOGS_API_TIMEOUT = int(os.getenv('LOGS_API_TIMEOUT', '30'))
+
+
+def validate_logs_api_config():
+    """Validate Logs API configuration settings."""
+    errors = []
+    if LOGS_API_URL and not (
+        LOGS_API_URL.startswith('http://') or LOGS_API_URL.startswith('https://')
+    ):
+        errors.append(
+            f"LOGS_API_URL must start with http:// or https://. Got: {LOGS_API_URL}"
+        )
+    if LOGS_API_URL and LOGS_API_TIMEOUT < 1:
+        errors.append(f"LOGS_API_TIMEOUT must be >= 1. Got: {LOGS_API_TIMEOUT}")
+    return len(errors) == 0, errors
 
 # SuperAdmin Middleware Configuration
 SUPER_ADMIN_ONLY_ENABLED = os.getenv('SUPER_ADMIN_ONLY_ENABLED', 'True').lower() == 'true'

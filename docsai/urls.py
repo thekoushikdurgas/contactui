@@ -36,6 +36,7 @@ urlpatterns = [
     path('operations/', include('apps.operations.urls')),
     path('page-builder/', include('apps.page_builder.urls')),
     path('knowledge/', include('apps.knowledge.urls')),
+    path('admin/', include('apps.admin.urls')),
     # REST API v1 - documentation GETs + health + dashboard
     path('api/v1/', include('apps.documentation.api.v1.urls')),
     # OpenAPI schema and interactive API docs (Swagger UI, ReDoc)

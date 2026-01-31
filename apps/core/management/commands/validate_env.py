@@ -44,6 +44,7 @@ class Command(BaseCommand):
         self._validate_database_config()
         self._validate_aws_s3_config()
         self._validate_graphql_config()
+        self._validate_logs_api_config()
         self._validate_lambda_api_config()
         self._validate_ai_config()
         self._validate_storage_config()
@@ -178,6 +179,25 @@ class Command(BaseCommand):
                     self.errors.append(f"Invalid APPOINTMENT360_GRAPHQL_URL: {e}")
         else:
             self.warnings.append("APPOINTMENT360_GRAPHQL_URL not configured - GraphQL fallback will not work")
+
+    def _validate_logs_api_config(self):
+        """Validate Lambda Logs API configuration."""
+        self.stdout.write('\n[Lambda Logs API Configuration]')
+        logs_url = getattr(settings, 'LOGS_API_URL', '')
+        logs_key = getattr(settings, 'LOGS_API_KEY', '')
+        if logs_url:
+            if not (logs_url.startswith('http://') or logs_url.startswith('https://')):
+                self.errors.append(
+                    f"LOGS_API_URL must start with http:// or https://. Got: {logs_url}"
+                )
+            elif logs_key:
+                if self.verbose:
+                    self.info.append("Lambda Logs API configured - admin logs will use REST API")
+            else:
+                self.warnings.append("LOGS_API_URL set but LOGS_API_KEY missing - admin logs will fall back to GraphQL")
+        else:
+            if self.verbose:
+                self.info.append("LOGS_API_URL not configured - admin logs will use GraphQL")
 
     def _validate_lambda_api_config(self):
         """Validate Lambda AI API configuration (Documentation API removed)."""
