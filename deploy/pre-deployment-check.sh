@@ -154,8 +154,17 @@ if [ -f "$ENV_FILE" ]; then
     set -a
     source "$ENV_FILE" 2>/dev/null || true
     set +a
+    # If sourcing left SECRET_KEY empty (e.g. value has %, &, ^), read from file
+    if [ -z "$SECRET_KEY" ]; then
+        SECRET_KEY_RAW=$(grep -E '^SECRET_KEY=' "$ENV_FILE" 2>/dev/null | cut -d= -f2- | tr -d '\r' | head -1)
+        if [ -n "$SECRET_KEY_RAW" ]; then
+            SECRET_KEY="$SECRET_KEY_RAW"
+        fi
+    fi
     if [ -z "$SECRET_KEY" ] || [ "$SECRET_KEY" = "django-insecure-change-this-in-production" ]; then
         print_error "SECRET_KEY is not set or using default value"
+        print_info "Generate one: python -c \"from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())\""
+        print_info "Then set SECRET_KEY=... in $ENV_FILE"
     else
         print_success "SECRET_KEY is set"
     fi
